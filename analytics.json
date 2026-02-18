@@ -1,0 +1,821 @@
+[
+    {
+        "timestamp": "2026-02-18 14:52:12",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "Closed Dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:52:10",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:52:03",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:52:02",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-team"
+    },
+    {
+        "timestamp": "2026-02-18 14:52:01",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:58",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:56",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-team"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:55",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:54",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-team"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:52",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:52",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:34",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:51:10",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Login",
+        "details": "User authenticated"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:32",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Logout",
+        "details": "User signed out manually"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:30",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:30",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:29",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:29",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:28",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:27",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:26",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:23",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:21",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> CSO 2"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:05",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:50:02",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:52",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:51",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:50",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:49",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:49",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:48",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:47",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:46",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:46",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:45",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:44",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:43",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:41",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:41",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:49:38",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:48:38",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:48:37",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:48:37",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:48:33",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "Closed Dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:46:27",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "Closed Dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:55",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "Closed Dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:48",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "view-customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:47",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "view-team"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:46",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Tab Switch",
+        "details": "view-regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:35",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "Closed Dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:29",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Login",
+        "details": "User authenticated"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:24",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Logout",
+        "details": "User signed out manually"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:23",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "view-regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:45:06",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:44:38",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:44:34",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:44:33",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:44:33",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:43:53",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:43:52",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:43:49",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:43:48",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:43:47",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:43:44",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:49",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:20",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:20",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:19",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:19",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:19",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:18",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:18",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:17",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:15",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:14",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:13",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:41:13",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:39:28",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:41",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:40",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:33",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:32",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:30",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:27",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:17",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:15",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:14",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Regional"
+    },
+    {
+        "timestamp": "2026-02-18 14:38:08",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:36:27",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:36:23",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "State -> ANDHRA PRADESH"
+    },
+    {
+        "timestamp": "2026-02-18 14:36:14",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:35:13",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Overview"
+    },
+    {
+        "timestamp": "2026-02-18 14:35:01",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Team Performance"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:59",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:59",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Tab Switch",
+        "details": "Customer"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:50",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:43",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> BKKSO"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:40",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:38",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "Region -> Z-4"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:35",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "Region -> TG-2"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:30",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "Region -> OD"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:28",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "Region -> AP-3"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:23",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Global Filter Applied",
+        "details": "Region -> AP-1"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:20",
+        "email": "ceo@heritagefoods.in",
+        "role": "CXO",
+        "action": "Login",
+        "details": "User authenticated"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:19",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Logout",
+        "details": "User signed out manually"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:09",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:04",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> Cleared"
+    },
+    {
+        "timestamp": "2026-02-18 14:34:01",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> VMISO"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:59",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> KANCHIPURAM SO"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:57",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> CSO 3"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:53",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> CSO 2"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:50",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> CSO 1"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:47",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> KANCHIPURAM SO"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:43",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Global Filter Applied",
+        "details": "SO_Name -> CSO 2"
+    },
+    {
+        "timestamp": "2026-02-18 14:33:24",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:31:27",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    },
+    {
+        "timestamp": "2026-02-18 14:31:26",
+        "email": "rh.tn@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User closed or navigated away from dashboard"
+    }
+]

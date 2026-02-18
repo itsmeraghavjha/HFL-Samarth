@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samarth | Admin Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        :root { --brand: #2E963D; --accent: #DF2027; }
+        .text-brand { color: var(--brand); }
+        .bg-brand { background-color: var(--brand); }
+        
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            border-radius: 8px; color: #64748B; font-weight: 600; transition: all 0.2s; cursor: pointer;
+        }
+        .sidebar-link:hover { background-color: #F1F5F9; color: #334155; }
+        .sidebar-link.active { background-color: #FFF6F1; color: var(--brand); }
+        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; }
+        .modal-enter-active { opacity: 1 !important; transform: scale(1) !important; transition: all 0.2s; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col z-10 shadow-sm flex-shrink-0">
+        <div class="p-6">
+            <div class="mb-8 flex flex-col items-center border-b border-gray-100 pb-6">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage Logo" class="h-10 object-contain mb-3">
+                <h1 class="font-extrabold text-gray-900 leading-tight text-center">
+                    Samarth<br><span class="text-brand text-[10px] font-bold uppercase tracking-widest">Admin Control</span>
+                </h1>
+            </div>
+            <nav class="space-y-2">
+                <a onclick="switchTab('view-users')" data-target="view-users" class="sidebar-link active">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    User Management
+                </a>
+                <a onclick="switchTab('view-analytics')" data-target="view-analytics" class="sidebar-link">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Usage Analytics
+                </a>
+                <div class="pt-4 mt-4 border-t border-gray-100">
+                    <a href="/" class="sidebar-link text-gray-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path></svg>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <div class="mt-auto p-6 border-t border-gray-100 bg-gray-50">
+            <a href="/logout" class="flex items-center gap-2 text-sm text-red-500 hover:text-red-700 font-bold">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Sign Out Admin
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative">
+        
+        <div id="view-users" class="tab-content block">
+            <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">System Users & Roles</h2>
+                        <p class="text-sm text-gray-500 mt-1">Manage Dashboard access, roles, and Row-Level Security (RLS) scopes.</p>
+                    </div>
+                    <button onclick="openModal()" class="bg-brand hover:bg-[#247A31] text-white px-5 py-2.5 rounded-lg font-bold shadow-md transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Create New User
+                    </button>
+                </div>
+            </header>
+            <div class="p-8">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-xs font-bold">
+                            <tr><th class="px-6 py-4">User</th><th class="px-6 py-4">Role & Title</th><th class="px-6 py-4">Security Scope</th><th class="px-6 py-4 text-right">Actions</th></tr>
+                        </thead>
+                        <tbody id="userTableBody" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-analytics" class="tab-content hidden">
+            <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Product Usage Analytics</h2>
+                    <p class="text-sm text-gray-500 mt-1">Track platform adoption, feature engagement, and high-intent actions.</p>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <select id="userTrackerSelect" class="bg-transparent border-none text-sm font-bold text-gray-700 outline-none w-48 cursor-pointer" onchange="renderAnalytics()">
+                        <option value="ALL">All Users (Global)</option>
+                    </select>
+                </div>
+            </header>
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card border-l-4 border-l-blue-500">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-dau">Daily Active Users (DAU)</p>
+                        <h3 class="text-3xl font-black text-gray-900" id="kpi-dau">0</h3>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-indigo-500">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-mau">Monthly Active (MAU)</p>
+                        <h3 class="text-3xl font-black text-indigo-600" id="kpi-mau">0</h3>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-[#2E963D]">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-time">Total Time Spent</p>
+                        <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-time">0m</h3>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-[#DF2027]">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-exports">Data Exports</p>
+                        <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-exports">0</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="stat-card">
+                        <h3 class="font-bold text-gray-800 mb-6">Action Breakdown</h3>
+                        <div class="h-64"><canvas id="actionChart"></canvas></div>
+                    </div>
+                    <div class="stat-card flex flex-col overflow-hidden">
+                        <h3 class="font-bold text-gray-800 mb-4">Detailed Activity Feed</h3>
+                        <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-gray-50 text-gray-500 uppercase sticky top-0">
+                                    <tr><th class="px-4 py-2">Date & Time</th><th class="px-4 py-2" id="th-user">User</th><th class="px-4 py-2">Action</th></tr>
+                                </thead>
+                                <tbody id="activityFeedBody" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="userModal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden opacity-0 transform scale-95" id="modalContent">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-900" id="modalTitle">Create User</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <form id="userForm" class="p-6 space-y-4">
+                <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Email Address</label><input type="email" id="u_email" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Full Name</label><input type="text" id="u_name" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Password</label><input type="text" id="u_pass" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Role</label>
+                        <select id="u_role" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white"><option value="RH">Regional Head (RH)</option><option value="CXO">Executive (CXO)</option><option value="Superadmin">Superadmin</option></select>
+                    </div>
+                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Job Title</label><input type="text" id="u_title" class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-2">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Scope Type</label>
+                    <select id="u_scope_type" onchange="toggleScopeValue()" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 mb-2 bg-white text-sm"><option value="SO">Sales Office (SO)</option><option value="ALL">ALL (No Restrictions)</option></select>
+                    <div id="scope_val_container"><label class="block text-xs font-medium text-gray-500 mb-1">Mapped SOs (Comma separated)</label><input type="text" id="u_scope_value" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-mono"></div>
+                </div>
+                <div class="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-brand text-white font-bold rounded-lg shadow-md hover:bg-[#247A31]">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let actionChartInstance = null;
+        let globalLogs = []; // Store logs so we don't have to re-fetch on filter change
+
+        function switchTab(tabId) {
+            $('.tab-content').addClass('hidden');
+            $('#' + tabId).removeClass('hidden');
+            $('.sidebar-link').removeClass('active');
+            $(`[data-target="${tabId}"]`).addClass('active');
+            
+            if(tabId === 'view-analytics') { fetchAnalytics(); }
+        }
+
+        // --- USER MANAGEMENT LOGIC ---
+        function loadUsers() {
+            $.get('/api/users', function(data) {
+                let html = '';
+                for (const [email, user] of Object.entries(data)) {
+                    let scopeDisplay = user.scope_type === 'ALL' 
+                        ? '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Unrestricted</span>' 
+                        : `<div class="text-xs font-bold text-gray-800">SO Map</div><div class="text-[10px] text-gray-500 font-mono mt-0.5 truncate max-w-[150px]">${Array.isArray(user.scope_value) ? user.scope_value.join(', ') : user.scope_value}</div>`;
+                    let delBtn = user.role === 'Superadmin' ? '' : `<button onclick="deleteUser('${email}')" class="text-red-500 hover:text-red-700 font-medium text-xs ml-3">Delete</button>`;
+
+                    html += `<tr>
+                        <td class="px-6 py-4"><div class="font-bold text-gray-900">${user.name}</div><div class="text-xs text-gray-500">${email}</div></td>
+                        <td class="px-6 py-4"><div class="font-bold text-gray-700">${user.role}</div><div class="text-xs text-gray-500">${user.title}</div></td>
+                        <td class="px-6 py-4">${scopeDisplay}</td>
+                        <td class="px-6 py-4 text-right"><button onclick="editUser('${email}', '${user.name}', '${user.password}', '${user.role}', '${user.title}', '${user.scope_type}', '${Array.isArray(user.scope_value) ? user.scope_value.join(', ') : (user.scope_value||'')}')" class="text-brand hover:text-[#247A31] font-bold text-xs bg-green-50 px-3 py-1.5 rounded-md">Edit</button>${delBtn}</td>
+                    </tr>`;
+                }
+                $('#userTableBody').html(html);
+            });
+        }
+
+        // Form logic
+        let isEdit = false;
+        function toggleScopeValue() { $('#u_scope_type').val() === 'ALL' ? $('#scope_val_container').hide() : $('#scope_val_container').show(); }
+        function openModal() { isEdit = false; $('#userForm')[0].reset(); $('#u_email').prop('disabled', false).removeClass('bg-gray-100'); $('#modalTitle').text('Create New User'); toggleScopeValue(); $('#userModal').removeClass('hidden'); setTimeout(() => $('#modalContent').addClass('modal-enter-active'), 10); }
+        function editUser(e,n,p,r,t,st,sv) { isEdit = true; $('#u_email').val(e).prop('disabled', true).addClass('bg-gray-100'); $('#u_name').val(n); $('#u_pass').val(p); $('#u_role').val(r); $('#u_title').val(t); $('#u_scope_type').val(st); $('#u_scope_value').val(sv); $('#modalTitle').text('Edit User'); toggleScopeValue(); $('#userModal').removeClass('hidden'); setTimeout(() => $('#modalContent').addClass('modal-enter-active'), 10); }
+        function closeModal() { $('#modalContent').removeClass('modal-enter-active'); setTimeout(() => $('#userModal').addClass('hidden'), 200); }
+        
+        $('#userForm').submit(function(e) {
+            e.preventDefault();
+            const payload = { email: $('#u_email').val(), name: $('#u_name').val(), password: $('#u_pass').val(), role: $('#u_role').val(), title: $('#u_title').val(), scope_type: $('#u_scope_type').val(), scope_value: $('#u_scope_type').val() === 'ALL' ? null : $('#u_scope_value').val() };
+            $.ajax({ url: '/api/users', type: isEdit ? 'PUT' : 'POST', contentType: 'application/json', data: JSON.stringify(payload), success: function() { closeModal(); loadUsers(); }});
+        });
+
+        function deleteUser(email) {
+            if(confirm('Revoke access for ' + email + '?')) {
+                $.ajax({ url: '/api/users', type: 'DELETE', contentType: 'application/json', data: JSON.stringify({email: email}), success: function() { loadUsers(); }});
+            }
+        }
+
+        // --- NEW: PM ANALYTICS ENGINE ---
+        function fetchAnalytics() {
+            $.get('/api/analytics', function(logs) {
+                globalLogs = logs;
+                
+                // Populate User Dropdown
+                let uniqueUsers = new Set();
+                logs.forEach(l => uniqueUsers.add(l.email));
+                let options = '<option value="ALL">All Users (Global)</option>';
+                uniqueUsers.forEach(u => options += `<option value="${u}">${u}</option>`);
+                $('#userTrackerSelect').html(options);
+
+                renderAnalytics(); // Initial render for ALL
+            });
+        }
+
+        function renderAnalytics() {
+            const filterUser = $('#userTrackerSelect').val();
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+
+            let dauSet = new Set();
+            let mauSet = new Set();
+            let userLogins = 0;
+            let exports = 0;
+            let actions = { 'Tab Switch': 0, 'Filter': 0, 'Export CSV': 0 };
+            let sessionMap = {}; // Tracks min and max time per user per day to calculate "Time Spent"
+            let feedHtml = '';
+            let feedCount = 0;
+
+            globalLogs.forEach(log => {
+                // Filter logic
+                if (filterUser !== 'ALL' && log.email !== filterUser) return;
+
+                // Time Parsing
+                let logDate = new Date(log.timestamp);
+                let dateStr = log.timestamp.split(' ')[0]; // "YYYY-MM-DD"
+
+                // KPI Aggregation
+                if (filterUser === 'ALL') {
+                    if (logDate >= today) dauSet.add(log.email);
+                    if (logDate >= thirtyDaysAgo) mauSet.add(log.email);
+                } else {
+                    if (log.action === 'Login') userLogins++;
+                }
+                
+                if (log.action === 'Export CSV') exports++;
+                if (['Tab Switch', 'Export CSV', 'Filter'].includes(log.action)) {
+                    actions[log.action] = (actions[log.action] || 0) + 1;
+                }
+
+                // Time Spent Aggregation (Min/Max time per user per day)
+                let sessionKey = `${log.email}_${dateStr}`;
+                if (!sessionMap[sessionKey]) {
+                    sessionMap[sessionKey] = { min: logDate, max: logDate };
+                } else {
+                    if (logDate < sessionMap[sessionKey].min) sessionMap[sessionKey].min = logDate;
+                    if (logDate > sessionMap[sessionKey].max) sessionMap[sessionKey].max = logDate;
+                }
+
+                // Feed Generation
+                if (feedCount < 100) {
+                    let timeDisplay = log.timestamp.split(' ')[1] || log.timestamp;
+                    feedHtml += `<tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-gray-500 font-mono">${dateStr} ${timeDisplay}</td>
+                        ${filterUser === 'ALL' ? `<td class="px-4 py-3 font-medium text-gray-800">${log.email.split('@')[0]}</td>` : ''}
+                        <td class="px-4 py-3"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase mr-2 border border-gray-200">${log.action}</span><span class="text-gray-500 truncate inline-block max-w-[200px]" style="vertical-align: bottom;">${log.details}</span></td>
+                    </tr>`;
+                    feedCount++;
+                }
+            });
+
+            // Calculate Total Time Spent
+            let totalMinutes = 0;
+            for (let key in sessionMap) {
+                let diffMs = sessionMap[key].max - sessionMap[key].min;
+                let diffMins = Math.floor(diffMs / 60000);
+                if (diffMins === 0) diffMins = 2; // Assume 2 minutes if they only did one action
+                totalMinutes += diffMins;
+            }
+            let hours = Math.floor(totalMinutes / 60);
+            let mins = totalMinutes % 60;
+            let timeString = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+
+            // Dynamic KPI Updates based on view mode
+            if (filterUser === 'ALL') {
+                $('#label-dau').text('Daily Active Users (DAU)'); $('#kpi-dau').text(dauSet.size);
+                $('#label-mau').text('Monthly Active (MAU)'); $('#kpi-mau').text(mauSet.size);
+                $('#label-time').text('Total Platform Time Spent');
+                $('#th-user').show();
+            } else {
+                $('#label-dau').text('Total User Logins'); $('#kpi-dau').text(userLogins);
+                $('#label-mau').text('Total Actions Taken'); $('#kpi-mau').text(actions['Tab Switch'] + actions['Filter'] + exports);
+                $('#label-time').text('User Total Time Spent');
+                $('#th-user').hide(); // Hide user column in feed if we are isolating a user
+            }
+            $('#kpi-exports').text(exports);
+            $('#kpi-time').text(timeString);
+            $('#activityFeedBody').html(feedHtml);
+
+            // Re-render Chart
+            if(actionChartInstance) actionChartInstance.destroy();
+            actionChartInstance = new Chart(document.getElementById('actionChart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(actions),
+                    datasets: [{ label: 'Event Count', data: Object.values(actions), backgroundColor: ['#3B82F6', '#2E963D', '#DF2027'], borderRadius: 4 }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        $(document).ready(function() { loadUsers(); });
+    </script>
+</body>
+</html>

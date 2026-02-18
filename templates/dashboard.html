@@ -3,530 +3,716 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heritage Foods | Sales Performance Dashboard</title>
+    <title>Heritage Samarth | Dashboard</title>
     
-    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        
-        /* Heritage Foods Brand Colors - Official from heritagefoods.in */
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
         :root {
-            --heritage-orange: #FF6B35;
-            --heritage-gold: #FFB84D;
-            --heritage-dark: #1F2937;
+            --heritage-green: #2E963D;
+            --heritage-green-hover: #247A31;
+            --heritage-red: #DF2027;
+            --heritage-slate: #64748B;
         }
+        .text-brand { color: var(--heritage-green); }
+        .bg-brand { background-color: var(--heritage-green); }
         
-        body {
-            background: linear-gradient(135deg, #FFF5EB 0%, #FFFFFF 100%);
-        }
+        #sidebar { transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; width: 16rem; }
+        #sidebar.collapsed { width: 5.5rem; }
+        #sidebar.collapsed .sidebar-text, #sidebar.collapsed .logo-full, #sidebar.collapsed .user-info, #sidebar.collapsed .sign-out-text { display: none; }
+        #sidebar .logo-icon { display: none; }
+        #sidebar.collapsed .logo-icon { display: flex; }
+        #sidebar.collapsed .sidebar-link { justify-content: center; padding-left: 0; padding-right: 0; }
+        #sidebar.collapsed .sidebar-link svg { margin: 0; }
+        #sidebar.collapsed .bottom-section { padding-left: 1rem; padding-right: 1rem; }
+        #sidebar.collapsed .user-avatar { margin: 0 auto; }
+        #sidebar.collapsed .sign-out-btn { justify-content: center; }
+
+        .sidebar-link { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 8px; color: var(--heritage-slate); font-weight: 500; transition: all 0.2s; cursor: pointer; font-size: 0.95rem; white-space: nowrap; }
+        .sidebar-link:hover { background-color: #F1F5F9; color: #334155; }
+        .sidebar-link.active { background-color: #FFF6F1; color: #334155; font-weight: 600; }
+        .sidebar-link.active svg { color: var(--heritage-slate); }
         
-        /* Heritage Header - Matches heritagefoods.in gradient */
-        .heritage-header {
-            background: linear-gradient(135deg, #FF6B35 0%, #FFB84D 100%);
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
-        }
+        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; transition: border-color 0.3s; display: flex; flex-direction: column; justify-content: space-between;}
         
-        .heritage-logo {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
-            letter-spacing: -0.5px;
-        }
+        table.dataTable th, table.dataTable td { white-space: nowrap !important; }
+        table.dataTable thead th { background-color: #F8FAFC; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; padding: 16px !important; border-bottom: 2px solid #E2E8F0 !important; }
+        table.dataTable tbody td { padding: 16px !important; color: #334155; font-size: 0.875rem; border-bottom: 1px solid #F1F5F9; }
         
-        .milk-icon {
-            font-size: 2.5rem;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
-        }
-        
-        .role-badge {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.875rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        /* Stats Cards with Heritage theme */
-        .stat-card {
-            background: white;
-            border-radius: 1.25rem;
-            padding: 1.75rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border-left: 5px solid var(--heritage-orange);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .stat-card:hover {
-            box-shadow: 0 12px 28px rgba(255, 107, 53, 0.25);
-            transform: translateY(-6px);
-        }
-        
-        .stat-value {
-            font-size: 2.75rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--heritage-orange), var(--heritage-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* DataTables with Heritage branding */
-        .dataTables_wrapper .dataTables_filter input {
-            border: 2px solid #E5E7EB;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1.25rem;
-            margin-left: 0.75rem;
-            outline: none;
-            background: white;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        
-        .dataTables_wrapper .dataTables_filter input:focus {
-            border-color: var(--heritage-orange);
-            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
-        }
-        
-        .dataTables_wrapper .dataTables_length select {
-            border: 2px solid #E5E7EB;
-            border-radius: 0.625rem;
-            padding: 0.5rem 2.5rem 0.5rem 1rem;
-            margin: 0 0.75rem;
-            background: white;
-            font-size: 0.9rem;
-        }
-        
-        /* Table styling - Heritage theme */
-        table.dataTable thead th {
-            background: linear-gradient(to bottom, #FFF5EB, #FFE5D0);
-            border-bottom: 3px solid var(--heritage-orange);
-            color: var(--heritage-dark);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            padding: 1.25rem 1rem;
-        }
-        
-        table.dataTable tbody td {
-            border-bottom: 1px solid #F3F4F6;
-            padding: 1rem;
-            font-size: 0.875rem;
-            color: #374151;
-        }
-        
-        table.dataTable tbody tr:hover {
-            background: #FFF5EB;
-        }
-        
-        table.dataTable tbody tr:nth-child(even) {
-            background: #FAFAFA;
-        }
-        
-        /* Pagination - Heritage orange */
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            padding: 0.625rem 1rem;
-            margin-left: 0.375rem;
-            border-radius: 0.625rem;
-            cursor: pointer;
-            border: 1px solid transparent;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: linear-gradient(135deg, var(--heritage-orange), var(--heritage-gold)) !important;
-            color: white !important;
-            border: none !important;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
-        }
-        
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.current) {
-            background: #FFF5EB !important;
-            border-color: var(--heritage-orange) !important;
-            color: var(--heritage-orange) !important;
-        }
-        
-        /* Beautiful Trend Badges */
-        .trend-growth {
-            background: linear-gradient(135deg, #10B981, #059669);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
-        }
-        
-        .trend-decline {
-            background: linear-gradient(135deg, #EF4444, #DC2626);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4);
-        }
-        
-        .trend-new {
-            background: linear-gradient(135deg, #6366F1, #4F46E5);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.4);
-        }
-        
-        .trend-stagnant {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(245, 158, 11, 0.4);
-        }
-        
-        /* Slicer Dropdowns */
-        .slicer-select {
-            background: white;
-            border: 2px solid #E5E7EB;
-            border-radius: 0.625rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-        }
-        
-        .slicer-select:hover {
-            border-color: var(--heritage-orange);
-            box-shadow: 0 6px 12px rgba(255, 107, 53, 0.2);
-        }
-        
-        .slicer-select:focus {
-            outline: none;
-            border-color: var(--heritage-orange);
-            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
-        }
-        
-        /* Loading Spinner */
-        .spinner {
-            border: 5px solid rgba(255, 107, 53, 0.1);
-            border-left-color: var(--heritage-orange);
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Export Button - Heritage gradient */
-        .export-btn {
-            background: linear-gradient(135deg, var(--heritage-orange), var(--heritage-gold));
-            color: white;
-            font-weight: 700;
-            padding: 1rem 2rem;
-            border-radius: 0.875rem;
-            box-shadow: 0 6px 16px rgba(255, 107, 53, 0.35);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-        }
-        
-        .export-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 24px rgba(255, 107, 53, 0.45);
-        }
-        
-        .export-btn:active {
-            transform: translateY(0);
-        }
-        
-        .card {
-            background: white;
-            border-radius: 1.25rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #F3F4F6;
-        }
+        .dataTables_scrollBody::-webkit-scrollbar { height: 8px; }
+        .dataTables_scrollBody::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .dataTables_scrollBody::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dataTables_scrollBody::-webkit-scrollbar-thumb:hover { background: var(--heritage-green); }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current { background: var(--heritage-green) !important; color: white !important; border: none !important; }
+
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .badge-growth { background: #DCFCE7; color: var(--heritage-green); border: 1px solid #BBF7D0;}
+        .badge-decline { background: #FEE2E2; color: var(--heritage-red); border: 1px solid #FECACA; }
+        .badge-new { background: #E0E7FF; color: #4338CA; border: 1px solid #C7D2FE;}
     </style>
 </head>
-<body class="min-h-screen">
-    
-    <!-- Heritage Foods Header -->
-    <div class="heritage-header py-6 px-6 mb-10">
-        <div class="max-w-[1700px] mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="milk-icon">🥛</span>
+<body class="flex h-screen overflow-hidden">
+
+    <aside id="sidebar" class="bg-white border-r border-gray-200 hidden lg:flex flex-col z-10 shadow-sm flex-shrink-0">
+        <div class="p-6">
+            <div class="mb-10 flex flex-col items-center border-b border-gray-100 pb-6">
+                <div class="logo-full text-center flex flex-col items-center">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage Logo" class="h-12 object-contain mb-4">
+                    <h1 class="text-[1.1rem] font-extrabold text-gray-900 tracking-tight leading-tight">
+                        Samarth<br><span class="text-brand text-xs font-bold uppercase tracking-widest">Analytics Engine</span>
+                    </h1>
+                </div>
+                <div class="logo-icon w-10 h-10 bg-brand text-white rounded-xl items-center justify-center font-black text-xl shadow-md cursor-pointer" onclick="$('#toggleSidebar').click();" title="Expand Menu">S</div>
+            </div>
+            
+            <nav class="space-y-2">
+                <a onclick="switchTab('view-overview')" data-target="view-overview" class="sidebar-link active" title="Overview">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span class="sidebar-text">Overview</span>
+                </a>
+                <a onclick="switchTab('view-regional')" data-target="view-regional" class="sidebar-link" title="Regional Performance">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <span class="sidebar-text">Regional Performance</span>
+                </a>
+                <a onclick="switchTab('view-team')" data-target="view-team" class="sidebar-link" title="Team Performance">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <span class="sidebar-text">Team Performance</span>
+                </a>
+                <a onclick="switchTab('view-customer')" data-target="view-customer" class="sidebar-link" title="Customer Insights">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="sidebar-text">Customer Insights</span>
+                </a>
+                
+                {% if user.role == 'Superadmin' %}
+                <div class="mt-4 pt-4 border-t border-gray-100 sidebar-text">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-4 mb-2">System</p>
+                    <a href="/admin" class="sidebar-link text-brand bg-green-50" title="Admin Settings">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Admin Panel
+                    </a>
+                </div>
+                {% endif %}
+            </nav>
+        </div>
+        
+        <div class="mt-auto p-6 bottom-section border-t border-gray-100 bg-gray-50">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 flex-shrink-0 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand font-bold shadow-sm user-avatar" title="{{ user.name }}">{{ user.name[0] }}</div>
+                <div class="user-info">
+                    <p class="text-sm font-bold text-gray-900 truncate">{{ user.name }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ user.title }}</p>
+                </div>
+            </div>
+            <a href="/logout" class="sign-out-btn mt-4 flex items-center gap-2 text-xs text-red-500 hover:text-red-700 font-medium" title="Sign Out">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span class="sign-out-text">Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative bg-[#F8FAFC]">
+        <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20 shadow-sm transition-all">
+            <div class="max-w-[1500px] mx-auto flex justify-between items-end">
+                <div class="flex items-center gap-4">
+                    <button id="toggleSidebar" class="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 transition-colors hidden lg:block focus:outline-none focus:ring-2 focus:ring-brand">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
                     <div>
-                        <div class="heritage-logo">Heritage Foods</div>
-                        <div class="text-white/90 text-sm font-semibold tracking-wide">Sales Performance Dashboard</div>
+                        <h2 class="text-2xl font-bold text-gray-900" id="greeting">Welcome Back</h2>
+                        <p class="text-sm text-gray-500 mt-1" id="header-subtitle">Here is today's overview.</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Last Sync</span>
+                    <p class="text-sm font-bold text-gray-700 flex items-center gap-2 justify-end mt-1">
+                        <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+                        <span id="last-updated">Syncing...</span>
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <div class="px-8 pt-8 max-w-[1500px] mx-auto">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-brand"></div>
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                    <span class="font-bold text-sm text-gray-700 uppercase tracking-wider">Global Context Filters</span>
+                    <span class="text-xs text-gray-400 ml-2">Applies to all KPIs, Charts, and Tables below</span>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="slicer-container">
+                    </div>
+            </div>
+        </div>
+
+        <div class="p-8 pt-6 max-w-[1500px] mx-auto">
+            
+            <div id="view-overview" class="tab-content block">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    
+                    <div class="stat-card border-t-4 border-t-[#2E963D]" id="vol-card-border">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">MTD Sales Vol (LPD)</p>
+                        <div>
+                            <h3 class="text-3xl font-black text-gray-900" id="kpi-sales">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border border-transparent" id="kpi-sales-diff-badge">
+                                <span id="kpi-sales-diff"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card border-t-4 border-t-[#2E963D]">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Growth Accounts</p>
+                        <div>
+                            <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-growth">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-green-50 text-[#2E963D] text-xs font-bold border border-green-100" title="Volume gained from growth accounts vs last year">
+                                &uarr; <span id="kpi-growth-vol">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card border-t-4 border-t-[#DF2027]">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Decline Accounts</p>
+                        <div>
+                            <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-decline">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-red-50 text-[#DF2027] text-xs font-bold border border-red-100" title="Volume lost from declining accounts vs last year">
+                                &darr; <span id="kpi-decline-vol">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card border-t-4 border-t-blue-500">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">New Customers</p>
+                        <div>
+                            <h3 class="text-3xl font-black text-blue-600" id="kpi-new">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-50 text-blue-600 text-xs font-bold border border-blue-100" title="Volume brought in by brand new accounts">
+                                &plus; <span id="kpi-new-vol">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <div class="stat-card col-span-2">
+                        <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2" id="overview-chart-title"></h3>
+                        <div class="h-64"><canvas id="overviewRegionChart"></canvas></div>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="font-bold text-gray-800 mb-6">Account Health Portfolio</h3>
+                        <div class="h-56 relative"><canvas id="overviewHealthChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                        <h3 class="font-bold text-gray-800">Master Data Table</h3>
+                        <div class="flex items-center gap-4">
+                            <div id="table-actions"></div>
+                            <button onclick="exportData()" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Export CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <table id="salesTable" class="w-full display nowrap" style="width:100%"></table>
                     </div>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 text-white/90 text-sm font-medium">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                    <span>Viewing as:</span>
+
+            <div id="view-regional" class="tab-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="stat-card">
+                        <div class="flex items-center gap-2 mb-6">
+                            <span class="p-1.5 bg-green-50 text-[#2E963D] rounded-lg border border-green-100">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            </span>
+                            <h3 class="font-bold text-gray-800">Top 5 Sales Offices (Volume)</h3>
+                        </div>
+                        <div class="h-64"><canvas id="topBranchesChart"></canvas></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center gap-2 mb-6">
+                            <span class="p-1.5 bg-red-50 text-[#DF2027] rounded-lg border border-red-100">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                            </span>
+                            <h3 class="font-bold text-gray-800">Bottom 5 Sales Offices (Volume)</h3>
+                        </div>
+                        <div class="h-64"><canvas id="bottomBranchesChart"></canvas></div>
+                    </div>
                 </div>
-                <div class="role-badge">{{ role }}</div>
             </div>
+
+            <div id="view-team" class="tab-content hidden">
+                <div class="grid grid-cols-1 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full">
+                        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                            <div>
+                                <h3 class="font-bold text-gray-800">Sales Executive (SE) Leaderboard</h3>
+                                <p class="text-xs text-gray-500 mt-1">Review your ground-level team by Volume and YoY Growth %.</p>
+                            </div>
+                            <div id="se-table-actions"></div>
+                        </div>
+                        <div class="w-full">
+                            <table id="seTable" class="w-full display nowrap" style="width:100%">
+                                <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-[10px] font-bold tracking-wider">
+                                    <tr>
+                                        <th class="text-left p-4">Sales Executive</th>
+                                        <th class="text-right p-4">MTD Volume</th>
+                                        <th class="text-right p-4">LYMTD Volume</th>
+                                        <th class="text-right p-4">YoY Growth %</th>
+                                        <th class="text-center p-4">Growth Accts</th>
+                                        <th class="text-center p-4">Decline Accts</th>
+                                        <th class="text-center p-4">New Accts</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-customer" class="tab-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <div class="stat-card">
+                        <h3 class="font-bold text-gray-800 mb-6">Sales by Customer Group</h3>
+                        <div class="h-64"><canvas id="customerGroupChart"></canvas></div>
+                    </div>
+                    <div class="stat-card col-span-2 overflow-hidden flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-[#DF2027] animate-pulse"></span>
+                                High Priority Churn Risk
+                            </h3>
+                            <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">Largest absolute decline (YoY)</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg">
+                            <table class="w-full text-left text-sm" id="churnTable">
+                                <thead class="bg-gray-50 text-gray-500 text-xs uppercase sticky top-0 border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold">Customer Name</th>
+                                        <th class="px-4 py-3 font-semibold">Region/SO</th>
+                                        <th class="px-4 py-3 font-semibold text-right">LPD Drop</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100" id="churnTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="mt-12 text-center text-gray-400 text-sm pb-8 border-t border-gray-200 pt-6">
+                <p>Heritage Foods Limited | Samarth Analytics Engine v2.0</p>
+            </footer>
         </div>
-    </div>
-
-    <div class="max-w-[1700px] mx-auto px-6 pb-10">
-        
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="text-gray-600 text-sm font-bold uppercase tracking-wide">Total Records</div>
-                    <svg class="w-10 h-10 text-orange-200" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <div class="stat-value" id="stat-total">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="text-gray-600 text-sm font-bold uppercase tracking-wide">Growth Accounts</div>
-                    <svg class="w-10 h-10 text-green-200" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <div class="text-5xl font-bold text-green-600" id="stat-growth">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="text-gray-600 text-sm font-bold uppercase tracking-wide">Decline Accounts</div>
-                    <svg class="w-10 h-10 text-red-200" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <div class="text-5xl font-bold text-red-600" id="stat-decline">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="text-gray-600 text-sm font-bold uppercase tracking-wide">New Customers</div>
-                    <svg class="w-10 h-10 text-indigo-200" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
-                    </svg>
-                </div>
-                <div class="text-5xl font-bold text-indigo-600" id="stat-new">-</div>
-            </div>
-        </div>
-
-        <!-- Filters Card -->
-        <div class="card p-7 mb-10">
-            <div class="flex items-center gap-3 mb-6">
-                <svg class="w-6 h-6" style="color: var(--heritage-orange);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                </svg>
-                <h2 class="text-base font-bold uppercase tracking-wider" style="color: var(--heritage-dark);">Quick Filters</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5" id="slicer-container">
-                <!-- Slicers dynamically added by JavaScript -->
-            </div>
-        </div>
-
-        <!-- Main Data Table -->
-        <div class="card overflow-hidden relative min-h-[600px]">
-            
-            <!-- Loading Indicator -->
-            <div id="loadingIndicator" class="absolute inset-0 bg-white/97 z-50 flex flex-col items-center justify-center transition-opacity duration-300">
-                <div class="spinner mb-8"></div>
-                <p class="text-gray-900 font-bold text-3xl mb-3">Loading Sales Data...</p>
-                <p class="text-gray-600 text-base mb-2">Connecting to Heritage Foods SQL Server...</p>
-                <div class="mt-8 flex items-center gap-3 text-sm text-gray-400">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"></path>
-                    </svg>
-                    <span>First load may take a few seconds. Subsequent loads will be instant!</span>
-                </div>
-            </div>
-
-            <!-- Table Header with Export -->
-            <div class="p-6 border-b-2 border-gray-100 flex justify-between items-center" style="background: linear-gradient(to right, #FFF5EB, white);">
-                <div class="text-base">
-                    <span class="font-bold text-gray-800" id="row-count">Loading...</span>
-                </div>
-                <button onclick="exportData()" class="export-btn flex items-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span>Export to CSV</span>
-                </button>
-            </div>
-
-            <!-- DataTable -->
-            <div class="p-6 overflow-x-auto">
-                <table id="salesTable" class="w-full text-left" style="width:100%">
-                    <!-- Populated by DataTables -->
-                </table>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="text-center mt-10 text-sm">
-            <p class="font-bold text-lg mb-1" style="color: var(--heritage-orange);">Heritage Foods Limited</p>
-            <p class="text-gray-600">Empowering sales teams with real-time insights</p>
-            <p class="text-gray-400 mt-2">Built with ❤️ for better business decisions</p>
-        </div>
-    </div>
+    </main>
 
     <script>
-        var slicerColumns = {{ slicer_columns | tojson | safe }};
-        var dataTable;
+        $('#toggleSidebar').on('click', function() {
+            $('#sidebar').toggleClass('collapsed');
+            setTimeout(function() { 
+                if(myDataTable) myDataTable.columns.adjust().draw(); 
+                if(seDataTable) seDataTable.columns.adjust().draw(); 
+            }, 300);
+        });
 
-        function exportData() {
-            dataTable.button('.buttons-csv').trigger();
-        }
+        let globalData = [];
+        let globalColumns = [];
+        let activeFilters = {}; 
+
+        const slicerColumns = ['State', 'Region', 'SO_Name', 'CustomerGroup', 'Product', 'Sales_Trend'];
+        const staticSlicers = ['Product', 'Sales_Trend']; 
+        
+        const hour = new Date().getHours();
+        const greeting = hour < 12 ? 'Good Morning,' : hour < 18 ? 'Good Afternoon,' : 'Good Evening,';
+        document.getElementById('greeting').innerHTML = `${greeting} <span class="text-brand">{{ user.name.split(' ')[0] }}</span>`;
+        
+        let charts = {};
+        let myDataTable;
+        let seDataTable;
 
         $(document).ready(function() {
             $.ajax({
                 url: '/api/data',
                 type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    console.log('✅ Data loaded:', response.rowCount, 'rows');
-                    $('#loadingIndicator').fadeOut(400);
+                success: function(res) {
+                    $('#last-updated').text(res.last_updated);
+                    globalData = res.data;
+                    globalColumns = res.columns;
                     
-                    updateStats(response.data);
-                    
-                    var columnDefs = [];
-                    var trendIndex = response.columns.findIndex(c => c.title === 'Sales_Trend');
-                    
-                    if (trendIndex > -1) {
-                        columnDefs.push({
-                            targets: trendIndex,
-                            render: function(data, type, row) {
-                                if (type === 'display' && data) {
-                                    if (data === 'Growth') return '<span class="trend-growth">Growth ↑</span>';
-                                    if (data === 'Decline') return '<span class="trend-decline">Decline ↓</span>';
-                                    if (data === 'New Customer') return '<span class="trend-new">New Customer ✨</span>';
-                                    if (data === 'Stagnant') return '<span class="trend-stagnant">Stagnant →</span>';
-                                    return '<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">' + data + '</span>';
-                                }
-                                return data;
-                            }
-                        });
-                    }
-
-                    dataTable = $('#salesTable').DataTable({
-                        data: response.data,
-                        columns: response.columns,
-                        columnDefs: columnDefs,
-                        deferRender: true,
-                        scrollX: true,
-                        pageLength: 25,
-                        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                        order: [],
-                        dom: '<"flex flex-col md:flex-row justify-between items-center mb-5 gap-4"lf>rt<"flex flex-col md:flex-row justify-between items-center mt-5 gap-4"ip>B',
-                        buttons: ['csv'],
-                        language: {
-                            search: "",
-                            searchPlaceholder: "Search across all columns...",
-                            lengthMenu: "Show _MENU_ rows",
-                            info: "Showing _START_ to _END_ of _TOTAL_ records",
-                            infoFiltered: "(filtered from _MAX_ total)"
-                        },
-                        
-                        initComplete: function() {
-                            var api = this.api();
-                            updateRowCount(api);
-                            
-                            api.columns().every(function() {
-                                var column = this;
-                                var headerName = $(column.header()).text().trim();
-                                
-                                if (slicerColumns.includes(headerName)) {
-                                    var slicerDiv = $('<div class="flex flex-col"></div>').appendTo('#slicer-container');
-                                    $('<label class="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">' + headerName + '</label>').appendTo(slicerDiv);
-                                    
-                                    var select = $('<select class="slicer-select"><option value="">All ' + headerName + '</option></select>')
-                                        .appendTo(slicerDiv)
-                                        .on('change', function() {
-                                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                                            column.search(val ? '^' + val + '$' : '', true, false).draw();
-                                            updateRowCount(api);
-                                        });
-                                    
-                                    column.data().unique().sort().each(function(d, j) {
-                                        if (d !== null && d !== "") {
-                                            select.append('<option value="' + d + '">' + d + '</option>');
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
+                    buildGlobalSlicers();
+                    applyFiltersAndUpdate();
                 },
-                error: function(xhr, status, error) {
-                    console.error("❌ Error:", error);
-                    $('#loadingIndicator').html(
-                        '<div class="text-center p-10">' +
-                        '<svg class="w-20 h-20 text-red-500 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>' +
-                        '</svg>' +
-                        '<p class="text-red-700 font-bold text-2xl mb-3">Error Loading Data</p>' +
-                        '<p class="text-gray-600 text-base mb-4">Failed to connect to the database.</p>' +
-                        '<p class="text-sm text-gray-500 font-mono bg-gray-100 p-4 rounded-lg">' + error + '</p>' +
-                        '</div>'
-                    );
+                error: function(err) {
+                    alert("Dashboard failed to load. Please check your connection.");
                 }
             });
         });
 
-        function updateStats(data) {
-            var total = data.length;
-            var growth = 0, decline = 0, newCustomers = 0;
-            
-            data.forEach(function(row) {
-                var trendCol = row.find((val, idx) => {
-                    return val === 'Growth' || val === 'Decline' || val === 'New Customer' || val === 'Stagnant';
+        // ==========================================
+        // GLOBAL FILTERING ENGINE
+        // ==========================================
+        function buildGlobalSlicers() {
+            var container = $('#slicer-container');
+            container.empty();
+
+            slicerColumns.forEach(colName => {
+                let colIdx = globalColumns.findIndex(c => c.title === colName);
+                if (colIdx === -1) return;
+
+                let uniqueVals = [...new Set(globalData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
+                uniqueVals.sort();
+
+                var safeId = 'slicer-' + colName.replace(/[^a-zA-Z0-9]/g, '');
+                var wrapper = $('<div class="flex flex-col"></div>').appendTo(container);
+                $('<label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">' + colName + '</label>').appendTo(wrapper);
+                
+                var select = $(`<select id="${safeId}" data-col-idx="${colIdx}" data-header="${colName}" class="w-full border border-gray-300 rounded-lg text-xs py-2 px-3 focus:ring-2 focus:ring-[#2E963D] outline-none bg-gray-50 global-slicer"><option value="">All ${colName}</option></select>`)
+                    .appendTo(wrapper);
+                
+                uniqueVals.forEach(val => {
+                    let safeVal = String(val).replace(/"/g, '&quot;');
+                    select.append(`<option value="${safeVal}">${val}</option>`);
                 });
-                if (trendCol === 'Growth') growth++;
-                if (trendCol === 'Decline') decline++;
-                if (trendCol === 'New Customer') newCustomers++;
             });
-            
-            $('#stat-total').text(total.toLocaleString());
-            $('#stat-growth').text(growth.toLocaleString());
-            $('#stat-decline').text(decline.toLocaleString());
-            $('#stat-new').text(newCustomers.toLocaleString());
         }
 
-        function updateRowCount(api) {
-            var info = api.page.info();
-            $('#row-count').text('Displaying ' + info.recordsDisplay.toLocaleString() + ' of ' + info.recordsTotal.toLocaleString() + ' records');
+        $(document).on('change', '.global-slicer', function() {
+            let filterName = $(this).data('header');
+            let filterValue = $(this).val() || 'Cleared';
+            trackEvent('Global Filter Applied', `${filterName} -> ${filterValue}`);
+            applyFiltersAndUpdate();
+        });
+
+        function applyFiltersAndUpdate() {
+            activeFilters = {};
+            $('.global-slicer').each(function() {
+                let val = $(this).val();
+                let colIdx = $(this).data('col-idx');
+                if (val !== "") { activeFilters[colIdx] = val; }
+            });
+
+            let filteredData = globalData.filter(row => {
+                for (let colIdx in activeFilters) {
+                    let rowVal = String(row[colIdx] || '').trim();
+                    let filterVal = activeFilters[colIdx].replace(/&quot;/g, '"');
+                    if (rowVal !== filterVal) return false;
+                }
+                return true;
+            });
+
+            updateDashboardComponents(filteredData);
+            updateCascadingSlicers(filteredData);
         }
+
+        function updateCascadingSlicers(filteredData) {
+            $('.global-slicer').each(function() {
+                var select = $(this);
+                var headerName = select.data('header');
+                var colIdx = select.data('col-idx');
+                var currentVal = select.val();
+                
+                if (staticSlicers.includes(headerName) || currentVal !== "") return; 
+                
+                let uniqueVisibleData = [...new Set(filteredData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
+                uniqueVisibleData.sort();
+                
+                select.empty();
+                select.append(`<option value="">All ${headerName}</option>`);
+                uniqueVisibleData.forEach(val => {
+                    let safeVal = String(val).replace(/"/g, '&quot;');
+                    select.append(`<option value="${safeVal}">${val}</option>`);
+                });
+            });
+        }
+
+        // ==========================================
+        // DASHBOARD RENDER ENGINE
+        // ==========================================
+        function updateDashboardComponents(data) {
+            const idx = col => globalColumns.findIndex(c => c.title === col);
+            
+            const iTrend = idx('Sales_Trend'); const iSales = idx('MTD');
+            const iRegion = idx('Region'); const iSO = idx('SO_Name');
+            const iCustGrp = idx('CustomerGroup'); const iCustName = idx('CustomerName');
+            const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+            const iSE = idx('SE_Name'); const iLYMTD = idx('LYMTD');
+
+            // Added Volume Tracking Variables
+            let stats = { 
+                growth: 0, decline: 0, new: 0, stable: 0, 
+                sales: 0, lymtd: 0,
+                growthVol: 0, declineVol: 0, newVol: 0
+            };
+            
+            let regionData = {}, soData = {}, custGrpData = {}, churnList = [];
+            let seDataMap = {}; 
+
+            data.forEach(row => {
+                let trend = iTrend > -1 ? String(row[iTrend] || '').trim() : 'Stable';
+                let salesVal = iSales > -1 ? parseFloat(row[iSales]) || 0 : 0;
+                let lymtdVal = iLYMTD > -1 ? parseFloat(row[iLYMTD]) || 0 : 0;
+                let dropVal = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
+                
+                let reg = iRegion > -1 ? String(row[iRegion] || 'Unknown').trim() : 'All Regions';
+                let so = iSO > -1 ? String(row[iSO] || 'Unknown').trim() : 'All Sales Offices';
+                let custGrp = iCustGrp > -1 ? String(row[iCustGrp] || 'Other').trim() : 'Other';
+                let custName = iCustName > -1 ? String(row[iCustName] || 'Unknown').trim() : 'Unknown';
+                let seName = iSE > -1 ? String(row[iSE] || 'Unassigned').trim() : 'Unassigned';
+
+                // Categorize and capture specific Volume Impacts
+                if (trend === 'Growth') {
+                    stats.growth++;
+                    stats.growthVol += dropVal;
+                } else if (trend === 'Decline') {
+                    stats.decline++;
+                    stats.declineVol += Math.abs(dropVal); // Use abs to display "lost 500" instead of "lost -500"
+                } else if (trend === 'New Customer' || trend === 'New') {
+                    stats.new++;
+                    stats.newVol += salesVal; // New customer volume is exactly what they sold this month
+                } else {
+                    stats.stable++;
+                }
+                
+                stats.sales += salesVal;
+                stats.lymtd += lymtdVal; 
+                
+                regionData[reg] = (regionData[reg] || 0) + salesVal;
+                soData[so] = (soData[so] || 0) + salesVal;
+                custGrpData[custGrp] = (custGrpData[custGrp] || 0) + salesVal;
+
+                if (trend === 'Decline' && dropVal < 0) {
+                    churnList.push({ name: custName, region: reg !== 'All Regions' ? reg : so, drop: dropVal });
+                }
+
+                // SE Aggregation
+                if (seName !== '') {
+                    if(!seDataMap[seName]) {
+                        seDataMap[seName] = { sales: 0, lymtd: 0, growth: 0, decline: 0, new: 0 };
+                    }
+                    seDataMap[seName].sales += salesVal;
+                    seDataMap[seName].lymtd += lymtdVal;
+                    if (trend === 'Growth') seDataMap[seName].growth++;
+                    else if (trend === 'Decline') seDataMap[seName].decline++;
+                    else if (trend === 'New Customer' || trend === 'New') seDataMap[seName].new++;
+                }
+            });
+
+            // --- 1. MTD VOLUME LOGIC ---
+            $('#kpi-sales').text((stats.sales).toLocaleString(undefined, {maximumFractionDigits: 0}));
+            let volDiff = stats.sales - stats.lymtd;
+            let diffElem = $('#kpi-sales-diff');
+            let diffBadge = $('#kpi-sales-diff-badge');
+            let volCardBorder = $('#vol-card-border');
+            
+            if (volDiff > 0) {
+                diffElem.html(`&uarr; +${volDiff.toLocaleString(undefined, {maximumFractionDigits: 0})} YoY`);
+                diffBadge.removeClass('bg-red-50 text-[#DF2027] border-red-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-green-50 text-[#2E963D] border-green-100');
+                volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
+            } else if (volDiff < 0) {
+                diffElem.html(`&darr; ${volDiff.toLocaleString(undefined, {maximumFractionDigits: 0})} YoY`);
+                diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-red-50 text-[#DF2027] border-red-100');
+                volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
+            } else {
+                diffElem.html(`&minus; Flat YoY`);
+                diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-red-50 text-[#DF2027] border-red-100').addClass('bg-gray-50 text-gray-500 border-gray-200');
+                volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
+            }
+
+            // --- 2. IMPACT BADGES LOGIC ---
+            $('#kpi-growth').text(stats.growth.toLocaleString());
+            $('#kpi-growth-vol').text('+' + stats.growthVol.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' LPD');
+
+            $('#kpi-decline').text(stats.decline.toLocaleString());
+            $('#kpi-decline-vol').text('-' + stats.declineVol.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' LPD');
+
+            $('#kpi-new').text(stats.new.toLocaleString());
+            $('#kpi-new-vol').text('+' + stats.newVol.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' LPD');
+
+
+            // --- 3. CHART & TABLE RENDER ---
+            let overviewBarData = {};
+            let barLabel = "";
+            if ("{{ user.role }}" === "RH" || Object.keys(regionData).length <= 1) {
+                overviewBarData = soData;
+                barLabel = "Sales Office (MTD)";
+                $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> SO Performance (MTD)');
+            } else {
+                overviewBarData = regionData;
+                barLabel = "Regional Sales (MTD)";
+                $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg> Regional Sales (MTD)');
+            }
+
+            renderOverviewCharts(overviewBarData, stats, barLabel);
+            
+            let soArray = Object.keys(soData).map(key => ({ name: key, val: soData[key] }));
+            soArray.sort((a, b) => b.val - a.val);
+            renderRegionalCharts(soArray.slice(0, 5), soArray.slice(-5).reverse());
+            renderCustomerCharts(custGrpData);
+            
+            churnList.sort((a, b) => a.drop - b.drop);
+            let churnHtml = '';
+            churnList.slice(0, 15).forEach(c => {
+                churnHtml += `<tr class="hover:bg-red-50 transition-colors"><td class="px-4 py-3 font-medium text-gray-800">${c.name}</td><td class="px-4 py-3 text-gray-500">${c.region}</td><td class="px-4 py-3 font-bold text-[#DF2027] text-right">${c.drop.toFixed(2)}</td></tr>`;
+            });
+            $('#churnTableBody').html(churnHtml);
+
+            let seArray = Object.keys(seDataMap).map(se => {
+                let d = seDataMap[se];
+                let growthPct = 0;
+                if (d.lymtd > 0) {
+                    growthPct = ((d.sales - d.lymtd) / d.lymtd) * 100;
+                } else if (d.sales > 0) {
+                    growthPct = 100; 
+                }
+                
+                return [ se, d.sales.toFixed(1), d.lymtd.toFixed(1), growthPct.toFixed(1), d.growth, d.decline, d.new ];
+            });
+
+            initTable(data, globalColumns, iTrend);
+            initSETable(seArray);
+        }
+
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        const brandColors = { green: '#2E963D', red: '#DF2027', blue: '#3B82F6', palette: ['#2E963D', '#DF2027', '#F59E0B', '#3B82F6', '#64748B', '#14B8A6'] };
+
+        function renderOverviewCharts(barData, stats, barLabel) {
+            if(charts.overviewRegion) charts.overviewRegion.destroy();
+            if(charts.overviewHealth) charts.overviewHealth.destroy();
+
+            charts.overviewRegion = new Chart(document.getElementById('overviewRegionChart'), { 
+                type: 'bar', 
+                data: { labels: Object.keys(barData), datasets: [{ label: barLabel, data: Object.values(barData), backgroundColor: brandColors.green, borderRadius: 4, maxBarThickness: 50 }] }, 
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } } 
+            });
+            charts.overviewHealth = new Chart(document.getElementById('overviewHealthChart'), { 
+                type: 'doughnut', 
+                data: { labels: ['Growth', 'Decline', 'New', 'Stable'], datasets: [{ data: [stats.growth, stats.decline, stats.new, stats.stable], backgroundColor: [brandColors.green, brandColors.red, brandColors.blue, '#E2E8F0'], borderWidth: 0 }] }, 
+                options: { maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } } 
+            });
+        }
+        
+        function renderRegionalCharts(top5, bottom5) {
+            if(charts.topBranches) charts.topBranches.destroy();
+            if(charts.bottomBranches) charts.bottomBranches.destroy();
+
+            charts.topBranches = new Chart(document.getElementById('topBranchesChart'), { type: 'bar', data: { labels: top5.map(d => d.name), datasets: [{ data: top5.map(d => d.val), backgroundColor: brandColors.green, borderRadius: 4 }] }, options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+            charts.bottomBranches = new Chart(document.getElementById('bottomBranchesChart'), { type: 'bar', data: { labels: bottom5.map(d => d.name), datasets: [{ data: bottom5.map(d => d.val), backgroundColor: brandColors.red, borderRadius: 4 }] }, options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        }
+
+        function renderCustomerCharts(custGrpData) {
+            if(charts.customerGroup) charts.customerGroup.destroy();
+            charts.customerGroup = new Chart(document.getElementById('customerGroupChart'), { type: 'pie', data: { labels: Object.keys(custGrpData), datasets: [{ data: Object.values(custGrpData), backgroundColor: brandColors.palette }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' } } } });
+        }
+
+        function initTable(data, columns, trendIdx) {
+            if (myDataTable) { 
+                myDataTable.clear();
+                myDataTable.rows.add(data);
+                myDataTable.draw();
+                return;
+            }
+            
+            myDataTable = $('#salesTable').DataTable({
+                data: data, columns: columns, pageLength: 15, scrollX: true, scrollCollapse: true, autoWidth: false,
+                deferRender: true, 
+                columnDefs: [{ targets: trendIdx, render: function(data) {
+                    let trimData = String(data||'').trim();
+                    if (trimData === 'Growth') return '<span class="badge badge-growth">Growth</span>';
+                    if (trimData === 'Decline') return '<span class="badge badge-decline">Decline</span>';
+                    if (trimData === 'New Customer' || trimData === 'New') return '<span class="badge badge-new">New</span>';
+                    return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${trimData || 'Stable'}</span>`;
+                }}],
+                language: { search: "", searchPlaceholder: "Search within results..." },
+                dom: '<"top"f>rt<"bottom"p><"clear">'
+            });
+            
+            $('.dataTables_filter').appendTo('#table-actions');
+            $('.dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]');
+            $('.dataTables_filter label').contents().filter(function(){ return this.nodeType === 3; }).remove();
+        }
+
+        function initSETable(dataArray) {
+            if (seDataTable) { 
+                seDataTable.clear();
+                seDataTable.rows.add(dataArray);
+                seDataTable.draw();
+                return;
+            }
+            
+            seDataTable = $('#seTable').DataTable({
+                data: dataArray, pageLength: 15, scrollX: true, scrollCollapse: true, autoWidth: false,
+                order: [[1, 'desc']], 
+                columnDefs: [
+                    { targets: 0, className: 'font-bold text-gray-800' },
+                    { targets: [1, 2], className: 'text-right text-gray-600 font-mono' },
+                    { 
+                        targets: 3, 
+                        className: 'text-right font-bold',
+                        render: function(data) {
+                            let val = parseFloat(data);
+                            if (val > 0) return `<span class="text-[#2E963D]">+${val}%</span>`;
+                            if (val < 0) return `<span class="text-[#DF2027]">${val}%</span>`;
+                            return `<span class="text-gray-500">${val}%</span>`;
+                        }
+                    },
+                    { targets: [4, 5, 6], className: 'text-center' }
+                ],
+                language: { search: "", searchPlaceholder: "Search Executive..." },
+                dom: '<"top"f>rt<"bottom"p><"clear">'
+            });
+            
+            $('#seTable_wrapper .dataTables_filter').appendTo('#se-table-actions');
+            $('#seTable_wrapper .dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D]');
+            $('#seTable_wrapper .dataTables_filter label').contents().filter(function(){ return this.nodeType === 3; }).remove();
+        }
+
+        function trackEvent(actionName, details) {
+            fetch('/api/track', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: actionName, details: details }), keepalive: true
+            }).catch(e => console.log('Analytics ping failed'));
+        }
+
+        function switchTab(tabId) {
+            $('.tab-content').addClass('hidden'); $('#' + tabId).removeClass('hidden');
+            $('.sidebar-link').removeClass('active'); $(`[data-target="${tabId}"]`).addClass('active');
+            
+            const subtitles = { 
+                'view-overview': "Here is today's overview.", 
+                'view-regional': "Deep dive into geographic performance.", 
+                'view-team': "Review Sales Executive performance and territory health.",
+                'view-customer': "Analyze customer segments and churn risk." 
+            };
+            $('#header-subtitle').text(subtitles[tabId]);
+            
+            if(myDataTable) myDataTable.columns.adjust().draw();
+            if(seDataTable) seDataTable.columns.adjust().draw();
+            
+            trackEvent('Tab Switch', { 'view-overview': 'Overview', 'view-regional': 'Regional', 'view-team': 'Team Performance', 'view-customer': 'Customer' }[tabId]);
+        }
+
+        function exportData() {
+            trackEvent('Export CSV', 'Exported Global Filtered Table');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            let headers = myDataTable.columns().header().toArray().map(h => `"${h.innerText.trim()}"`);
+            csvContent += headers.join(",") + "\r\n";
+            myDataTable.rows({ search: 'applied' }).data().each(function(row) {
+                let safeRow = row.map(cell => cell == null ? '""' : `"${String(cell).replace(/"/g, '""')}"`);
+                csvContent += safeRow.join(",") + "\r\n";
+            });
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Heritage_Samarth_Export.csv");
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        window.addEventListener('pagehide', function() { trackEvent('Session End', 'User closed or navigated away from dashboard'); });
     </script>
 </body>
 </html>
