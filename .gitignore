@@ -1,0 +1,47 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Environment variables & secrets
+.env
+*.env
+
+# SQLite databases (if used)
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# VS Code settings
+.vscode/
+
+# MacOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Build & distribution
+build/
+dist/
+*.egg-info/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
