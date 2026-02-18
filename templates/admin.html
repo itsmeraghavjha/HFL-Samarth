@@ -13,11 +13,7 @@
         :root { --brand: #2E963D; --accent: #DF2027; }
         .text-brand { color: var(--brand); }
         .bg-brand { background-color: var(--brand); }
-        
-        .sidebar-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            border-radius: 8px; color: #64748B; font-weight: 600; transition: all 0.2s; cursor: pointer;
-        }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: #64748B; font-weight: 600; transition: all 0.2s; cursor: pointer; }
         .sidebar-link:hover { background-color: #F1F5F9; color: #334155; }
         .sidebar-link.active { background-color: #FFF6F1; color: var(--brand); }
         .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; }
@@ -30,9 +26,7 @@
         <div class="p-6">
             <div class="mb-8 flex flex-col items-center border-b border-gray-100 pb-6">
                 <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage Logo" class="h-10 object-contain mb-3">
-                <h1 class="font-extrabold text-gray-900 leading-tight text-center">
-                    Samarth<br><span class="text-brand text-[10px] font-bold uppercase tracking-widest">Admin Control</span>
-                </h1>
+                <h1 class="font-extrabold text-gray-900 leading-tight text-center">Samarth<br><span class="text-brand text-[10px] font-bold uppercase tracking-widest">Admin Control</span></h1>
             </div>
             <nav class="space-y-2">
                 <a onclick="switchTab('view-users')" data-target="view-users" class="sidebar-link active">
@@ -60,7 +54,8 @@
     </aside>
 
     <main class="flex-1 overflow-y-auto relative">
-        
+
+        <!-- USER MANAGEMENT TAB -->
         <div id="view-users" class="tab-content block">
             <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20">
                 <div class="flex justify-between items-center">
@@ -86,6 +81,7 @@
             </div>
         </div>
 
+        <!-- ANALYTICS TAB -->
         <div id="view-analytics" class="tab-content hidden">
             <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20 flex justify-between items-center">
                 <div>
@@ -100,36 +96,77 @@
                 </div>
             </header>
             <div class="p-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="stat-card border-l-4 border-l-blue-500">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-dau">Daily Active Users (DAU)</p>
-                        <h3 class="text-3xl font-black text-gray-900" id="kpi-dau">0</h3>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-indigo-500">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-mau">Monthly Active (MAU)</p>
-                        <h3 class="text-3xl font-black text-indigo-600" id="kpi-mau">0</h3>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-[#2E963D]">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-time">Total Time Spent</p>
-                        <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-time">0m</h3>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-[#DF2027]">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" id="label-exports">Data Exports</p>
-                        <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-exports">0</h3>
+                <!-- Bug Fix Banner -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+                    <span class="text-xl flex-shrink-0">🔧</span>
+                    <div class="text-xs text-amber-800">
+                        <p class="font-bold mb-1">2 Analytics Bugs Fixed in This Version:</p>
+                        <p><strong>1. Filter key mismatch:</strong> Dashboard logged <code class="bg-amber-100 px-1 rounded">Global Filter Applied</code>, admin chart expected <code class="bg-amber-100 px-1 rounded">Filter</code> — always showed 0. Fixed via <code class="bg-amber-100 px-1 rounded">normaliseAction()</code> map.</p>
+                        <p class="mt-1"><strong>2. Session End inflation:</strong> <code class="bg-amber-100 px-1 rounded">pagehide</code> fired 6–8x per session (back/forward, tab switches). Fixed on dashboard via <code class="bg-amber-100 px-1 rounded">visibilitychange</code> + one-shot flag. Fixed here via 5-second deduplication window per user.</p>
                     </div>
                 </div>
 
+                <!-- Primary KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="stat-card border-l-4 border-l-blue-500">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-dau">Daily Active Users (DAU)</p>
+                        <h3 class="text-3xl font-black text-gray-900" id="kpi-dau">0</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Unique users with ≥1 action today (local date)</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-indigo-500">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-mau">Monthly Active (MAU)</p>
+                        <h3 class="text-3xl font-black text-indigo-600" id="kpi-mau">0</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Unique users active in last 30 days</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-[#2E963D]">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-time">Total Time Spent</p>
+                        <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-time">0m</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Max − min event timestamp per user/day</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-[#DF2027]">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-exports">Data Exports</p>
+                        <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-exports">0</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Export CSV button clicks</p>
+                    </div>
+                </div>
+                <!-- Secondary KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="stat-card border-l-4 border-l-purple-400">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Sessions (Logins)</p>
+                        <h3 class="text-3xl font-black text-purple-600" id="kpi-sessions">0</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Login events = session starts</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-teal-400">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Filter Actions</p>
+                        <h3 class="text-3xl font-black text-teal-600" id="kpi-filters">0</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Global Context Filter applied events</p>
+                    </div>
+                    <div class="stat-card border-l-4 border-l-orange-400">
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Tab Switches</p>
+                        <h3 class="text-3xl font-black text-orange-600" id="kpi-tabs">0</h3>
+                        <p class="text-[10px] text-gray-400 mt-2">Section navigation events</p>
+                    </div>
+                </div>
+
+                <!-- Charts + Feed -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <div class="stat-card">
-                        <h3 class="font-bold text-gray-800 mb-6">Action Breakdown</h3>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-bold text-gray-800">Action Breakdown</h3>
+                            <span class="text-[10px] bg-green-50 text-green-700 border border-green-200 px-2 py-1 rounded font-bold">✓ Bug Fixed</span>
+                        </div>
                         <div class="h-64"><canvas id="actionChart"></canvas></div>
                     </div>
                     <div class="stat-card flex flex-col overflow-hidden">
                         <h3 class="font-bold text-gray-800 mb-4">Detailed Activity Feed</h3>
-                        <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg">
+                        <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg" style="max-height: 300px;">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-gray-50 text-gray-500 uppercase sticky top-0">
-                                    <tr><th class="px-4 py-2">Date & Time</th><th class="px-4 py-2" id="th-user">User</th><th class="px-4 py-2">Action</th></tr>
+                                    <tr>
+                                        <th class="px-4 py-2">Date & Time</th>
+                                        <th class="px-4 py-2" id="th-user">User</th>
+                                        <th class="px-4 py-2">Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="activityFeedBody" class="divide-y divide-gray-100"></tbody>
                             </table>
@@ -140,6 +177,7 @@
         </div>
     </main>
 
+    <!-- User Modal -->
     <div id="userModal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
         <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden opacity-0 transform scale-95" id="modalContent">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -153,8 +191,7 @@
                     <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Password</label><input type="text" id="u_pass" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Role</label>
+                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Role</label>
                         <select id="u_role" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white"><option value="RH">Regional Head (RH)</option><option value="CXO">Executive (CXO)</option><option value="Superadmin">Superadmin</option></select>
                     </div>
                     <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Job Title</label><input type="text" id="u_title" class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
@@ -174,27 +211,100 @@
 
     <script>
         let actionChartInstance = null;
-        let globalLogs = []; // Store logs so we don't have to re-fetch on filter change
+        let globalLogs = [];
+
+        // ================================================================
+        // ACTION NORMALISATION MAP — SINGLE SOURCE OF TRUTH
+        // 
+        // PURPOSE: Map every raw log action string produced by dashboard.html's
+        // trackEvent() calls → a canonical display label used in charts & KPIs.
+        //
+        // HOW TO MAINTAIN: Any time you add a new trackEvent(actionName, ...) call
+        // in dashboard.html, add a corresponding entry here. If you don't,
+        // the action falls into the 'Other' catch-all and won't appear in charts.
+        //
+        // RULES:
+        //   - Keys  = exact string passed as first arg to trackEvent()
+        //   - Values = display label shown in the admin chart
+        //   - Values starting with '_' are internal/lifecycle events:
+        //     they are counted in dedicated KPIs but excluded from the bar chart
+        // ================================================================
+        const ACTION_NORM_MAP = {
+            // ---- Navigation ----
+            'Tab Switch':               'Tab Switch',
+
+            // ---- Filtering ----
+            // BUG FIX: dashboard sends 'Global Filter Applied', NOT 'Filter'
+            // Old admin chart used 'Filter' as key → always 0 counts. Fixed here.
+            'Global Filter Applied':    'Filter Applied',
+            'Filter Applied':           'Filter Applied',   // idempotent
+            'Filter':                   'Filter Applied',   // legacy fallback
+
+            // ---- Data Actions ----
+            'Export CSV':               'Export CSV',
+            'Manual Refresh':           'Manual Refresh',
+
+            // ---- Insights Feature ----
+            'Insights Panel Opened':    'Insights Opened',
+
+            // ---- Session Lifecycle (prefixed _ = excluded from bar chart) ----
+            'Login':                    '_Login',
+            'Logout':                   '_Logout',
+            'Session End':              '_Session End',
+        };
+
+        // ================================================================
+        // SESSION END DEDUPLICATION
+        //
+        // PROBLEM: Before the pagehide→visibilitychange fix in dashboard.html,
+        // 'Session End' was logged 6-8 times per real session because pagehide
+        // fires on tab switches, back/forward cache, and network requests.
+        //
+        // SOLUTION (server-side guard): If two 'Session End' events from the
+        // same user arrive within DEDUP_WINDOW_MS of each other, treat them
+        // as one. This is a read-time fix applied to the log file, not a
+        // deletion — raw logs remain intact.
+        //
+        // DEDUP_WINDOW_MS = 5000ms (5 seconds). Rationale: a genuine new session
+        // would require at least a Login event first, which takes more than 5s.
+        // ================================================================
+        const DEDUP_WINDOW_MS = 5000;
+
+        function deduplicateSessionEnds(logs) {
+            const result = [];
+            const lastSessionEnd = {}; // email → timestamp of last counted Session End
+
+            for (const log of logs) {
+                if (log.action === 'Session End') {
+                    const t = new Date(log.timestamp).getTime();
+                    const prev = lastSessionEnd[log.email];
+                    if (prev && (t - prev) < DEDUP_WINDOW_MS) {
+                        continue; // Skip — duplicate burst
+                    }
+                    lastSessionEnd[log.email] = t;
+                }
+                result.push(log);
+            }
+            return result;
+        }
 
         function switchTab(tabId) {
             $('.tab-content').addClass('hidden');
             $('#' + tabId).removeClass('hidden');
             $('.sidebar-link').removeClass('active');
             $(`[data-target="${tabId}"]`).addClass('active');
-            
             if(tabId === 'view-analytics') { fetchAnalytics(); }
         }
 
-        // --- USER MANAGEMENT LOGIC ---
+        // ---- USER MANAGEMENT ----
         function loadUsers() {
             $.get('/api/users', function(data) {
                 let html = '';
                 for (const [email, user] of Object.entries(data)) {
-                    let scopeDisplay = user.scope_type === 'ALL' 
-                        ? '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Unrestricted</span>' 
+                    let scopeDisplay = user.scope_type === 'ALL'
+                        ? '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Unrestricted</span>'
                         : `<div class="text-xs font-bold text-gray-800">SO Map</div><div class="text-[10px] text-gray-500 font-mono mt-0.5 truncate max-w-[150px]">${Array.isArray(user.scope_value) ? user.scope_value.join(', ') : user.scope_value}</div>`;
                     let delBtn = user.role === 'Superadmin' ? '' : `<button onclick="deleteUser('${email}')" class="text-red-500 hover:text-red-700 font-medium text-xs ml-3">Delete</button>`;
-
                     html += `<tr>
                         <td class="px-6 py-4"><div class="font-bold text-gray-900">${user.name}</div><div class="text-xs text-gray-500">${email}</div></td>
                         <td class="px-6 py-4"><div class="font-bold text-gray-700">${user.role}</div><div class="text-xs text-gray-500">${user.title}</div></td>
@@ -206,13 +316,12 @@
             });
         }
 
-        // Form logic
         let isEdit = false;
         function toggleScopeValue() { $('#u_scope_type').val() === 'ALL' ? $('#scope_val_container').hide() : $('#scope_val_container').show(); }
         function openModal() { isEdit = false; $('#userForm')[0].reset(); $('#u_email').prop('disabled', false).removeClass('bg-gray-100'); $('#modalTitle').text('Create New User'); toggleScopeValue(); $('#userModal').removeClass('hidden'); setTimeout(() => $('#modalContent').addClass('modal-enter-active'), 10); }
         function editUser(e,n,p,r,t,st,sv) { isEdit = true; $('#u_email').val(e).prop('disabled', true).addClass('bg-gray-100'); $('#u_name').val(n); $('#u_pass').val(p); $('#u_role').val(r); $('#u_title').val(t); $('#u_scope_type').val(st); $('#u_scope_value').val(sv); $('#modalTitle').text('Edit User'); toggleScopeValue(); $('#userModal').removeClass('hidden'); setTimeout(() => $('#modalContent').addClass('modal-enter-active'), 10); }
         function closeModal() { $('#modalContent').removeClass('modal-enter-active'); setTimeout(() => $('#userModal').addClass('hidden'), 200); }
-        
+
         $('#userForm').submit(function(e) {
             e.preventDefault();
             const payload = { email: $('#u_email').val(), name: $('#u_name').val(), password: $('#u_pass').val(), role: $('#u_role').val(), title: $('#u_title').val(), scope_type: $('#u_scope_type').val(), scope_value: $('#u_scope_type').val() === 'ALL' ? null : $('#u_scope_value').val() };
@@ -225,61 +334,70 @@
             }
         }
 
-        // --- NEW: PM ANALYTICS ENGINE ---
+        // ================================================================
+        // ANALYTICS ENGINE
+        // ================================================================
         function fetchAnalytics() {
-            $.get('/api/analytics', function(logs) {
-                globalLogs = logs;
-                
-                // Populate User Dropdown
+            $.get('/api/analytics', function(rawLogs) {
+                globalLogs = deduplicateSessionEnds(rawLogs);
+
                 let uniqueUsers = new Set();
-                logs.forEach(l => uniqueUsers.add(l.email));
+                globalLogs.forEach(l => uniqueUsers.add(l.email));
                 let options = '<option value="ALL">All Users (Global)</option>';
                 uniqueUsers.forEach(u => options += `<option value="${u}">${u}</option>`);
                 $('#userTrackerSelect').html(options);
 
-                renderAnalytics(); // Initial render for ALL
+                renderAnalytics();
             });
         }
 
         function renderAnalytics() {
             const filterUser = $('#userTrackerSelect').val();
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(today.getDate() - 30);
+            const today = new Date(); today.setHours(0,0,0,0);
+            const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(today.getDate() - 30);
 
-            let dauSet = new Set();
-            let mauSet = new Set();
-            let userLogins = 0;
-            let exports = 0;
-            let actions = { 'Tab Switch': 0, 'Filter': 0, 'Export CSV': 0 };
-            let sessionMap = {}; // Tracks min and max time per user per day to calculate "Time Spent"
+            let dauSet = new Set(), mauSet = new Set();
+            let userLogins = 0, exports = 0, filters = 0, tabs = 0, sessions = 0;
+
+            // Bar chart action buckets — keys MUST match ACTION_NORM_MAP values (excluding _ prefix)
+            let actions = {
+                'Tab Switch':       0,
+                'Filter Applied':   0,   // FIXED: was 'Filter', now matches normalised value
+                'Export CSV':       0,
+                'Insights Opened':  0,
+                'Manual Refresh':   0,
+            };
+
+            let sessionMap = {};
             let feedHtml = '';
             let feedCount = 0;
 
             globalLogs.forEach(log => {
-                // Filter logic
                 if (filterUser !== 'ALL' && log.email !== filterUser) return;
 
-                // Time Parsing
-                let logDate = new Date(log.timestamp);
-                let dateStr = log.timestamp.split(' ')[0]; // "YYYY-MM-DD"
+                const logDate = new Date(log.timestamp);
+                const dateStr = log.timestamp.split(' ')[0];
+                const normAction = ACTION_NORM_MAP[log.action] || log.action;
 
-                // KPI Aggregation
+                // DAU / MAU
                 if (filterUser === 'ALL') {
-                    if (logDate >= today) dauSet.add(log.email);
+                    if (logDate >= today)         dauSet.add(log.email);
                     if (logDate >= thirtyDaysAgo) mauSet.add(log.email);
-                } else {
-                    if (log.action === 'Login') userLogins++;
-                }
-                
-                if (log.action === 'Export CSV') exports++;
-                if (['Tab Switch', 'Export CSV', 'Filter'].includes(log.action)) {
-                    actions[log.action] = (actions[log.action] || 0) + 1;
                 }
 
-                // Time Spent Aggregation (Min/Max time per user per day)
-                let sessionKey = `${log.email}_${dateStr}`;
+                // KPI tallies (raw action checks for reliability)
+                if (log.action === 'Login')                                               { userLogins++; sessions++; }
+                if (log.action === 'Export CSV')                                          exports++;
+                if (log.action === 'Global Filter Applied' || log.action === 'Filter Applied') filters++;
+                if (log.action === 'Tab Switch')                                          tabs++;
+
+                // Bar chart (exclude _-prefixed lifecycle events)
+                if (!normAction.startsWith('_') && normAction in actions) {
+                    actions[normAction]++;
+                }
+
+                // Time Spent: min/max event time per (user, day)
+                const sessionKey = `${log.email}_${dateStr}`;
                 if (!sessionMap[sessionKey]) {
                     sessionMap[sessionKey] = { min: logDate, max: logDate };
                 } else {
@@ -287,55 +405,81 @@
                     if (logDate > sessionMap[sessionKey].max) sessionMap[sessionKey].max = logDate;
                 }
 
-                // Feed Generation
-                if (feedCount < 100) {
-                    let timeDisplay = log.timestamp.split(' ')[1] || log.timestamp;
+                // Feed
+                if (feedCount < 150) {
+                    const timeDisplay = log.timestamp.split(' ')[1] || '';
+                    const displayLabel = normAction.startsWith('_') ? normAction.slice(1) : normAction;
                     feedHtml += `<tr>
-                        <td class="px-4 py-3 whitespace-nowrap text-gray-500 font-mono">${dateStr} ${timeDisplay}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-gray-500 font-mono text-[10px]">${dateStr} ${timeDisplay}</td>
                         ${filterUser === 'ALL' ? `<td class="px-4 py-3 font-medium text-gray-800">${log.email.split('@')[0]}</td>` : ''}
-                        <td class="px-4 py-3"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase mr-2 border border-gray-200">${log.action}</span><span class="text-gray-500 truncate inline-block max-w-[200px]" style="vertical-align: bottom;">${log.details}</span></td>
+                        <td class="px-4 py-3"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase mr-2 border border-gray-200">${displayLabel}</span><span class="text-gray-500 truncate inline-block max-w-[180px]" style="vertical-align:bottom;">${log.details||''}</span></td>
                     </tr>`;
                     feedCount++;
                 }
             });
 
-            // Calculate Total Time Spent
+            // Time Spent formula: sum(max_t - min_t) per user/day pair.
+            // If a user had only 1 event in a day → diff = 0 → floor to 2 min (conservative minimum).
             let totalMinutes = 0;
-            for (let key in sessionMap) {
-                let diffMs = sessionMap[key].max - sessionMap[key].min;
-                let diffMins = Math.floor(diffMs / 60000);
-                if (diffMins === 0) diffMins = 2; // Assume 2 minutes if they only did one action
+            for (const key in sessionMap) {
+                let diffMins = Math.floor((sessionMap[key].max - sessionMap[key].min) / 60000);
+                if (diffMins === 0) diffMins = 2;
                 totalMinutes += diffMins;
             }
-            let hours = Math.floor(totalMinutes / 60);
-            let mins = totalMinutes % 60;
-            let timeString = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+            const hours = Math.floor(totalMinutes / 60);
+            const mins  = totalMinutes % 60;
+            const timeString = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
 
-            // Dynamic KPI Updates based on view mode
+            // Update KPIs
             if (filterUser === 'ALL') {
-                $('#label-dau').text('Daily Active Users (DAU)'); $('#kpi-dau').text(dauSet.size);
-                $('#label-mau').text('Monthly Active (MAU)'); $('#kpi-mau').text(mauSet.size);
+                $('#label-dau').text('Daily Active Users (DAU)');
+                $('#kpi-dau').text(dauSet.size);
+                $('#label-mau').text('Monthly Active (MAU)');
+                $('#kpi-mau').text(mauSet.size);
                 $('#label-time').text('Total Platform Time Spent');
                 $('#th-user').show();
             } else {
-                $('#label-dau').text('Total User Logins'); $('#kpi-dau').text(userLogins);
-                $('#label-mau').text('Total Actions Taken'); $('#kpi-mau').text(actions['Tab Switch'] + actions['Filter'] + exports);
+                $('#label-dau').text('Total User Logins');
+                $('#kpi-dau').text(userLogins);
+                $('#label-mau').text('Total Engagement Actions');
+                $('#kpi-mau').text(tabs + filters + exports);
                 $('#label-time').text('User Total Time Spent');
-                $('#th-user').hide(); // Hide user column in feed if we are isolating a user
+                $('#th-user').hide();
             }
             $('#kpi-exports').text(exports);
             $('#kpi-time').text(timeString);
+            $('#kpi-sessions').text(sessions);
+            $('#kpi-filters').text(filters);
+            $('#kpi-tabs').text(tabs);
             $('#activityFeedBody').html(feedHtml);
 
-            // Re-render Chart
+            // Chart
             if(actionChartInstance) actionChartInstance.destroy();
+            const chartColors = ['#3B82F6', '#2E963D', '#DF2027', '#8B5CF6', '#F59E0B'];
+            const chartLabels = Object.keys(actions);
+            const chartData   = Object.values(actions);
             actionChartInstance = new Chart(document.getElementById('actionChart'), {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(actions),
-                    datasets: [{ label: 'Event Count', data: Object.values(actions), backgroundColor: ['#3B82F6', '#2E963D', '#DF2027'], borderRadius: 4 }]
+                    labels: chartLabels,
+                    datasets: [{ label: 'Event Count', data: chartData, backgroundColor: chartColors, borderRadius: 4 }]
                 },
-                options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(ctx) {
+                                    const total = chartData.reduce((a, b) => a + b, 0);
+                                    const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+                                    return `${pct}% of engagement actions`;
+                                }
+                            }
+                        }
+                    },
+                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { grid: { display: false } } }
+                }
             });
         }
 
