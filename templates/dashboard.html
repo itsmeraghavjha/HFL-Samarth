@@ -364,7 +364,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button id="insightsBellBtn" onclick="openInsightsPanel()" title="Smart Insights & Alerts"
+                    <button id="insightsBellBtn" onclick="openInsightsPanel()" title="Samarth Insights & Alerts"
                         class="relative p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 transition-all focus:outline-none focus:ring-2 focus:ring-brand group">
                         <svg id="bellIcon" class="w-6 h-6 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
@@ -448,7 +448,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                     <div class="stat-card col-span-2">
                         <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2" id="overview-chart-title"></h3>
                         <div class="h-64"><canvas id="overviewRegionChart"></canvas></div>
@@ -456,6 +456,27 @@
                     <div class="stat-card">
                         <h3 class="font-bold text-gray-800 mb-6">Account Health Portfolio</h3>
                         <div class="h-56 relative"><canvas id="overviewHealthChart"></canvas></div>
+                    </div>
+                </div> -->
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <div class="stat-card col-span-2">
+                        <div class="flex justify-between items-start mb-5">
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-sm" id="overview-chart-title"></h3>
+                                <p class="text-xs text-gray-400 mt-0.5" id="overview-chart-subtitle"></p>
+                            </div>
+                            <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-1 rounded font-bold uppercase tracking-wider">MTD vs LYMTD</span>
+                        </div>
+                        <div class="h-64"><canvas id="overviewRegionChart"></canvas></div>
+                    </div>
+                    <div class="stat-card flex flex-col">
+                        <div class="mb-4">
+                            <h3 class="font-bold text-gray-800 text-sm">Month-End Projection</h3>
+                            <p class="text-xs text-gray-400 mt-0.5" id="projection-subtitle">Based on current daily run rate</p>
+                        </div>
+                        <div class="h-44"><canvas id="overviewHealthChart"></canvas></div>
+                        <div id="projection-verdict" class="mt-auto pt-3 border-t border-gray-100 text-xs font-bold text-center rounded-lg py-2"></div>
                     </div>
                 </div>
 
@@ -896,32 +917,73 @@
     // DASHBOARD RENDER ENGINE
     // =====================================================
     function updateDashboardComponents(data) {
+        // const idx      = col => globalColumns.findIndex(c => c.title === col);
+        // const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
+        // const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
+        // const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+        // const iLYMTD   = idx('LYMTD');
+
+        // let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0 };
+        // let regionData = {}, soData = {};
+
+        // data.forEach(row => {
+        //     let trend    = iTrend   > -1 ? String(row[iTrend]   || '').trim() : 'Stable';
+        //     let salesVal = iSales   > -1 ? parseFloat(row[iSales])   || 0 : 0;
+        //     let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
+        //     let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
+        //     let reg      = iRegion  > -1 ? String(row[iRegion]  || 'Unknown').trim() : 'All Regions';
+        //     let so       = iSO      > -1 ? String(row[iSO]      || 'Unknown').trim() : 'All SOs';
+
+        //     if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
+        //     else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
+        //     else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
+        //     else                                                 { stats.stable++; }
+
+        //     stats.sales += salesVal;
+        //     stats.lymtd += lymtdVal;
+        //     regionData[reg]  = (regionData[reg]  || 0) + salesVal;
+        //     soData[so]       = (soData[so]        || 0) + salesVal;
+        // });
+
         const idx      = col => globalColumns.findIndex(c => c.title === col);
         const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
         const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
         const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
         const iLYMTD   = idx('LYMTD');
+        const iLM      = idx('LM');
+        const iLYSM    = idx('LYSM');
+        const iProdCol = idx('Product');
 
-        let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0 };
-        let regionData = {}, soData = {};
+        let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0, totalLM: 0, totalLYSM: 0 };
+        let regionMTD = {}, regionLYMTD = {}, soMTD = {}, soLYMTD = {}, prodMTD = {}, prodLYMTD = {};
 
         data.forEach(row => {
-            let trend    = iTrend   > -1 ? String(row[iTrend]   || '').trim() : 'Stable';
-            let salesVal = iSales   > -1 ? parseFloat(row[iSales])   || 0 : 0;
+            let trend    = iTrend    > -1 ? String(row[iTrend]    || '').trim() : 'Stable';
+            let salesVal = iSales    > -1 ? parseFloat(row[iSales])    || 0 : 0;
             let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
+            let lmVal    = iLM      > -1 ? parseFloat(row[iLM])      || 0 : 0;
+            let lysmVal  = iLYSM    > -1 ? parseFloat(row[iLYSM])    || 0 : 0;
             let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
-            let reg      = iRegion  > -1 ? String(row[iRegion]  || 'Unknown').trim() : 'All Regions';
-            let so       = iSO      > -1 ? String(row[iSO]      || 'Unknown').trim() : 'All SOs';
+            let reg      = iRegion   > -1 ? String(row[iRegion]   || 'Unknown').trim() : 'All';
+            let so       = iSO      > -1 ? String(row[iSO]       || 'Unknown').trim() : 'All SOs';
+            let prod     = iProdCol > -1 ? String(row[iProdCol]  || 'Unknown').trim() : 'All';
 
             if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
             else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
             else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
             else                                                 { stats.stable++; }
 
-            stats.sales += salesVal;
-            stats.lymtd += lymtdVal;
-            regionData[reg]  = (regionData[reg]  || 0) + salesVal;
-            soData[so]       = (soData[so]        || 0) + salesVal;
+            stats.sales     += salesVal;
+            stats.lymtd     += lymtdVal;
+            stats.totalLM   += lmVal;
+            stats.totalLYSM += lysmVal;
+
+            regionMTD[reg]   = (regionMTD[reg]   || 0) + salesVal;
+            regionLYMTD[reg] = (regionLYMTD[reg] || 0) + lymtdVal;
+            soMTD[so]        = (soMTD[so]        || 0) + salesVal;
+            soLYMTD[so]      = (soLYMTD[so]      || 0) + lymtdVal;
+            prodMTD[prod]    = (prodMTD[prod]     || 0) + salesVal;
+            prodLYMTD[prod]  = (prodLYMTD[prod]  || 0) + lymtdVal;
         });
 
         // KPI cards
@@ -950,16 +1012,38 @@
         $('#kpi-new-vol').text('+' + stats.newVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
 
         // Overview chart
-        let overviewBarData = {};
-        if ("{{ user.role }}" === "RH" || Object.keys(regionData).length <= 1) {
-            overviewBarData = soData;
-            $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> SO Performance (MTD)');
-        } else {
-            overviewBarData = regionData;
-            $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg> Regional Sales (MTD)');
-        }
+        // let overviewBarData = {};
+        // if ("{{ user.role }}" === "RH" || Object.keys(regionData).length <= 1) {
+        //     overviewBarData = soData;
+        //     $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> SO Performance (MTD)');
+        // } else {
+        //     overviewBarData = regionData;
+        //     $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg> Regional Sales (MTD)');
+        // }
 
-        renderOverviewCharts(overviewBarData, stats);
+        // renderOverviewCharts(overviewBarData, stats);
+
+
+        // Overview charts — role-aware grouping
+        const _role = "{{ user.role }}";
+        let chartMTD, chartLYMTD, chartTitle, chartSubtitle;
+        if (_role === 'BM' || Object.keys(regionMTD).length <= 1) {
+            chartMTD      = prodMTD;    chartLYMTD  = prodLYMTD;
+            chartTitle    = 'Product Performance — MTD vs Same Period Last Year';
+            chartSubtitle = 'Milk · Curd · ButterMilk — YoY% shown above bars';
+        } else if (_role === 'RH') {
+            chartMTD      = soMTD;      chartLYMTD  = soLYMTD;
+            chartTitle    = 'Sales Office Performance — MTD vs Same Period Last Year';
+            chartSubtitle = 'Your SOs ranked by volume — YoY% shown above bars';
+        } else {
+            chartMTD      = regionMTD;  chartLYMTD  = regionLYMTD;
+            chartTitle    = 'Regional Performance — MTD vs Same Period Last Year';
+            chartSubtitle = 'All regions · YoY% shown above bars';
+        }
+        $('#overview-chart-title').text(chartTitle);
+        $('#overview-chart-subtitle').text(chartSubtitle);
+
+        renderOverviewCharts(chartMTD, chartLYMTD, stats);
 
         // ── PERFORMANCE: Mark customer tab dirty; only render if it's visible ──
         lastCustomerData = data;
@@ -976,15 +1060,76 @@
     // =====================================================
     // CHARTS  — update-in-place to avoid flicker
     // =====================================================
-    function renderOverviewCharts(barData, stats) {
-        const barLabels = Object.keys(barData);
-        const barVals   = Object.values(barData);
+    // function renderOverviewCharts(barData, stats) {
+    //     const barLabels = Object.keys(barData);
+    //     const barVals   = Object.values(barData);
 
-        // ── PERFORMANCE: Update in-place, destroy only if labels changed ──
+    //     // ── PERFORMANCE: Update in-place, destroy only if labels changed ──
+    //     if (charts.overviewRegion) {
+    //         const sameLabels = JSON.stringify(charts.overviewRegion.data.labels) === JSON.stringify(barLabels);
+    //         if (sameLabels) {
+    //             charts.overviewRegion.data.datasets[0].data = barVals;
+    //             charts.overviewRegion.update('none');
+    //         } else {
+    //             charts.overviewRegion.destroy();
+    //             charts.overviewRegion = null;
+    //         }
+    //     }
+    //     if (!charts.overviewRegion) {
+    //         charts.overviewRegion = new Chart(document.getElementById('overviewRegionChart'), {
+    //             type: 'bar',
+    //             data: { labels: barLabels, datasets: [{ label: 'MTD Volume', data: barVals, backgroundColor: brandColors.green, borderRadius: 4, maxBarThickness: 50 }] },
+    //             options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+    //         });
+    //     }
+
+    //     const healthVals = [stats.growth, stats.decline, stats.new, stats.stable];
+    //     if (charts.overviewHealth) {
+    //         charts.overviewHealth.data.datasets[0].data = healthVals;
+    //         charts.overviewHealth.update('none');
+    //     } else {
+    //         charts.overviewHealth = new Chart(document.getElementById('overviewHealthChart'), {
+    //             type: 'doughnut',
+    //             data: { labels: ['Growth', 'Decline', 'New', 'Stable'], datasets: [{ data: healthVals, backgroundColor: [brandColors.green, brandColors.red, brandColors.blue, '#E2E8F0'], borderWidth: 0 }] },
+    //             options: { maintainAspectRatio: false, animation: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } }
+    //         });
+    //     }
+    // }
+
+    function renderOverviewCharts(mtdData, lymtdData, stats) {
+        const labels   = Object.keys(mtdData);
+        const mtdVals  = labels.map(k => mtdData[k]);
+        const lymtdVals = labels.map(k => lymtdData[k] || 0);
+
+        // ── YoY% label plugin — draws % above each MTD bar ──
+        const yoyLabelPlugin = {
+            id: 'yoyLabels',
+            afterDatasetsDraw(chart) {
+                const ctx  = chart.ctx;
+                const meta = chart.getDatasetMeta(0);   // MTD dataset
+                meta.data.forEach((bar, i) => {
+                    const mtd   = mtdVals[i]   || 0;
+                    const lymtd = lymtdVals[i] || 0;
+                    if (!lymtd) return;
+                    const pct   = ((mtd - lymtd) / lymtd * 100);
+                    const sign  = pct >= 0 ? '+' : '';
+                    const color = pct >= 0 ? '#2E963D' : '#DF2027';
+                    ctx.save();
+                    ctx.fillStyle  = color;
+                    ctx.font       = 'bold 10px Inter, sans-serif';
+                    ctx.textAlign  = 'center';
+                    ctx.fillText(`${sign}${pct.toFixed(0)}%`, bar.x, bar.y - 6);
+                    ctx.restore();
+                });
+            }
+        };
+
+        // ── Chart 1: Grouped bars MTD vs LYMTD ──────────────
         if (charts.overviewRegion) {
-            const sameLabels = JSON.stringify(charts.overviewRegion.data.labels) === JSON.stringify(barLabels);
+            const sameLabels = JSON.stringify(charts.overviewRegion.data.labels) === JSON.stringify(labels);
             if (sameLabels) {
-                charts.overviewRegion.data.datasets[0].data = barVals;
+                charts.overviewRegion.data.datasets[0].data = mtdVals;
+                charts.overviewRegion.data.datasets[1].data = lymtdVals;
                 charts.overviewRegion.update('none');
             } else {
                 charts.overviewRegion.destroy();
@@ -994,21 +1139,111 @@
         if (!charts.overviewRegion) {
             charts.overviewRegion = new Chart(document.getElementById('overviewRegionChart'), {
                 type: 'bar',
-                data: { labels: barLabels, datasets: [{ label: 'MTD Volume', data: barVals, backgroundColor: brandColors.green, borderRadius: 4, maxBarThickness: 50 }] },
-                options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'MTD (This Year)',      data: mtdVals,   backgroundColor: '#2E963D', borderRadius: 4, maxBarThickness: 32 },
+                        { label: 'LYMTD (Last Year)',    data: lymtdVals, backgroundColor: '#E2E8F0', borderRadius: 4, maxBarThickness: 32 },
+                    ]
+                },
+                plugins: [yoyLabelPlugin],
+                options: {
+                    maintainAspectRatio: false,
+                    animation: false,
+                    layout: { padding: { top: 20 } },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { size: 11 }, boxWidth: 12, padding: 12 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterBody(items) {
+                                    const i    = items[0].dataIndex;
+                                    const mtd  = mtdVals[i]   || 0;
+                                    const ly   = lymtdVals[i] || 0;
+                                    if (!ly) return '';
+                                    const pct  = ((mtd - ly) / ly * 100);
+                                    return `YoY: ${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, ticks: { maxTicksLimit: 5 } }
+                    }
+                }
             });
         }
 
-        const healthVals = [stats.growth, stats.decline, stats.new, stats.stable];
+        // ── Chart 2: Month-end projection ────────────────────
+        const now              = new Date();
+        const daysInMonth      = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const daysInLastMonth  = new Date(now.getFullYear(), now.getMonth(),     0).getDate();
+        const daysInLYSM       = new Date(now.getFullYear() - 1, now.getMonth() + 1, 0).getDate();
+        const daysSoFar        = now.getDate() - 1 || 1;
+
+        const projected = Math.round(stats.sales  * daysInMonth);
+        const lastMonth = Math.round(stats.totalLM   * daysInLastMonth);
+        const lysm      = Math.round(stats.totalLYSM * daysInLYSM);
+
+        const projColors = [
+            projected >= lysm ? '#2E963D' : '#DF2027',
+            '#94A3B8',
+            '#CBD5E1',
+        ];
+
+        $('#projection-subtitle').text(`Run rate × ${daysInMonth} days · ${daysSoFar} days elapsed`);
+
         if (charts.overviewHealth) {
-            charts.overviewHealth.data.datasets[0].data = healthVals;
+            charts.overviewHealth.data.datasets[0].data            = [projected, lastMonth, lysm];
+            charts.overviewHealth.data.datasets[0].backgroundColor = projColors;
             charts.overviewHealth.update('none');
         } else {
             charts.overviewHealth = new Chart(document.getElementById('overviewHealthChart'), {
-                type: 'doughnut',
-                data: { labels: ['Growth', 'Decline', 'New', 'Stable'], datasets: [{ data: healthVals, backgroundColor: [brandColors.green, brandColors.red, brandColors.blue, '#E2E8F0'], borderWidth: 0 }] },
-                options: { maintainAspectRatio: false, animation: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } }
+                type: 'bar',
+                data: {
+                    labels: ['Projected', 'Last Month', 'Same Month LY'],
+                    datasets: [{
+                        data: [projected, lastMonth, lysm],
+                        backgroundColor: projColors,
+                        borderRadius: 6,
+                        maxBarThickness: 48,
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ` ${ctx.raw.toLocaleString('en-IN')} LPD`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                        y: { beginAtZero: true, ticks: { maxTicksLimit: 4, font: { size: 10 } } }
+                    }
+                }
             });
+        }
+
+        // Verdict pill
+        const verdictEl = document.getElementById('projection-verdict');
+        if (!lysm) {
+            verdictEl.textContent = '';
+        } else {
+            const diff    = projected - lysm;
+            const diffPct = ((diff / lysm) * 100).toFixed(1);
+            const ahead   = diff >= 0;
+            verdictEl.style.background = ahead ? '#DCFCE7' : '#FEE2E2';
+            verdictEl.style.color      = ahead ? '#166534' : '#991B1B';
+            verdictEl.textContent      = ahead
+                ? `▲ On track — projected ${diffPct}% ahead of last year`
+                : `▼ Shortfall — projected ${Math.abs(diffPct)}% below last year`;
         }
     }
 

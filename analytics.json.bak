@@ -1,5 +1,12 @@
 [
     {
+        "timestamp": "2026-02-19 10:52:47",
+        "email": "rh.ts1@heritagefoods.in",
+        "role": "RH",
+        "action": "Session End",
+        "details": "User navigated away or minimised tab"
+    },
+    {
         "timestamp": "2026-02-19 10:44:25",
         "email": "rh.ts1@heritagefoods.in",
         "role": "RH",
