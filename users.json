@@ -15,9 +15,17 @@
         "scope_type": "ALL",
         "scope_value": null
     },
+    "coo@heritagefoods.in": {
+        "password": "admin",
+        "name": "Samba Murthy Garu",
+        "role": "CXO",
+        "title": "Chief Operating Officer",
+        "scope_type": "ALL",
+        "scope_value": null
+    },
     "rh.tn@heritagefoods.in": {
         "password": "admin",
-        "name": "Sriram / Abbas",
+        "name": "Ashok",
         "role": "RH",
         "title": "Regional Head - Tamilnadu",
         "scope_type": "SO",

@@ -23,6 +23,7 @@
         .text-brand { color: var(--heritage-green); }
         .bg-brand { background-color: var(--heritage-green); }
         
+        /* ── Sidebar ── */
         #sidebar { transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; width: 16rem; }
         #sidebar.collapsed { width: 5.5rem; }
         #sidebar.collapsed .sidebar-text, #sidebar.collapsed .logo-full, #sidebar.collapsed .user-info, #sidebar.collapsed .sign-out-text { display: none; }
@@ -39,26 +40,26 @@
         .sidebar-link.active { background-color: #FFF6F1; color: #334155; font-weight: 600; }
         .sidebar-link.active svg { color: var(--heritage-slate); }
         
-        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; transition: border-color 0.3s; display: flex; flex-direction: column; justify-content: space-between;}
+        /* ── Stat cards ── */
+        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; transition: border-color 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
         
+        /* ── DataTables ── */
         table.dataTable th, table.dataTable td { white-space: nowrap !important; }
         table.dataTable thead th { background-color: #F8FAFC; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; padding: 16px !important; border-bottom: 2px solid #E2E8F0 !important; }
         table.dataTable tbody td { padding: 16px !important; color: #334155; font-size: 0.875rem; border-bottom: 1px solid #F1F5F9; }
-        
         .dataTables_scrollBody::-webkit-scrollbar { height: 8px; }
         .dataTables_scrollBody::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb:hover { background: var(--heritage-green); }
         .dataTables_wrapper .dataTables_paginate .paginate_button.current { background: var(--heritage-green) !important; color: white !important; border: none !important; }
 
+        /* ── Trend badges ── */
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-        .badge-growth { background: #DCFCE7; color: var(--heritage-green); border: 1px solid #BBF7D0;}
+        .badge-growth { background: #DCFCE7; color: var(--heritage-green); border: 1px solid #BBF7D0; }
         .badge-decline { background: #FEE2E2; color: var(--heritage-red); border: 1px solid #FECACA; }
-        .badge-new { background: #E0E7FF; color: #4338CA; border: 1px solid #C7D2FE;}
+        .badge-new { background: #E0E7FF; color: #4338CA; border: 1px solid #C7D2FE; }
 
-        /* =====================================================
-           INSIGHTS PANEL STYLES
-        ===================================================== */
+        /* ── Insights Panel ── */
         #insightsPanel {
             position: fixed; top: 0; right: -480px; height: 100vh;
             width: 460px; background: #fff; z-index: 100;
@@ -74,10 +75,7 @@
         }
         #panelOverlay.active { opacity: 1; pointer-events: all; }
 
-        .insight-card {
-            border-radius: 10px; padding: 14px; margin-bottom: 10px;
-            border: 1px solid; cursor: pointer; transition: all 0.2s;
-        }
+        .insight-card { border-radius: 10px; padding: 14px; margin-bottom: 10px; border: 1px solid; cursor: pointer; transition: all 0.2s; }
         .insight-card:hover { transform: translateX(-2px); }
         .insight-card.critical { background: #FFF5F5; border-color: #FECACA; }
         .insight-card.action { background: #FFFBEB; border-color: #FDE68A; }
@@ -89,7 +87,6 @@
             margin-bottom: 4px; font-size: 0.75rem; border: 1px solid rgba(0,0,0,0.05);
         }
 
-        /* Bell icon animation */
         .bell-ring { animation: bellRing 0.6s ease-in-out; }
         @keyframes bellRing {
             0%,100% { transform: rotate(0deg); }
@@ -99,7 +96,6 @@
             80% { transform: rotate(8deg); }
         }
 
-        /* Critical Alert Toast */
         #criticalToast {
             position: fixed; bottom: 28px; right: 28px; z-index: 200;
             background: white; border-radius: 14px;
@@ -110,43 +106,193 @@
         }
         #criticalToast.show { transform: translateY(0); opacity: 1; }
 
-        /* Panel section expand/collapse */
         .panel-section-body { overflow: hidden; transition: max-height 0.3s ease; }
         .panel-section-toggle svg { transition: transform 0.3s; }
         .panel-section-toggle.collapsed svg { transform: rotate(-90deg); }
 
-        /* Pulse indicator for critical issues */
         .pulse-red { animation: pulseRed 2s infinite; }
         @keyframes pulseRed {
             0%, 100% { box-shadow: 0 0 0 0 rgba(223, 32, 39, 0.4); }
             50% { box-shadow: 0 0 0 6px rgba(223, 32, 39, 0); }
         }
 
-        /* SE contact pill */
         .se-pill {
             display: inline-flex; align-items: center; gap: 4px;
             background: #F1F5F9; border-radius: 20px; padding: 2px 8px;
             font-size: 0.65rem; color: #475569; font-weight: 600;
         }
 
-        /* Scrollbar for panel */
         #panelBody::-webkit-scrollbar { width: 4px; }
         #panelBody::-webkit-scrollbar-track { background: #F8FAFC; }
         #panelBody::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
 
-        /* Summary bar at bottom of panel */
-        .summary-bar {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1px; background: #E2E8F0;
-            border-top: 1px solid #E2E8F0;
+        .summary-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #E2E8F0; border-top: 1px solid #E2E8F0; }
+        .summary-bar-item { background: white; padding: 12px; text-align: center; }
+
+        /* =====================================================
+           TEAM PERFORMANCE TAB — LEADERBOARD STYLES
+        ===================================================== */
+        .team-kpi-card {
+            background: white; border-radius: 12px; padding: 18px 20px;
+            border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; gap: 6px; transition: box-shadow 0.2s;
         }
-        .summary-bar-item {
-            background: white; padding: 12px; text-align: center;
+        .team-kpi-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+        .lb-tab-bar {
+            display: flex; gap: 4px; background: #F1F5F9;
+            padding: 4px; border-radius: 10px; width: fit-content;
+        }
+        .lb-tab {
+            padding: 8px 20px; border-radius: 7px; font-size: 0.78rem; font-weight: 700;
+            color: #64748B; cursor: pointer; transition: all 0.2s; border: none;
+            background: transparent; letter-spacing: 0.02em; white-space: nowrap;
+        }
+        .lb-tab.active { background: white; color: #1E293B; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .lb-tab:hover:not(.active) { color: #334155; background: #E8EDF2; }
+
+        .rank-badge {
+            width: 26px; height: 26px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 800; flex-shrink: 0;
+        }
+        .rank-1 { background: #FEF3C7; color: #92400E; border: 1.5px solid #FCD34D; }
+        .rank-2 { background: #F1F5F9; color: #475569; border: 1.5px solid #CBD5E1; }
+        .rank-3 { background: #FEF1EC; color: #9A3412; border: 1.5px solid #FCA785; }
+        .rank-other { background: #F8FAFC; color: #94A3B8; border: 1.5px solid #E2E8F0; }
+
+        .mini-bar-track { height: 4px; background: #F1F5F9; border-radius: 2px; margin-top: 3px; overflow: hidden; }
+        .mini-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+        .pct-chip { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+        .pct-pos { background: #DCFCE7; color: #166534; }
+        .pct-neg { background: #FEE2E2; color: #991B1B; }
+        .pct-flat { background: #F1F5F9; color: #64748B; }
+
+        .lb-table-body tr:hover { background: #F8FAFC; }
+        .lb-table-body tr { transition: background 0.15s; }
+        .lb-panel { display: none; }
+        .lb-panel.active-panel { display: block; }
+
+        .lb-table-body td { padding: 10px 16px; font-size: 0.8rem; border-bottom: 1px solid #F1F5F9; color: #334155; white-space: nowrap; }
+        .lb-table-head th { padding: 10px 16px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; background: #F9FAFB; border-bottom: 2px solid #E5E7EB; white-space: nowrap; }
+
+        /* =====================================================
+           CUSTOMER INSIGHTS TAB
+        ===================================================== */
+        .ci-section-label {
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #94A3B8; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .ci-section-label::after { content: ''; flex: 1; height: 1px; background: #E2E8F0; }
+
+        .ci-kpi-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px;
+        }
+        @media (max-width: 1024px) { .ci-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .ci-kpi-card {
+            background: white; border-radius: 14px; padding: 20px;
+            border: 1px solid #E2E8F0; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            display: flex; flex-direction: column; gap: 10px;
+            position: relative; overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .ci-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .ci-kpi-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        }
+        .ci-kpi-card.growth::before { background: linear-gradient(90deg, #2E963D, #4ADE80); }
+        .ci-kpi-card.decline::before { background: linear-gradient(90deg, #DF2027, #F87171); }
+        .ci-kpi-card.new::before { background: linear-gradient(90deg, #3B82F6, #60A5FA); }
+        .ci-kpi-card.stagnant::before { background: linear-gradient(90deg, #F59E0B, #FCD34D); }
+
+        .ci-kpi-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .ci-kpi-icon.growth { background: #DCFCE7; }
+        .ci-kpi-icon.decline { background: #FEE2E2; }
+        .ci-kpi-icon.new { background: #EFF6FF; }
+        .ci-kpi-icon.stagnant { background: #FEF3C7; }
+
+        /* Churn Tier Cards */
+        .churn-tier {
+            background: white; border-radius: 14px;
+            border: 1px solid #E2E8F0; overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .churn-tier-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 18px; cursor: pointer; user-select: none;
+            transition: background 0.15s;
+        }
+        .churn-tier-header:hover { background: #F8FAFC; }
+        .churn-tier-header.critical-h { border-left: 4px solid #DF2027; }
+        .churn-tier-header.high-h { border-left: 4px solid #F97316; }
+        .churn-tier-header.watch-h { border-left: 4px solid #F59E0B; }
+        .churn-tier-body { border-top: 1px solid #F1F5F9; max-height: 380px; overflow-y: auto; }
+        .churn-tier-body::-webkit-scrollbar { width: 4px; }
+        .churn-tier-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+        .churn-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 18px; border-bottom: 1px solid #F8FAFC;
+            transition: background 0.12s;
+        }
+        .churn-row:last-child { border-bottom: none; }
+        .churn-row:hover { background: #FAFAFA; }
+
+        /* New Customer Feed */
+        .acq-feed-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .acq-card {
+            background: white; border-radius: 12px; padding: 16px;
+            border: 1px solid #E2E8F0; border-left: 4px solid #3B82F6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .acq-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.12); }
+
+        /* Top Accounts */
+        .top-acct-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 0; border-bottom: 1px solid #F8FAFC;
+        }
+        .top-acct-row:last-child { border-bottom: none; }
+        .top-acct-bar-bg { flex: 1; height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden; }
+        .top-acct-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #2E963D, #4ADE80); transition: width 0.7s ease; }
+
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: #9CA3AF;
+            font-size: 0.8rem;
+        }
+
+        /* ── Tab skeleton loader ── */
+        .tab-skeleton {
+            display: flex; flex-direction: column; gap: 16px; padding: 8px 0;
+        }
+        .skeleton-block {
+            background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 10px;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
+    <!-- ========================================================
+         SIDEBAR
+    ======================================================== -->
     <aside id="sidebar" class="bg-white border-r border-gray-200 hidden lg:flex flex-col z-10 shadow-sm flex-shrink-0">
         <div class="p-6">
             <div class="mb-10 flex flex-col items-center border-b border-gray-100 pb-6">
@@ -163,10 +309,6 @@
                 <a onclick="switchTab('view-overview')" data-target="view-overview" class="sidebar-link active" title="Overview">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     <span class="sidebar-text">Overview</span>
-                </a>
-                <a onclick="switchTab('view-regional')" data-target="view-regional" class="sidebar-link" title="Regional Performance">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    <span class="sidebar-text">Regional Performance</span>
                 </a>
                 <a onclick="switchTab('view-team')" data-target="view-team" class="sidebar-link" title="Team Performance">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -204,7 +346,12 @@
         </div>
     </aside>
 
+    <!-- ========================================================
+         MAIN CONTENT
+    ======================================================== -->
     <main class="flex-1 overflow-y-auto relative bg-[#F8FAFC]">
+
+        <!-- Header -->
         <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20 shadow-sm transition-all">
             <div class="max-w-[1500px] mx-auto flex justify-between items-end">
                 <div class="flex items-center gap-4">
@@ -217,24 +364,19 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <!-- ===== INSIGHTS BELL BUTTON ===== -->
                     <button id="insightsBellBtn" onclick="openInsightsPanel()" title="Smart Insights & Alerts"
                         class="relative p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 transition-all focus:outline-none focus:ring-2 focus:ring-brand group">
                         <svg id="bellIcon" class="w-6 h-6 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                         </svg>
-                        <!-- Badge -->
                         <span id="insightsBadge" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#DF2027] text-white text-[10px] font-black rounded-full flex items-center justify-center pulse-red">0</span>
                     </button>
-
-                    <!-- Manual Refresh Button -->
                     <button id="refreshBtn" onclick="manualRefresh()" title="Refresh Data Now"
                         class="relative p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-500 hover:text-brand transition-all focus:outline-none focus:ring-2 focus:ring-brand group">
                         <svg id="refreshIcon" class="w-5 h-5 transition-transform group-hover:rotate-180 duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                         </svg>
                     </button>
-
                     <div class="text-right">
                         <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Data Loaded At</span>
                         <p class="text-sm font-bold text-gray-700 flex items-center gap-2 justify-end mt-1">
@@ -247,6 +389,7 @@
             </div>
         </header>
 
+        <!-- Global Filters -->
         <div class="px-8 pt-8 max-w-[1500px] mx-auto">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-brand"></div>
@@ -259,8 +402,12 @@
             </div>
         </div>
 
+        <!-- Tab Content -->
         <div class="p-8 pt-6 max-w-[1500px] mx-auto">
-            
+
+            <!-- ================================================
+                 OVERVIEW TAB
+            ================================================ -->
             <div id="view-overview" class="tab-content block">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="stat-card border-t-4 border-t-[#2E963D]" id="vol-card-border">
@@ -329,83 +476,230 @@
                 </div>
             </div>
 
-            <div id="view-regional" class="tab-content hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div class="stat-card">
-                        <div class="flex items-center gap-2 mb-6">
-                            <span class="p-1.5 bg-green-50 text-[#2E963D] rounded-lg border border-green-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></span>
-                            <h3 class="font-bold text-gray-800">Top 5 Sales Offices (Volume)</h3>
-                        </div>
-                        <div class="h-64"><canvas id="topBranchesChart"></canvas></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center gap-2 mb-6">
-                            <span class="p-1.5 bg-red-50 text-[#DF2027] rounded-lg border border-red-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></span>
-                            <h3 class="font-bold text-gray-800">Bottom 5 Sales Offices (Volume)</h3>
-                        </div>
-                        <div class="h-64"><canvas id="bottomBranchesChart"></canvas></div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- ================================================
+                 TEAM PERFORMANCE TAB
+            ================================================ -->
             <div id="view-team" class="tab-content hidden">
-                <div class="grid grid-cols-1 mb-8">
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full">
-                        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                            <div>
-                                <h3 class="font-bold text-gray-800">Sales Executive (SE) Leaderboard</h3>
-                                <p class="text-xs text-gray-500 mt-1">Review your ground-level team by Volume and YoY Growth %.</p>
+
+                <!-- Team KPI Summary Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-7">
+                    <div class="team-kpi-card border-t-4 border-t-[#2E963D]">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total SEs</p>
+                        <h3 class="text-2xl font-black text-gray-900" id="tkpi-se-count">—</h3>
+                        <p class="text-[10px] text-gray-400">Active executives tracked</p>
+                    </div>
+                    <div class="team-kpi-card border-t-4 border-t-blue-500">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Best SE (Volume)</p>
+                        <h3 class="text-sm font-black text-blue-700 truncate leading-tight mt-1" id="tkpi-top-se-name">—</h3>
+                        <p class="text-[10px] text-gray-500 font-semibold" id="tkpi-top-se-vol">—</p>
+                    </div>
+                    <div class="team-kpi-card border-t-4 border-t-amber-400">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Avg SE YoY Growth</p>
+                        <h3 class="text-2xl font-black" id="tkpi-avg-growth">—</h3>
+                        <p class="text-[10px] text-gray-400">Across all executives</p>
+                    </div>
+                    <div class="team-kpi-card border-t-4 border-t-[#DF2027]">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Highest Churn Risk SE</p>
+                        <h3 class="text-sm font-black text-[#DF2027] truncate leading-tight mt-1" id="tkpi-worst-se-name">—</h3>
+                        <p class="text-[10px] text-gray-500 font-semibold" id="tkpi-worst-se-decl">—</p>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-base">Performance Leaderboard</h3>
+                            <p class="text-xs text-gray-400 mt-0.5">Ranked by MTD Volume · YoY Growth · Account Health · Win Rate</p>
+                        </div>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <div id="lb-search-container">
+                                <input id="lb-search-input" type="text" placeholder="Search..."
+                                    oninput="onLbSearch(this.value)"
+                                    class="px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#2E963D] w-44">
                             </div>
-                            <div id="se-table-actions"></div>
+                            <div class="lb-tab-bar">
+                                <button class="lb-tab active" onclick="switchLbTab('se')" id="lb-tab-se">👤 Sales Exec</button>
+                                <button class="lb-tab" onclick="switchLbTab('so')" id="lb-tab-so">🏢 Sales Office</button>
+                                <button class="lb-tab" onclick="switchLbTab('rh')" id="lb-tab-rh">🌐 Region</button>
+                            </div>
                         </div>
-                        <div class="w-full">
-                            <table id="seTable" class="w-full display nowrap" style="width:100%">
-                                <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-[10px] font-bold tracking-wider">
-                                    <tr>
-                                        <th class="text-left p-4">Sales Executive</th>
-                                        <th class="text-right p-4">MTD Volume</th>
-                                        <th class="text-right p-4">LYMTD Volume</th>
-                                        <th class="text-right p-4">YoY Growth %</th>
-                                        <th class="text-center p-4">Growth Accts</th>
-                                        <th class="text-center p-4">Decline Accts</th>
-                                        <th class="text-center p-4">New Accts</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+                    </div>
+
+                    <!-- SE Panel -->
+                    <div id="lb-panel-se" class="lb-panel active-panel overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="lb-table-head"><tr>
+                                <th class="w-12">#</th>
+                                <th class="cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','name')">Sales Executive <span class="lb-sort-icon" id="si-se-name"></span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','mtd')">MTD Vol <span class="lb-sort-icon" id="si-se-mtd">↓</span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','lymtd')">LYMTD <span class="lb-sort-icon" id="si-se-lymtd"></span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','yoy')">YoY % <span class="lb-sort-icon" id="si-se-yoy"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','growth')">Growth <span class="lb-sort-icon" id="si-se-growth"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','decline')">Decline <span class="lb-sort-icon" id="si-se-decline"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','newAccts')">New <span class="lb-sort-icon" id="si-se-newAccts"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','total')">Total <span class="lb-sort-icon" id="si-se-total"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('se','winRate')">Win Rate <span class="lb-sort-icon" id="si-se-winRate"></span></th>
+                            </tr></thead>
+                            <tbody id="se-lb-body" class="lb-table-body divide-y divide-gray-50"></tbody>
+                        </table>
+                        <div id="se-lb-pagination" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30"></div>
+                    </div>
+
+                    <!-- SO Panel -->
+                    <div id="lb-panel-so" class="lb-panel overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="lb-table-head"><tr>
+                                <th class="w-12">#</th>
+                                <th class="cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','name')">Sales Office <span class="lb-sort-icon" id="si-so-name"></span></th>
+                                <th class="cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','region')">Region <span class="lb-sort-icon" id="si-so-region"></span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','mtd')">MTD Vol <span class="lb-sort-icon" id="si-so-mtd">↓</span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','lymtd')">LYMTD <span class="lb-sort-icon" id="si-so-lymtd"></span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','yoy')">YoY % <span class="lb-sort-icon" id="si-so-yoy"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','growth')">Growth <span class="lb-sort-icon" id="si-so-growth"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','decline')">Decline <span class="lb-sort-icon" id="si-so-decline"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','newAccts')">New <span class="lb-sort-icon" id="si-so-newAccts"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','total')">Total <span class="lb-sort-icon" id="si-so-total"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('so','winRate')">Win Rate <span class="lb-sort-icon" id="si-so-winRate"></span></th>
+                            </tr></thead>
+                            <tbody id="so-lb-body" class="lb-table-body divide-y divide-gray-50"></tbody>
+                        </table>
+                        <div id="so-lb-pagination" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30"></div>
+                    </div>
+
+                    <!-- Region (RH) Panel -->
+                    <div id="lb-panel-rh" class="lb-panel overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="lb-table-head"><tr>
+                                <th class="w-12">#</th>
+                                <th class="cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','name')">Region <span class="lb-sort-icon" id="si-rh-name"></span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','mtd')">MTD Vol <span class="lb-sort-icon" id="si-rh-mtd">↓</span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','lymtd')">LYMTD <span class="lb-sort-icon" id="si-rh-lymtd"></span></th>
+                                <th class="text-right cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','yoy')">YoY % <span class="lb-sort-icon" id="si-rh-yoy"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','growth')">Growth <span class="lb-sort-icon" id="si-rh-growth"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','decline')">Decline <span class="lb-sort-icon" id="si-rh-decline"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','newAccts')">New <span class="lb-sort-icon" id="si-rh-newAccts"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','total')">Total <span class="lb-sort-icon" id="si-rh-total"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','winRate')">Win Rate <span class="lb-sort-icon" id="si-rh-winRate"></span></th>
+                                <th class="text-center cursor-pointer select-none hover:bg-gray-100" onclick="sortLb('rh','soCount')">SOs <span class="lb-sort-icon" id="si-rh-soCount"></span></th>
+                            </tr></thead>
+                            <tbody id="rh-lb-body" class="lb-table-body divide-y divide-gray-50"></tbody>
+                        </table>
+                        <div id="rh-lb-pagination" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- ================================================
+                 CUSTOMER INSIGHTS TAB
+            ================================================ -->
             <div id="view-customer" class="tab-content hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                    <div class="stat-card">
-                        <h3 class="font-bold text-gray-800 mb-6">Sales by Customer Group</h3>
-                        <div class="h-64"><canvas id="customerGroupChart"></canvas></div>
-                    </div>
-                    <div class="stat-card col-span-2 overflow-hidden flex flex-col">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-[#DF2027] animate-pulse"></span>
-                                High Priority Churn Risk
-                            </h3>
-                            <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">Largest absolute decline (YoY)</span>
-                        </div>
-                        <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg">
-                            <table class="w-full text-left text-sm" id="churnTable">
-                                <thead class="bg-gray-50 text-gray-500 text-xs uppercase sticky top-0 border-b border-gray-200">
-                                    <tr>
-                                        <th class="px-4 py-3 font-semibold">Customer Name</th>
-                                        <th class="px-4 py-3 font-semibold">Region/SO</th>
-                                        <th class="px-4 py-3 font-semibold text-right">LPD Drop</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100" id="churnTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-sm">🎯</span>
+                    Churn Risk Radar
+                </h3>
+                <p class="text-xs text-gray-400 mt-0.5 ml-9">Accounts with declining YoY volume — click a tier to filter</p>
             </div>
+            <div class="flex items-center gap-3 flex-wrap">
+                <div class="flex items-center gap-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tier</label>
+                    <select id="churn-tier-filter" onchange="_churnPage=1;renderChurnTable()"
+                        class="border border-gray-300 rounded-lg text-xs py-2 px-3 outline-none focus:ring-2 focus:ring-[#2E963D] bg-gray-50">
+                        <option value="all">All Tiers</option>
+                        <option value="critical">🔴 Critical</option>
+                        <option value="high">🟠 High Risk</option>
+                        <option value="watch">🟡 Watch List</option>
+                    </select>
+                </div>
+                <input id="churn-search" type="text" placeholder="🔍  Search customer, SE, SO..."
+                    oninput="_churnPage=1;renderChurnTable()"
+                    class="border border-gray-300 rounded-lg text-xs py-2 px-3 outline-none focus:ring-2 focus:ring-[#2E963D] w-56 bg-gray-50">
+                <button onclick="exportChurnTier('all')"
+                    class="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm whitespace-nowrap">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Export CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Tier Criterion + Count Pills -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+
+            <div onclick="selectChurnTier('all')" id="churn-pill-all"
+                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-gray-200 bg-gray-50 hover:border-gray-300 transition-all group"
+                style="transition:all 0.2s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-lg">📊</span>
+                    <span id="churn-count-total" class="text-xl font-black text-gray-800">0</span>
+                </div>
+                <div class="font-bold text-gray-700 text-xs">All Accounts</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">Any YoY decline</div>
+            </div>
+
+            <div onclick="selectChurnTier('critical')" id="churn-pill-critical"
+                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-red-100 bg-red-50 hover:border-red-300 transition-all"
+                style="transition:all 0.2s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-lg">🔴</span>
+                    <span id="churn-count-critical" class="text-xl font-black text-red-700">0</span>
+                </div>
+                <div class="font-bold text-red-700 text-xs">Critical Risk</div>
+                <div class="text-[10px] text-red-400 mt-0.5">Gone dark <span class="font-bold">or</span> &gt;50% drop</div>
+            </div>
+
+            <div onclick="selectChurnTier('high')" id="churn-pill-high"
+                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-orange-100 bg-orange-50 hover:border-orange-300 transition-all"
+                style="transition:all 0.2s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-lg">🟠</span>
+                    <span id="churn-count-high" class="text-xl font-black text-orange-700">0</span>
+                </div>
+                <div class="font-bold text-orange-700 text-xs">High Risk</div>
+                <div class="text-[10px] text-orange-400 mt-0.5">30–50% YoY decline</div>
+            </div>
+
+            <div onclick="selectChurnTier('watch')" id="churn-pill-watch"
+                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-amber-100 bg-amber-50 hover:border-amber-300 transition-all"
+                style="transition:all 0.2s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-lg">🟡</span>
+                    <span id="churn-count-watch" class="text-xl font-black text-amber-700">0</span>
+                </div>
+                <div class="font-bold text-amber-700 text-xs">Watch List</div>
+                <div class="text-[10px] text-amber-400 mt-0.5">10–30% YoY decline</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr style="background:#F9FAFB;border-bottom:2px solid #E5E7EB">
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider">Tier</th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('cust')">Customer <span id="churn-si-cust"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('prod')">Product <span id="churn-si-prod"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('so')">Sales Office <span id="churn-si-so"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('se')">Sales Executive <span id="churn-si-se"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('mtd')">MTD LPD <span id="churn-si-mtd"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('lymtd')">LYMTD LPD <span id="churn-si-lymtd"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('lpd')">LPD Lost <span id="churn-si-lpd"></span></th>
+                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('pct')">% Change <span id="churn-si-pct">↓</span></th>
+                    </tr>
+                </thead>
+                <tbody id="churn-table-body"></tbody>
+            </table>
+        </div>
+        <div id="churn-table-pagination" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
+    </div>
+
+</div>
 
             <footer class="mt-12 text-center text-gray-400 text-sm pb-8 border-t border-gray-200 pt-6">
                 <p>Heritage Foods Limited | Samarth Analytics Engine v2.0</p>
@@ -414,21 +708,15 @@
     </main>
 
     <!-- ========================================================
-         INSIGHTS PANEL OVERLAY
+         INSIGHTS PANEL OVERLAY + PANEL
     ======================================================== -->
     <div id="panelOverlay" onclick="closeInsightsPanel()"></div>
 
-    <!-- ========================================================
-         INSIGHTS SLIDE-IN PANEL
-    ======================================================== -->
     <div id="insightsPanel">
-        <!-- Panel Header -->
         <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200 bg-gray-50 flex-shrink-0">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center shadow-sm">
-                    <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                    </svg>
+                    <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-900 text-sm">Samarth Insights</h3>
@@ -439,46 +727,25 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
-
-        <!-- Insight Filter Tabs -->
         <div class="flex border-b border-gray-200 flex-shrink-0 bg-white">
-            <button class="insight-tab-btn active flex-1 py-3 text-xs font-bold uppercase tracking-wider text-[#DF2027] border-b-2 border-[#DF2027] transition-all" data-tab="critical" onclick="switchInsightTab('critical')">
-                🚨 Critical <span id="tab-badge-critical" class="ml-1 bg-red-100 text-red-700 px-1.5 rounded font-black">0</span>
-            </button>
-            <button class="insight-tab-btn flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 border-b-2 border-transparent transition-all" data-tab="action" onclick="switchInsightTab('action')">
-                ⚡ Action <span id="tab-badge-action" class="ml-1 bg-amber-100 text-amber-700 px-1.5 rounded font-black">0</span>
-            </button>
-            <button class="insight-tab-btn flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 border-b-2 border-transparent transition-all" data-tab="positive" onclick="switchInsightTab('positive')">
-                ✅ Wins <span id="tab-badge-positive" class="ml-1 bg-green-100 text-green-700 px-1.5 rounded font-black">0</span>
-            </button>
+            <button class="insight-tab-btn active flex-1 py-3 text-xs font-bold uppercase tracking-wider text-[#DF2027] border-b-2 border-[#DF2027] transition-all" data-tab="critical" onclick="switchInsightTab('critical')">🚨 Critical <span id="tab-badge-critical" class="ml-1 bg-red-100 text-red-700 px-1.5 rounded font-black">0</span></button>
+            <button class="insight-tab-btn flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 border-b-2 border-transparent transition-all" data-tab="action" onclick="switchInsightTab('action')">⚡ Action <span id="tab-badge-action" class="ml-1 bg-amber-100 text-amber-700 px-1.5 rounded font-black">0</span></button>
+            <button class="insight-tab-btn flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 border-b-2 border-transparent transition-all" data-tab="positive" onclick="switchInsightTab('positive')">✅ Wins <span id="tab-badge-positive" class="ml-1 bg-green-100 text-green-700 px-1.5 rounded font-black">0</span></button>
         </div>
-
-        <!-- Panel Body (scrollable) -->
         <div id="panelBody" class="flex-1 overflow-y-auto p-5">
             <div id="insight-tab-critical" class="insight-tab-content"></div>
             <div id="insight-tab-action" class="insight-tab-content hidden"></div>
             <div id="insight-tab-positive" class="insight-tab-content hidden"></div>
         </div>
-
-        <!-- Summary Footer Bar -->
         <div class="summary-bar flex-shrink-0">
-            <div class="summary-bar-item">
-                <div class="text-lg font-black text-[#DF2027]" id="panel-total-critical">0</div>
-                <div class="text-[10px] text-gray-400 uppercase font-bold">Critical</div>
-            </div>
-            <div class="summary-bar-item">
-                <div class="text-lg font-black text-amber-500" id="panel-total-action">0</div>
-                <div class="text-[10px] text-gray-400 uppercase font-bold">Action Pts</div>
-            </div>
-            <div class="summary-bar-item">
-                <div class="text-lg font-black text-[#2E963D]" id="panel-total-positive">0</div>
-                <div class="text-[10px] text-gray-400 uppercase font-bold">Wins</div>
-            </div>
+            <div class="summary-bar-item"><div class="text-lg font-black text-[#DF2027]" id="panel-total-critical">0</div><div class="text-[10px] text-gray-400 uppercase font-bold">Critical</div></div>
+            <div class="summary-bar-item"><div class="text-lg font-black text-amber-500" id="panel-total-action">0</div><div class="text-[10px] text-gray-400 uppercase font-bold">Action Pts</div></div>
+            <div class="summary-bar-item"><div class="text-lg font-black text-[#2E963D]" id="panel-total-positive">0</div><div class="text-[10px] text-gray-400 uppercase font-bold">Wins</div></div>
         </div>
     </div>
 
     <!-- ========================================================
-         CRITICAL ALERT TOAST (Bottom-right, auto-dismiss)
+         CRITICAL ALERT TOAST
     ======================================================== -->
     <div id="criticalToast">
         <div class="h-1.5 bg-[#DF2027] w-full" id="toastProgress" style="transition: width linear;"></div>
@@ -493,888 +760,1300 @@
                         </button>
                     </div>
                     <p class="text-xs text-gray-500 mb-3" id="toastMessage">Loading...</p>
-                    <button onclick="dismissToast(); openInsightsPanel();" class="text-xs font-bold text-[#DF2027] hover:underline flex items-center gap-1">
-                        View all insights →
-                    </button>
+                    <button onclick="dismissToast(); openInsightsPanel();" class="text-xs font-bold text-[#DF2027] hover:underline">View all insights →</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ========================================================
+         JAVASCRIPT
+    ======================================================== -->
     <script>
-        // =====================================================
-        // SIDEBAR TOGGLE
-        // =====================================================
-        $('#toggleSidebar').on('click', function() {
-            $('#sidebar').toggleClass('collapsed');
-            setTimeout(function() { 
-                if(myDataTable) myDataTable.columns.adjust().draw(); 
-                if(seDataTable) seDataTable.columns.adjust().draw(); 
-            }, 300);
+    // =====================================================
+    // SIDEBAR TOGGLE
+    // =====================================================
+    $('#toggleSidebar').on('click', function() {
+        $('#sidebar').toggleClass('collapsed');
+        setTimeout(function() {
+            if (myDataTable) myDataTable.columns.adjust().draw();
+        }, 300);
+    });
+
+    // =====================================================
+    // GLOBALS
+    // =====================================================
+    let globalData    = [];
+    let globalColumns = [];
+    let activeFilters = {};
+    let currentInsights = { critical: [], action: [], positive: [] };
+    let toastTimer    = null;
+    let isFirstLoad   = true;
+    let myDataTable;
+
+    // ── PERFORMANCE: Lazy render state for Customer Tab ──
+    let customerTabDirty  = true;
+    let lastCustomerData  = null;
+    let customerTabEverRendered = false;
+
+    // ── PERFORMANCE: Debounce timer for filter changes ──
+    let filterDebounceTimer = null;
+
+    const slicerColumns  = ['State', 'Region', 'SO_Name', 'CustomerGroup', 'Product', 'Sales_Trend'];
+    const staticSlicers  = ['Product', 'Sales_Trend'];
+
+    // Greeting
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good Morning,' : hour < 18 ? 'Good Afternoon,' : 'Good Evening,';
+    document.getElementById('greeting').innerHTML = `${greeting} <span class="text-brand">{{ user.name }}</span>`;
+
+    let charts = {};
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    const brandColors = { green: '#2E963D', red: '#DF2027', blue: '#3B82F6', palette: ['#2E963D', '#DF2027', '#F59E0B', '#3B82F6', '#64748B', '#14B8A6'] };
+
+    // =====================================================
+    // INITIAL DATA LOAD
+    // =====================================================
+    $(document).ready(function() {
+        $.ajax({
+            url: '/api/data', type: 'GET',
+            success: function(res) {
+                $('#last-updated').text(res.last_updated);
+                globalData    = res.data;
+                globalColumns = res.columns;
+                setDataLoadedAt(res.last_updated);
+                buildGlobalSlicers();
+                applyFiltersAndUpdate();
+            },
+            error: function() { alert("Dashboard failed to load. Please check your connection."); }
+        });
+    });
+
+    // =====================================================
+    // GLOBAL FILTERING ENGINE
+    // =====================================================
+    function buildGlobalSlicers() {
+        var container = $('#slicer-container');
+        container.empty();
+        slicerColumns.forEach(colName => {
+            let colIdx = globalColumns.findIndex(c => c.title === colName);
+            if (colIdx === -1) return;
+            let uniqueVals = [...new Set(globalData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
+            uniqueVals.sort();
+            var safeId = 'slicer-' + colName.replace(/[^a-zA-Z0-9]/g, '');
+            var wrapper = $('<div class="flex flex-col"></div>').appendTo(container);
+            $('<label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">' + colName + '</label>').appendTo(wrapper);
+            var select = $(`<select id="${safeId}" data-col-idx="${colIdx}" data-header="${colName}" class="w-full border border-gray-300 rounded-lg text-xs py-2 px-3 focus:ring-2 focus:ring-[#2E963D] outline-none bg-gray-50 global-slicer"><option value="">All ${colName}</option></select>`).appendTo(wrapper);
+            uniqueVals.forEach(val => { let safeVal = String(val).replace(/"/g, '&quot;'); select.append(`<option value="${safeVal}">${val}</option>`); });
+        });
+    }
+
+    // ── PERFORMANCE: Debounced filter change handler ──
+    $(document).on('change', '.global-slicer', function() {
+        let filterName  = $(this).data('header');
+        let filterValue = $(this).val() || 'Cleared';
+        trackEvent('Global Filter Applied', `${filterName} -> ${filterValue}`);
+        clearTimeout(filterDebounceTimer);
+        filterDebounceTimer = setTimeout(() => applyFiltersAndUpdate(), 80);
+    });
+
+    function applyFiltersAndUpdate() {
+        activeFilters = {};
+        $('.global-slicer').each(function() {
+            let val    = $(this).val();
+            let colIdx = $(this).data('col-idx');
+            if (val !== "") { activeFilters[colIdx] = val; }
+        });
+        let filteredData = globalData.filter(row => {
+            for (let colIdx in activeFilters) {
+                let rowVal    = String(row[colIdx] || '').trim();
+                let filterVal = activeFilters[colIdx].replace(/&quot;/g, '"');
+                if (rowVal !== filterVal) return false;
+            }
+            return true;
+        });
+        updateDashboardComponents(filteredData);
+        updateCascadingSlicers(filteredData);
+        computeAndRenderInsights(filteredData);
+    }
+
+    function updateCascadingSlicers(filteredData) {
+        $('.global-slicer').each(function() {
+            var select     = $(this);
+            var headerName = select.data('header');
+            var colIdx     = select.data('col-idx');
+            var currentVal = select.val();
+            if (staticSlicers.includes(headerName) || currentVal !== "") return;
+            let uniqueVisibleData = [...new Set(filteredData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
+            uniqueVisibleData.sort();
+            select.empty();
+            select.append(`<option value="">All ${headerName}</option>`);
+            uniqueVisibleData.forEach(val => { let safeVal = String(val).replace(/"/g, '&quot;'); select.append(`<option value="${safeVal}">${val}</option>`); });
+        });
+    }
+
+    // =====================================================
+    // DASHBOARD RENDER ENGINE
+    // =====================================================
+    function updateDashboardComponents(data) {
+        const idx      = col => globalColumns.findIndex(c => c.title === col);
+        const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
+        const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
+        const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+        const iLYMTD   = idx('LYMTD');
+
+        let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0 };
+        let regionData = {}, soData = {};
+
+        data.forEach(row => {
+            let trend    = iTrend   > -1 ? String(row[iTrend]   || '').trim() : 'Stable';
+            let salesVal = iSales   > -1 ? parseFloat(row[iSales])   || 0 : 0;
+            let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
+            let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
+            let reg      = iRegion  > -1 ? String(row[iRegion]  || 'Unknown').trim() : 'All Regions';
+            let so       = iSO      > -1 ? String(row[iSO]      || 'Unknown').trim() : 'All SOs';
+
+            if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
+            else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
+            else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
+            else                                                 { stats.stable++; }
+
+            stats.sales += salesVal;
+            stats.lymtd += lymtdVal;
+            regionData[reg]  = (regionData[reg]  || 0) + salesVal;
+            soData[so]       = (soData[so]        || 0) + salesVal;
         });
 
-        let globalData = [];
-        let globalColumns = [];
-        let activeFilters = {}; 
-        let currentInsights = { critical: [], action: [], positive: [] };
-        let toastTimer = null;
-        let isFirstLoad = true;
-
-        const slicerColumns = ['State', 'Region', 'SO_Name', 'CustomerGroup', 'Product', 'Sales_Trend'];
-        const staticSlicers = ['Product', 'Sales_Trend']; 
-        
-        const hour = new Date().getHours();
-        const greeting = hour < 12 ? 'Good Morning,' : hour < 18 ? 'Good Afternoon,' : 'Good Evening,';
-        document.getElementById('greeting').innerHTML = `${greeting} <span class="text-brand">{{ user.name.split(' ')[0] }}</span>`;
-        
-        let charts = {};
-        let myDataTable;
-        let seDataTable;
-
-        $(document).ready(function() {
-            $.ajax({
-                url: '/api/data',
-                type: 'GET',
-                success: function(res) {
-                    $('#last-updated').text(res.last_updated);
-                    globalData = res.data;
-                    globalColumns = res.columns;
-                    setDataLoadedAt(res.last_updated);
-                    buildGlobalSlicers();
-                    applyFiltersAndUpdate();
-                },
-                error: function() { alert("Dashboard failed to load. Please check your connection."); }
-            });
-        });
-
-        // =====================================================
-        // GLOBAL FILTERING ENGINE
-        // =====================================================
-        function buildGlobalSlicers() {
-            var container = $('#slicer-container');
-            container.empty();
-            slicerColumns.forEach(colName => {
-                let colIdx = globalColumns.findIndex(c => c.title === colName);
-                if (colIdx === -1) return;
-                let uniqueVals = [...new Set(globalData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
-                uniqueVals.sort();
-                var safeId = 'slicer-' + colName.replace(/[^a-zA-Z0-9]/g, '');
-                var wrapper = $('<div class="flex flex-col"></div>').appendTo(container);
-                $('<label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">' + colName + '</label>').appendTo(wrapper);
-                var select = $(`<select id="${safeId}" data-col-idx="${colIdx}" data-header="${colName}" class="w-full border border-gray-300 rounded-lg text-xs py-2 px-3 focus:ring-2 focus:ring-[#2E963D] outline-none bg-gray-50 global-slicer"><option value="">All ${colName}</option></select>`).appendTo(wrapper);
-                uniqueVals.forEach(val => { let safeVal = String(val).replace(/"/g, '&quot;'); select.append(`<option value="${safeVal}">${val}</option>`); });
-            });
+        // KPI cards
+        $('#kpi-sales').text(stats.sales.toLocaleString(undefined, { maximumFractionDigits: 0 }));
+        let volDiff = stats.sales - stats.lymtd;
+        let diffElem = $('#kpi-sales-diff'), diffBadge = $('#kpi-sales-diff-badge'), volCardBorder = $('#vol-card-border');
+        if (volDiff > 0) {
+            diffElem.html(`&uarr; +${volDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} YoY`);
+            diffBadge.removeClass('bg-red-50 text-[#DF2027] border-red-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-green-50 text-[#2E963D] border-green-100');
+            volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
+        } else if (volDiff < 0) {
+            diffElem.html(`&darr; ${volDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} YoY`);
+            diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-red-50 text-[#DF2027] border-red-100');
+            volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
+        } else {
+            diffElem.html(`&minus; Flat YoY`);
+            diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-red-50 text-[#DF2027] border-red-100').addClass('bg-gray-50 text-gray-500 border-gray-200');
+            volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
         }
 
-        $(document).on('change', '.global-slicer', function() {
-            let filterName = $(this).data('header');
-            let filterValue = $(this).val() || 'Cleared';
-            trackEvent('Global Filter Applied', `${filterName} -> ${filterValue}`);
-            applyFiltersAndUpdate();
-        });
+        $('#kpi-growth').text(stats.growth.toLocaleString());
+        $('#kpi-growth-vol').text('+' + stats.growthVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
+        $('#kpi-decline').text(stats.decline.toLocaleString());
+        $('#kpi-decline-vol').text('-' + stats.declineVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
+        $('#kpi-new').text(stats.new.toLocaleString());
+        $('#kpi-new-vol').text('+' + stats.newVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
 
-        function applyFiltersAndUpdate() {
-            activeFilters = {};
-            $('.global-slicer').each(function() {
-                let val = $(this).val();
-                let colIdx = $(this).data('col-idx');
-                if (val !== "") { activeFilters[colIdx] = val; }
-            });
-            let filteredData = globalData.filter(row => {
-                for (let colIdx in activeFilters) {
-                    let rowVal = String(row[colIdx] || '').trim();
-                    let filterVal = activeFilters[colIdx].replace(/&quot;/g, '"');
-                    if (rowVal !== filterVal) return false;
-                }
-                return true;
-            });
-            updateDashboardComponents(filteredData);
-            updateCascadingSlicers(filteredData);
-
-            // Compute insights on every filter change
-            computeAndRenderInsights(filteredData);
+        // Overview chart
+        let overviewBarData = {};
+        if ("{{ user.role }}" === "RH" || Object.keys(regionData).length <= 1) {
+            overviewBarData = soData;
+            $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> SO Performance (MTD)');
+        } else {
+            overviewBarData = regionData;
+            $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg> Regional Sales (MTD)');
         }
 
-        function updateCascadingSlicers(filteredData) {
-            $('.global-slicer').each(function() {
-                var select = $(this);
-                var headerName = select.data('header');
-                var colIdx = select.data('col-idx');
-                var currentVal = select.val();
-                if (staticSlicers.includes(headerName) || currentVal !== "") return;
-                let uniqueVisibleData = [...new Set(filteredData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
-                uniqueVisibleData.sort();
-                select.empty();
-                select.append(`<option value="">All ${headerName}</option>`);
-                uniqueVisibleData.forEach(val => { let safeVal = String(val).replace(/"/g, '&quot;'); select.append(`<option value="${safeVal}">${val}</option>`); });
-            });
+        renderOverviewCharts(overviewBarData, stats);
+
+        // ── PERFORMANCE: Mark customer tab dirty; only render if it's visible ──
+        lastCustomerData = data;
+        customerTabDirty = true;
+        if (!document.getElementById('view-customer').classList.contains('hidden')) {
+            requestAnimationFrame(() => renderCustomerInsightsTab(data));
         }
 
-        // =====================================================
-        // SMART INSIGHTS ENGINE
-        // =====================================================
-        function computeAndRenderInsights(data) {
-            const idx = col => globalColumns.findIndex(c => c.title === col);
-            const iMTD = idx('MTD'), iLYMTD = idx('LYMTD');
-            const iAbsDiff = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
-            const iPct = idx('MTD_vs_LYMTD_Growth_Percentage');
-            const iTrend = idx('Sales_Trend');
-            const iCust = idx('CustomerName'), iSE = idx('SE_Name'), iSEMob = idx('SE_Mobile');
-            const iLastOrder = idx('Last_Order_Date');
-            const iSO = idx('SO_Name'), iRegion = idx('Region'), iProd = idx('Product');
-            const iLM = idx('LM');
+        // Master table + Leaderboard (always needed)
+        initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
+        buildLeaderboardData(data);
+    }
 
-            const today = new Date();
-            let insights = { critical: [], action: [], positive: [] };
+    // =====================================================
+    // CHARTS  — update-in-place to avoid flicker
+    // =====================================================
+    function renderOverviewCharts(barData, stats) {
+        const barLabels = Object.keys(barData);
+        const barVals   = Object.values(barData);
 
-            let totalMTD = 0, totalLYMTD = 0;
-            let goneDark = [], heavyDecline = [], inactiveList = [], stagnantList = [];
-            let newCustomers = [], growthAccounts = [], topGrowthAccounts = [];
-            let seDeclineMap = {}, seGrowthMap = {};
-
-            data.forEach(row => {
-                const mtd     = parseFloat(row[iMTD]) || 0;
-                const lymtd   = parseFloat(row[iLYMTD]) || 0;
-                const lm      = parseFloat(row[iLM]) || 0;
-                const absDiff = parseFloat(row[iAbsDiff]) || 0;
-                const pct     = parseFloat(row[iPct]) || 0;
-                const trend   = String(row[iTrend] || '').trim();
-                const cust    = String(row[iCust] || 'Unknown').trim();
-                const se      = String(row[iSE] || 'Unassigned').trim();
-                const seMob   = String(row[iSEMob] || '').trim();
-                const so      = String(row[iSO] || '').trim();
-                const region  = String(row[iRegion] || '').trim();
-                const prod    = String(row[iProd] || '').trim();
-                const lastOrd = String(row[iLastOrder] || '').trim();
-
-                totalMTD   += mtd;
-                totalLYMTD += lymtd;
-
-                // 🚨 CRITICAL 1: Gone Dark — had LYMTD but zero MTD
-                if (lymtd > 1 && mtd === 0 && trend === 'Decline') {
-                    goneDark.push({ cust, se, seMob, so, region, prod, lymtd: lymtd.toFixed(1) });
-                }
-
-                // 🚨 CRITICAL 2: Heavy Decline (>30% YoY, meaningful volume base)
-                if (pct < -0.30 && lymtd > 3 && trend === 'Decline') {
-                    heavyDecline.push({ cust, se, seMob, so, region, prod, pct: (pct * 100).toFixed(1), absDiff: absDiff.toFixed(2), lymtd: lymtd.toFixed(1) });
-                }
-
-                // ⚡ ACTION 1: Inactive customers (last order > 7 days, but had sales this month = base customers not reordering yet)
-                if (lastOrd && mtd > 0) {
-                    const lastDate = new Date(lastOrd);
-                    const daysSince = Math.floor((today - lastDate) / 86400000);
-                    if (daysSince >= 7) {
-                        inactiveList.push({ cust, se, seMob, so, prod, daysSince, mtd: mtd.toFixed(1) });
-                    }
-                }
-
-                // ⚡ ACTION 2: Stagnant high-value accounts (had big LM but MTD is flat or tiny)
-                if (trend === 'Stagnant' && lm > 10 && mtd < lm * 0.5) {
-                    stagnantList.push({ cust, se, seMob, so, prod, lm: lm.toFixed(1), mtd: mtd.toFixed(1) });
-                }
-
-                // ✅ POSITIVE 1: New customer wins
-                if (trend === 'New Customer' || trend === 'New') {
-                    newCustomers.push({ cust, se, so, prod, mtd: mtd.toFixed(1) });
-                }
-
-                // ✅ POSITIVE 2: Top growth accounts
-                if (trend === 'Growth' && absDiff > 5) {
-                    topGrowthAccounts.push({ cust, se, so, prod, absDiff: absDiff.toFixed(2), pct: (pct * 100).toFixed(1) });
-                }
-
-                // SE performance map
-                if (se && se !== 'Unassigned') {
-                    if (!seDeclineMap[se]) seDeclineMap[se] = { count: 0, vol: 0, mobile: seMob };
-                    if (!seGrowthMap[se])  seGrowthMap[se]  = { count: 0, vol: 0, mobile: seMob };
-                    if (trend === 'Decline') { seDeclineMap[se].count++; seDeclineMap[se].vol += Math.abs(absDiff); }
-                    if (trend === 'Growth')  { seGrowthMap[se].count++;  seGrowthMap[se].vol  += absDiff; }
-                }
-            });
-
-            // Sort by impact
-            goneDark.sort((a, b) => parseFloat(b.lymtd) - parseFloat(a.lymtd));
-            heavyDecline.sort((a, b) => parseFloat(a.pct) - parseFloat(b.pct));
-            inactiveList.sort((a, b) => b.daysSince - a.daysSince);
-            stagnantList.sort((a, b) => parseFloat(b.lm) - parseFloat(a.lm));
-            topGrowthAccounts.sort((a, b) => parseFloat(b.absDiff) - parseFloat(a.absDiff));
-
-            // SE rankings
-            const seDeclineRanked = Object.entries(seDeclineMap).sort((a, b) => b[1].count - a[1].count).slice(0, 5);
-            const seGrowthRanked  = Object.entries(seGrowthMap).sort((a, b)  => b[1].count - a[1].count).slice(0, 5);
-
-            // Overall volume trend
-            const overallPct = totalLYMTD > 0 ? ((totalMTD - totalLYMTD) / totalLYMTD * 100) : 0;
-            const overallDiff = totalMTD - totalLYMTD;
-
-            // ============ BUILD INSIGHT CARDS ============
-
-            // 🚨 CRITICAL SECTION
-            if (overallPct < -10) {
-                insights.critical.push({
-                    icon: '📉', title: `Overall Volume Down ${Math.abs(overallPct).toFixed(1)}% vs Last Year`,
-                    desc: `Current view is tracking ${Math.abs(overallDiff).toFixed(0)} LPD below LYMTD. Immediate strategic review recommended.`,
-                    type: 'volume-alert', severity: 'high',
-                    rows: null
-                });
-            }
-            if (goneDark.length > 0) {
-                insights.critical.push({
-                    icon: '🔴', title: `${goneDark.length} Account${goneDark.length > 1 ? 's' : ''} Gone Dark`,
-                    desc: `Customers who ordered last year (same month) but have ZERO sales this month. Risk of permanent churn.`,
-                    type: 'gone-dark', severity: 'high',
-                    rows: goneDark.slice(0, 8),
-                    cols: ['Customer', 'SE', 'LYMTD LPD', 'Product'],
-                    rowFn: r => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.prod} · ${r.so}</div>
-                            ${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-[#DF2027]" style="font-size:0.75rem">GONE DARK</div>
-                            <div style="font-size:0.65rem; color:#6B7280">Was ${r.lymtd} LPD</div>
-                        </div>
-                    </div>`
-                });
-            }
-            if (heavyDecline.length > 0) {
-                insights.critical.push({
-                    icon: '⚠️', title: `${heavyDecline.length} Account${heavyDecline.length > 1 ? 's' : ''} with >30% YoY Decline`,
-                    desc: `High-impact accounts losing significant volume. SE intervention and visit required.`,
-                    type: 'heavy-decline', severity: 'medium',
-                    rows: heavyDecline.slice(0, 8),
-                    rowFn: r => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.prod} · ${r.so}</div>
-                            ${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-[#DF2027]" style="font-size:0.75rem">${r.pct}%</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.absDiff} LPD drop</div>
-                        </div>
-                    </div>`
-                });
-            }
-            if (seDeclineRanked.length > 0) {
-                insights.critical.push({
-                    icon: '👤', title: 'SEs with Highest Decline Account Count',
-                    desc: `These executives have the most accounts trending downward. May need coaching, territory review, or support.`,
-                    type: 'se-decline', severity: 'medium',
-                    rows: seDeclineRanked,
-                    rowFn: ([name, d]) => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>
-                            ${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-[#DF2027]" style="font-size:0.75rem">${d.count} accounts</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${d.vol.toFixed(0)} LPD lost</div>
-                        </div>
-                    </div>`
-                });
-            }
-
-            // ⚡ ACTION SECTION
-            if (inactiveList.length > 0) {
-                insights.action.push({
-                    icon: '📅', title: `${inactiveList.length} Customers — No Order in 7+ Days`,
-                    desc: `These customers have active MTD sales but last placed an order over a week ago. Follow-up needed to maintain continuity.`,
-                    type: 'inactive', severity: 'medium',
-                    rows: inactiveList.slice(0, 8),
-                    rowFn: r => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.prod} · ${r.so}</div>
-                            ${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-amber-600" style="font-size:0.75rem">${r.daysSince}d ago</div>
-                            <div style="font-size:0.65rem; color:#6B7280">MTD: ${r.mtd} LPD</div>
-                        </div>
-                    </div>`
-                });
-            }
-            if (stagnantList.length > 0) {
-                insights.action.push({
-                    icon: '😐', title: `${stagnantList.length} High-Value Stagnant Accounts`,
-                    desc: `Accounts with strong Last Month (LM) performance but underperforming MTD. Likely demand activation or relationship opportunity.`,
-                    type: 'stagnant', severity: 'low',
-                    rows: stagnantList.slice(0, 8),
-                    rowFn: r => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.prod} · ${r.so}</div>
-                            ${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-amber-600" style="font-size:0.75rem">${r.mtd} LPD</div>
-                            <div style="font-size:0.65rem; color:#6B7280">LM was ${r.lm} LPD</div>
-                        </div>
-                    </div>`
-                });
-            }
-
-            // ✅ POSITIVE SECTION
-            if (newCustomers.length > 0) {
-                const newVol = newCustomers.reduce((s, r) => s + parseFloat(r.mtd), 0);
-                insights.positive.push({
-                    icon: '🌱', title: `${newCustomers.length} New Customers Acquired This Month`,
-                    desc: `Contributing ${newVol.toFixed(0)} LPD of fresh volume to the portfolio. Pipeline expansion in progress.`,
-                    type: 'new-customers', severity: 'positive',
-                    rows: newCustomers.slice(0, 8),
-                    rowFn: r => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.prod} · ${r.so}</div>
-                            <span class="se-pill mt-1">👤 ${r.se}</span>
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.mtd} LPD</div>
-                            <div style="font-size:0.65rem; color:#6B7280">NEW</div>
-                        </div>
-                    </div>`
-                });
-            }
-            if (topGrowthAccounts.length > 0) {
-                insights.positive.push({
-                    icon: '🚀', title: `Top Growth Accounts — Momentum Leaders`,
-                    desc: `These accounts are driving the most absolute volume growth vs last year. Nurture and replicate their model.`,
-                    type: 'top-growth', severity: 'positive',
-                    rows: topGrowthAccounts.slice(0, 8),
-                    rowFn: r => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div>
-                            <div style="font-size:0.65rem; color:#6B7280">${r.prod} · ${r.so}</div>
-                            <span class="se-pill mt-1">👤 ${r.se}</span>
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.absDiff} LPD</div>
-                            <div style="font-size:0.65rem; color:#6B7280">+${r.pct}% YoY</div>
-                        </div>
-                    </div>`
-                });
-            }
-            if (seGrowthRanked.length > 0) {
-                insights.positive.push({
-                    icon: '🏆', title: 'Top Performing SEs — Growth Champions',
-                    desc: `Executives leading the most growth accounts. Consider them for recognition and best-practice sharing sessions.`,
-                    type: 'se-growth', severity: 'positive',
-                    rows: seGrowthRanked,
-                    rowFn: ([name, d]) => `<div class="insight-detail-row">
-                        <div>
-                            <div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>
-                            ${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-2">
-                            <div class="font-black text-[#2E963D]" style="font-size:0.75rem">${d.count} accts</div>
-                            <div style="font-size:0.65rem; color:#6B7280">+${d.vol.toFixed(0)} LPD gained</div>
-                        </div>
-                    </div>`
-                });
-            }
-
-            currentInsights = insights;
-            renderInsightsPanel(insights);
-
-            // Show critical toast on first load if issues exist
-            if (isFirstLoad && insights.critical.length > 0) {
-                isFirstLoad = false;
-                setTimeout(() => showCriticalToast(insights.critical), 2000);
+        // ── PERFORMANCE: Update in-place, destroy only if labels changed ──
+        if (charts.overviewRegion) {
+            const sameLabels = JSON.stringify(charts.overviewRegion.data.labels) === JSON.stringify(barLabels);
+            if (sameLabels) {
+                charts.overviewRegion.data.datasets[0].data = barVals;
+                charts.overviewRegion.update('none');
             } else {
-                isFirstLoad = false;
+                charts.overviewRegion.destroy();
+                charts.overviewRegion = null;
             }
         }
-
-        function renderInsightsPanel(insights) {
-            const totalCritical = insights.critical.length;
-            const totalAction   = insights.action.length;
-            const totalPositive = insights.positive.length;
-            const totalAll      = totalCritical + totalAction + totalPositive;
-
-            // Update badge
-            if (totalCritical > 0) {
-                $('#insightsBadge').text(totalCritical).removeClass('hidden');
-                $('#bellIcon').addClass('bell-ring');
-                setTimeout(() => $('#bellIcon').removeClass('bell-ring'), 600);
-            } else {
-                $('#insightsBadge').addClass('hidden');
-            }
-
-            // Update tab badges
-            $('#tab-badge-critical').text(totalCritical);
-            $('#tab-badge-action').text(totalAction);
-            $('#tab-badge-positive').text(totalPositive);
-
-            // Update summary footer
-            $('#panel-total-critical').text(totalCritical);
-            $('#panel-total-action').text(totalAction);
-            $('#panel-total-positive').text(totalPositive);
-
-            // Update timestamp
-            $('#insightTimestamp').text('Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
-
-            // Render each section
-            renderInsightSection('critical', insights.critical);
-            renderInsightSection('action', insights.action);
-            renderInsightSection('positive', insights.positive);
+        if (!charts.overviewRegion) {
+            charts.overviewRegion = new Chart(document.getElementById('overviewRegionChart'), {
+                type: 'bar',
+                data: { labels: barLabels, datasets: [{ label: 'MTD Volume', data: barVals, backgroundColor: brandColors.green, borderRadius: 4, maxBarThickness: 50 }] },
+                options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+            });
         }
 
-        function renderInsightSection(type, cards) {
-            const container = $(`#insight-tab-${type}`);
-            container.empty();
+        const healthVals = [stats.growth, stats.decline, stats.new, stats.stable];
+        if (charts.overviewHealth) {
+            charts.overviewHealth.data.datasets[0].data = healthVals;
+            charts.overviewHealth.update('none');
+        } else {
+            charts.overviewHealth = new Chart(document.getElementById('overviewHealthChart'), {
+                type: 'doughnut',
+                data: { labels: ['Growth', 'Decline', 'New', 'Stable'], datasets: [{ data: healthVals, backgroundColor: [brandColors.green, brandColors.red, brandColors.blue, '#E2E8F0'], borderWidth: 0 }] },
+                options: { maintainAspectRatio: false, animation: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+    }
 
-            const colorMap = {
-                critical: { bg: '#FFF5F5', border: '#FECACA', titleColor: '#B91C1C' },
-                action:   { bg: '#FFFBEB', border: '#FDE68A', titleColor: '#92400E' },
-                positive: { bg: '#F0FDF4', border: '#BBF7D0', titleColor: '#166534' }
-            };
-            const c = colorMap[type];
 
-            if (cards.length === 0) {
-                let msg = type === 'critical' ? '✅ No critical alerts for this view.' : 
-                          type === 'action'   ? '👍 No action points right now.' : 
-                                                '📊 Filter data to see wins.';
-                container.html(`<div class="text-center py-12 text-gray-400">
-                    <div class="text-4xl mb-3">${type === 'positive' ? '🌟' : '✅'}</div>
-                    <p class="text-sm font-medium">${msg}</p>
-                </div>`);
-                return;
+    function renderAcqPage() {
+    const ACQ_PAGE_SIZE = 12;
+    const customers  = window._acqCustomers || [];
+    const page       = window._acqPage || 1;
+    const totalPages = Math.ceil(customers.length / ACQ_PAGE_SIZE);
+    const start      = (page - 1) * ACQ_PAGE_SIZE;
+    const pageItems  = customers.slice(start, start + ACQ_PAGE_SIZE);
+
+    document.getElementById('acq-feed-grid').innerHTML = pageItems.map(c => `
+        <div class="acq-card">
+            <div style="font-size:0.8rem;font-weight:800;color:#111827;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${c.cust}">${c.cust}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">
+                <span style="font-size:0.63rem;background:#EFF6FF;color:#1D4ED8;padding:2px 8px;border-radius:20px;font-weight:700">${c.prod}</span>
+                <span style="font-size:0.63rem;background:#F0FDF4;color:#166534;padding:2px 8px;border-radius:20px;font-weight:700">NEW</span>
+            </div>
+            <div style="font-size:0.68rem;color:#6B7280;margin-bottom:4px">📍 ${c.so}</div>
+            ${c.seMob
+                ? `<div style="font-size:0.68rem;color:#6B7280;margin-bottom:8px">📞 ${c.se} · ${c.seMob}</div>`
+                : `<div style="font-size:0.68rem;color:#6B7280;margin-bottom:8px">👤 ${c.se || 'Unassigned'}</div>`}
+            <div style="display:flex;align-items:baseline;gap:4px;border-top:1px solid #EFF6FF;padding-top:8px;margin-top:4px">
+                <span style="font-size:1.1rem;font-weight:900;color:#1D4ED8;font-family:monospace">${parseFloat(c.mtd).toLocaleString(undefined,{maximumFractionDigits:1})}</span>
+                <span style="font-size:0.65rem;color:#93C5FD;font-weight:700">LPD MTD</span>
+            </div>
+        </div>`).join('');
+
+    // Pagination bar
+    const paginEl  = document.getElementById('acq-feed-pagination');
+    if (totalPages <= 1) { paginEl.innerHTML = `<span style="font-size:0.75rem;color:#9CA3AF">${customers.length} new customers</span>`; return; }
+
+    const btnStyle = 'padding:4px 14px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
+    let pageButtons = '';
+    for (let p = 1; p <= totalPages; p++) {
+        const isActive = p === page;
+        pageButtons += `<button onclick="window._acqPage=${p};renderAcqPage()"
+            style="${btnStyle}${isActive ? 'background:#3B82F6;color:white;border-color:#3B82F6;' : 'color:#374151;'}">${p}</button>`;
+    }
+
+    paginEl.innerHTML = `
+        <span style="font-size:0.75rem;color:#9CA3AF">${customers.length} total · Page ${page} of ${totalPages}</span>
+        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+            <button onclick="window._acqPage=Math.max(1,window._acqPage-1);renderAcqPage()"
+                ${page<=1?'disabled':''} style="${btnStyle}opacity:${page<=1?'0.35':'1'}">← Prev</button>
+            ${pageButtons}
+            <button onclick="window._acqPage=Math.min(${totalPages},window._acqPage+1);renderAcqPage()"
+                ${page>=totalPages?'disabled':''} style="${btnStyle}opacity:${page>=totalPages?'0.35':'1'}">Next →</button>
+        </div>`;
+}
+
+    // =====================================================
+    // CUSTOMER INSIGHTS TAB — lazy-rendered
+    // =====================================================
+    // Global churn data store for sort + export
+let _churnData   = { critical: [], high: [], watch: [] };
+let _churnSort   = { col: 'pct', dir: 'asc' };  // asc = worst % first
+let _churnPage   = 1;
+const CHURN_PAGE_SIZE = 50;
+
+function renderCustomerInsightsTab(data) {
+    const idx      = col => globalColumns.findIndex(c => c.title === col);
+    const iMTD     = idx('MTD'),       iLYMTD  = idx('LYMTD');
+    const iAbsDiff = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+    const iPct     = idx('MTD_vs_LYMTD_Growth_Percentage');
+    const iTrend   = idx('Sales_Trend');
+    const iCust    = idx('CustomerName');
+    const iSE      = idx('SE_Name'),   iSEMob  = idx('SE_Mobile');
+    const iSO      = idx('SO_Name'),   iProd   = idx('Product');
+
+    let churnCritical = [], churnHigh = [], churnWatch = [];
+
+    data.forEach(row => {
+        const mtd     = parseFloat(row[iMTD])    || 0;
+        const lymtd   = parseFloat(row[iLYMTD])  || 0;
+        const absDiff = parseFloat(row[iAbsDiff]) || 0;
+        const pct     = parseFloat(row[iPct])     || 0;
+        const trend   = String(row[iTrend]  || '').trim();
+        const pctDisp = pct * 100;
+
+        if (trend !== 'Decline') return;
+
+        const item = {
+            cust:     String(row[iCust]  || 'Unknown').trim(),
+            se:       String(row[iSE]    || '').trim(),
+            seMob:    String(row[iSEMob] || '').trim(),
+            so:       String(row[iSO]    || '').trim(),
+            prod:     String(row[iProd]  || '').trim(),
+            mtd, lymtd,
+            mtdFmt:   mtd.toFixed(1),
+            lymtdFmt: lymtd.toFixed(1),
+            pct:      pctDisp,
+            pctFmt:   pctDisp.toFixed(1),
+            absDiff:  Math.abs(absDiff),
+            absFmt:   Math.abs(absDiff).toFixed(2),
+            goneDark: lymtd > 1 && mtd === 0
+        };
+
+        if (item.goneDark || pctDisp < -50) churnCritical.push({ ...item, tier: 'critical' });
+        else if (pctDisp < -30)             churnHigh.push(  { ...item, tier: 'high' });
+        else if (pctDisp < -10)             churnWatch.push(  { ...item, tier: 'watch' });
+    });
+
+    _churnData = { critical: churnCritical, high: churnHigh, watch: churnWatch };
+
+    // Update pills
+    document.getElementById('churn-count-critical').textContent = churnCritical.length;
+    document.getElementById('churn-count-high').textContent     = churnHigh.length;
+    document.getElementById('churn-count-watch').textContent    = churnWatch.length;
+    document.getElementById('churn-count-total').textContent    = churnCritical.length + churnHigh.length + churnWatch.length;
+
+    _churnPage = 1;
+    renderChurnTable();
+    customerTabDirty = false;
+}
+
+function selectChurnTier(tier) {
+    document.getElementById('churn-tier-filter').value = tier;
+    _churnPage = 1;
+    renderChurnTable();
+}
+
+function churnTableSort(col) {
+    if (_churnSort.col === col) {
+        _churnSort.dir = _churnSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        _churnSort.col = col;
+        // Default directions: pct/lpd descending magnitude, text ascending
+        _churnSort.dir = (col === 'pct' || col === 'lpd' || col === 'mtd' || col === 'lymtd') ? 'asc' : 'asc';
+    }
+    // Update sort icons
+    document.querySelectorAll('[id^="churn-si-"]').forEach(el => el.textContent = '');
+    const el = document.getElementById('churn-si-' + col);
+    if (el) el.textContent = _churnSort.dir === 'asc' ? ' ↑' : ' ↓';
+    _churnPage = 1;
+    renderChurnTable();
+}
+
+function renderChurnTable() {
+
+
+    function updateChurnPillActive() {
+    const tier = document.getElementById('churn-tier-filter')?.value || 'all';
+    const configs = {
+        all:      { el: 'churn-pill-all',      border: 'border-gray-400',   bg: 'bg-gray-100'   },
+        critical: { el: 'churn-pill-critical',  border: 'border-red-400',    bg: 'bg-red-100'    },
+        high:     { el: 'churn-pill-high',      border: 'border-orange-400', bg: 'bg-orange-100' },
+        watch:    { el: 'churn-pill-watch',      border: 'border-amber-400',  bg: 'bg-amber-100'  },
+    };
+    // Reset all
+    Object.values(configs).forEach(c => {
+        const el = document.getElementById(c.el);
+        if (!el) return;
+        el.style.boxShadow = '';
+        el.style.transform = '';
+    });
+    // Highlight active
+    const active = configs[tier];
+    if (active) {
+        const el = document.getElementById(active.el);
+        if (el) { el.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.12)'; el.style.transform = 'translateY(-1px)'; }
+    }
+}
+    const tierFilter = document.getElementById('churn-tier-filter')?.value || 'all';
+    const search     = (document.getElementById('churn-search')?.value || '').toLowerCase();
+
+    // Merge tiers
+    let rows = [];
+    if (tierFilter === 'all' || tierFilter === 'critical') rows = rows.concat(_churnData.critical);
+    if (tierFilter === 'all' || tierFilter === 'high')     rows = rows.concat(_churnData.high);
+    if (tierFilter === 'all' || tierFilter === 'watch')    rows = rows.concat(_churnData.watch);
+
+    // Search filter
+    if (search) {
+        rows = rows.filter(r =>
+            r.cust.toLowerCase().includes(search) ||
+            r.se.toLowerCase().includes(search)   ||
+            r.so.toLowerCase().includes(search)   ||
+            r.prod.toLowerCase().includes(search) ||
+            r.seMob.includes(search)
+        );
+    }
+
+    // Sort
+    const { col, dir } = _churnSort;
+    rows.sort((a, b) => {
+        let av, bv;
+        if (col === 'pct')   { av = a.pct;    bv = b.pct; }
+        else if (col === 'lpd')   { av = a.absDiff; bv = b.absDiff; }
+        else if (col === 'mtd')   { av = a.mtd;     bv = b.mtd; }
+        else if (col === 'lymtd') { av = a.lymtd;   bv = b.lymtd; }
+        else if (col === 'tier')  { av = a.tier;     bv = b.tier; }
+        else { av = (a[col] || '').toLowerCase(); bv = (b[col] || '').toLowerCase(); }
+
+        if (typeof av === 'string') return dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+        return dir === 'asc' ? av - bv : bv - av;
+    });
+
+    // Paginate
+    const totalPages = Math.ceil(rows.length / CHURN_PAGE_SIZE);
+    const start      = (_churnPage - 1) * CHURN_PAGE_SIZE;
+    const pageRows   = rows.slice(start, start + CHURN_PAGE_SIZE);
+
+    // Tier config
+    const tierCfg = {
+        critical: { label: 'Critical',  bg: '#FFF5F5', color: '#991B1B', badge: 'background:#FEE2E2;color:#991B1B' },
+        high:     { label: 'High Risk', bg: '#FFF7F0', color: '#9A3412', badge: 'background:#FFEDD5;color:#9A3412' },
+        watch:    { label: 'Watch',     bg: '#FEFCE8', color: '#92400E', badge: 'background:#FEF3C7;color:#92400E' }
+    };
+
+    const tbody = document.getElementById('churn-table-body');
+    if (pageRows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:#9CA3AF;font-size:0.85rem">
+            <div style="font-size:2rem;margin-bottom:8px">✅</div>No accounts match the current filter
+        </td></tr>`;
+    } else {
+        tbody.innerHTML = pageRows.map(r => {
+            const cfg  = tierCfg[r.tier];
+            const pctColor = r.goneDark ? '#991B1B' : r.pct < -50 ? '#991B1B' : r.pct < -30 ? '#9A3412' : '#92400E';
+            const pctLabel = r.goneDark ? 'GONE DARK' : r.pctFmt + '%';
+            return `<tr style="border-bottom:1px solid #F1F5F9;transition:background 0.12s" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
+                <td style="padding:12px 16px">
+                    <span style="font-size:0.68rem;font-weight:800;padding:2px 10px;border-radius:20px;${cfg.badge}">${cfg.label}</span>
+                </td>
+                <td style="padding:12px 16px;max-width:180px">
+                    <div style="font-size:0.78rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.cust}">${r.cust}</div>
+                </td>
+                <td style="padding:12px 16px">
+                    <span style="font-size:0.7rem;background:#F1F5F9;color:#475569;padding:2px 8px;border-radius:20px;font-weight:600">${r.prod}</span>
+                </td>
+                <td style="padding:12px 16px;font-size:0.75rem;color:#374151;white-space:nowrap">${r.so}</td>
+                <td style="padding:12px 16px">
+                    <div style="font-size:0.75rem;color:#374151;font-weight:600">${r.se || 'Unassigned'}</div>
+                    ${r.seMob ? `<div style="font-size:0.65rem;color:#6B7280;margin-top:1px">📞 ${r.seMob}</div>` : ''}
+                </td>
+                <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;font-weight:600;color:#374151">${r.mtdFmt}</td>
+                <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;color:#9CA3AF">${r.lymtdFmt}</td>
+                <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;font-weight:600;color:#DF2027">−${r.absFmt}</td>
+                <td style="padding:12px 16px;text-align:right">
+                    <span style="font-size:0.78rem;font-weight:900;color:${pctColor}">${pctLabel}</span>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // Pagination bar
+    const paginEl  = document.getElementById('churn-table-pagination');
+    const btnStyle = 'padding:4px 12px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
+    if (rows.length > CHURN_PAGE_SIZE) {
+        let pageButtons = '';
+        const range = 3;
+        for (let p = 1; p <= totalPages; p++) {
+            if (p === 1 || p === totalPages || (p >= _churnPage - range && p <= _churnPage + range)) {
+                const isActive = p === _churnPage;
+                pageButtons += `<button onclick="_churnPage=${p};renderChurnTable()"
+                    style="${btnStyle}${isActive ? 'background:#2E963D;color:white;border-color:#2E963D;' : 'color:#374151;'}">${p}</button>`;
+            } else if (p === _churnPage - range - 1 || p === _churnPage + range + 1) {
+                pageButtons += `<span style="padding:4px 4px;color:#9CA3AF">…</span>`;
             }
+        }
+        paginEl.innerHTML = `
+            <span>${rows.length} accounts · Page ${_churnPage} of ${totalPages}</span>
+            <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+                <button onclick="_churnPage=Math.max(1,_churnPage-1);renderChurnTable()" ${_churnPage<=1?'disabled':''} style="${btnStyle}opacity:${_churnPage<=1?'0.35':'1'}">← Prev</button>
+                ${pageButtons}
+                <button onclick="_churnPage=Math.min(${totalPages},_churnPage+1);renderChurnTable()" ${_churnPage>=totalPages?'disabled':''} style="${btnStyle}opacity:${_churnPage>=totalPages?'0.35':'1'}">Next →</button>
+            </div>`;
+    } else {
+        paginEl.innerHTML = `<span>${rows.length} accounts · All shown</span>`;
+    }
+}
 
-            cards.forEach((card, i) => {
-                let detailHtml = '';
-                if (card.rows && card.rows.length > 0 && card.rowFn) {
-                    let rowsHtml = card.rows.map(r => card.rowFn(r)).join('');
-                    let moreCount = card.rows.length >= 8 ? '<div class="text-center mt-2 text-xs text-gray-400">Showing top results. Open Master Table for full list.</div>' : '';
-                    detailHtml = `<div class="mt-3 panel-section-body" id="detail-${type}-${i}" style="max-height: 0px;">
-                        ${rowsHtml}${moreCount}
-                    </div>`;
+function exportChurnTier(tier) {
+    let rows = [];
+    const labelMap = { critical: 'Critical', high: 'High Risk', watch: 'Watch List' };
+    if (tier === 'all') {
+        rows = [
+            ..._churnData.critical.map(r => ({ ...r, tierLabel: 'Critical' })),
+            ..._churnData.high.map(r =>     ({ ...r, tierLabel: 'High Risk' })),
+            ..._churnData.watch.map(r =>    ({ ...r, tierLabel: 'Watch List' }))
+        ];
+    } else {
+        rows = (_churnData[tier] || []).map(r => ({ ...r, tierLabel: labelMap[tier] }));
+    }
+
+    if (!rows.length) { alert('No data to export.'); return; }
+
+    const headers = ['Tier','Customer','Product','Sales Office','SE Name','SE Mobile','MTD (LPD)','LYMTD (LPD)','LPD Lost','% Change'];
+    const csv = [
+        headers.join(','),
+        ...rows.map(r => [
+            `"${r.tierLabel}"`, `"${r.cust}"`, `"${r.prod}"`, `"${r.so}"`,
+            `"${r.se}"`, `"${r.seMob}"`,
+            r.mtdFmt, r.lymtdFmt, r.absFmt, r.pctFmt + '%'
+        ].join(','))
+    ].join('\r\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `Heritage_ChurnRisk_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    trackEvent('Churn Export', tier);
+}
+
+function applyChurnSort() {
+    const sortVal = document.getElementById('churn-sort-select')?.value || 'pct';
+
+    function sortList(list) {
+        return [...list].sort((a, b) => {
+            if (sortVal === 'pct')  return a.pct - b.pct;           // most negative first
+            if (sortVal === 'lpd')  return b.absDiff - a.absDiff;   // highest LPD loss first
+            if (sortVal === 'name') return a.cust.localeCompare(b.cust);
+            return 0;
+        });
+    }
+
+    const sorted = {
+        critical: sortList(_churnData.critical),
+        high:     sortList(_churnData.high),
+        watch:    sortList(_churnData.watch)
+    };
+
+    document.getElementById('churn-critical-badge').textContent = sorted.critical.length;
+    document.getElementById('churn-high-badge').textContent     = sorted.high.length;
+    document.getElementById('churn-watch-badge').textContent    = sorted.watch.length;
+
+    renderChurnTierRows('critical', sorted.critical);
+    renderChurnTierRows('high',     sorted.high);
+    renderChurnTierRows('watch',    sorted.watch);
+}
+
+function renderChurnTierRows(tier, list) {
+    const txtClrMap = { critical: '#991B1B', high: '#9A3412', watch: '#92400E' };
+    const txtClr    = txtClrMap[tier];
+
+    document.getElementById('churn-tier-body-' + tier).innerHTML = list.length
+        ? list.map(r => `
+            <div class="churn-row">
+                <div style="min-width:0;flex:1">
+                    <div style="font-size:0.75rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.cust}">${r.cust}</div>
+                    <div style="font-size:0.65rem;color:#6B7280;margin-top:1px">${r.prod} · ${r.so}</div>
+                    ${r.seMob
+                        ? `<span class="se-pill" style="margin-top:3px;display:inline-flex">📞 ${r.se} · ${r.seMob}</span>`
+                        : `<span class="se-pill" style="margin-top:3px;display:inline-flex">👤 ${r.se || 'Unassigned'}</span>`}
+                </div>
+                <div style="text-align:right;flex-shrink:0;margin-left:10px">
+                    <div style="font-size:0.78rem;font-weight:900;color:${txtClr}">${r.label}</div>
+                    <div style="font-size:0.62rem;color:#9CA3AF">Was ${r.lymtdFmt} LPD</div>
+                    <div style="font-size:0.62rem;color:#9CA3AF">−${r.absFmt} LPD</div>
+                </div>
+            </div>`).join('')
+        : `<div class="empty-state"><div style="font-size:1.5rem;margin-bottom:6px">✅</div>No accounts in this tier</div>`;
+}
+
+function exportChurnTier(tier) {
+    let rows = [];
+    if (tier === 'all') {
+        rows = [
+            ..._churnData.critical.map(r => ({ ...r, tier: 'Critical' })),
+            ..._churnData.high.map(r =>     ({ ...r, tier: 'High Risk' })),
+            ..._churnData.watch.map(r =>    ({ ...r, tier: 'Watch List' }))
+        ];
+    } else {
+        const labelMap = { critical: 'Critical', high: 'High Risk', watch: 'Watch List' };
+        rows = _churnData[tier].map(r => ({ ...r, tier: labelMap[tier] }));
+    }
+
+    if (!rows.length) { alert('No data to export for this tier.'); return; }
+
+    const headers = ['Tier', 'Customer', 'Product', 'Sales Office', 'SE Name', 'SE Mobile', 'MTD (LPD)', 'LYMTD (LPD)', 'LPD Lost', '% Change'];
+    const csv = [
+        headers.join(','),
+        ...rows.map(r => [
+            `"${r.tier}"`,
+            `"${r.cust}"`,
+            `"${r.prod}"`,
+            `"${r.so}"`,
+            `"${r.se}"`,
+            `"${r.seMob}"`,
+            r.mtdFmt,
+            r.lymtdFmt,
+            r.absFmt,
+            r.pctFmt + '%'
+        ].join(','))
+    ].join('\r\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href     = url;
+    link.download = `Heritage_ChurnRisk_${tier}_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(link); link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    trackEvent('Churn Export', tier);
+}
+
+    // Toggle churn tier accordion
+    function toggleChurnTier(tier) {
+        const body    = document.getElementById('churn-tier-body-' + tier);
+        const chevron = document.getElementById('churn-' + tier + '-chevron');
+        const isOpen  = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
+        if (isOpen) {
+            body.style.maxHeight = '0px'; body.style.overflow = 'hidden';
+            chevron.style.transform = 'rotate(-90deg)';
+        } else {
+            body.style.maxHeight = '400px'; body.style.overflow = 'auto';
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    // =====================================================
+    // MASTER DATA TABLE (DataTables)
+    // =====================================================
+    function initTable(data, columns, trendIdx) {
+        if (myDataTable) { myDataTable.clear(); myDataTable.rows.add(data); myDataTable.draw(); return; }
+        myDataTable = $('#salesTable').DataTable({
+            data: data, columns: columns, pageLength: 15, scrollX: true, scrollCollapse: true, autoWidth: false, deferRender: true,
+            columnDefs: [{ targets: trendIdx, render: function(data) {
+                let t = String(data || '').trim();
+                if (t === 'Growth')                          return '<span class="badge badge-growth">Growth</span>';
+                if (t === 'Decline')                         return '<span class="badge badge-decline">Decline</span>';
+                if (t === 'New Customer' || t === 'New')     return '<span class="badge badge-new">New</span>';
+                return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${t || 'Stable'}</span>`;
+            }}],
+            language: { search: "", searchPlaceholder: "Search within results..." },
+            dom: '<"top"f>rt<"bottom"p><"clear">'
+        });
+        $('.dataTables_filter').appendTo('#table-actions');
+        $('.dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]');
+        $('.dataTables_filter label').contents().filter(function() { return this.nodeType === 3; }).remove();
+    }
+
+    // =====================================================
+    // TEAM LEADERBOARD ENGINE
+    // =====================================================
+    const LB_PAGE_SIZE = 25;
+    let lbData   = { se: [], so: [], rh: [] };
+    let lbPage   = { se: 1,  so: 1,  rh: 1  };
+    let lbSearch = '';
+    let activeLbTab = 'se';
+
+    let lbSort = {
+        se: { col: 'mtd', dir: 'desc' },
+        so: { col: 'mtd', dir: 'desc' },
+        rh: { col: 'mtd', dir: 'desc' }
+    };
+
+    const LB_NUMERIC_COLS = new Set(['mtd','lymtd','yoy','growth','decline','newAccts','total','winRate','soCount']);
+
+    function sortLb(tab, col) {
+        if (lbSort[tab].col === col) {
+            lbSort[tab].dir = lbSort[tab].dir === 'desc' ? 'asc' : 'desc';
+        } else {
+            lbSort[tab].col = col;
+            lbSort[tab].dir = 'desc';
+        }
+        lbPage[tab] = 1;
+        updateSortIcons(tab);
+        renderLbTable(tab);
+    }
+
+    function updateSortIcons(tab) {
+        document.querySelectorAll(`[id^="si-${tab}-"]`).forEach(el => el.textContent = '');
+        const { col, dir } = lbSort[tab];
+        const el = document.getElementById(`si-${tab}-${col}`);
+        if (el) el.textContent = dir === 'desc' ? ' ↓' : ' ↑';
+    }
+
+    function getFieldVal(r, col) {
+        if (col === 'winRate') return r.total > 0 ? r.growth / r.total : 0;
+        if (LB_NUMERIC_COLS.has(col)) return parseFloat(r[col]) || 0;
+        return String(r[col] || '').toLowerCase();
+    }
+
+    function getSortedRows(tab, filtered) {
+        const { col, dir } = lbSort[tab];
+        return [...filtered].sort((a, b) => {
+            const av = getFieldVal(a, col);
+            const bv = getFieldVal(b, col);
+            if (typeof av === 'string') return dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+            return dir === 'asc' ? av - bv : bv - av;
+        });
+    }
+
+    function switchLbTab(tab) {
+        activeLbTab = tab;
+        document.querySelectorAll('.lb-panel').forEach(p => p.classList.remove('active-panel'));
+        document.getElementById('lb-panel-' + tab).classList.add('active-panel');
+        document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'));
+        document.getElementById('lb-tab-' + tab).classList.add('active');
+        lbPage[tab] = 1;
+        updateSortIcons(tab);
+        renderLbTable(tab);
+    }
+
+    function onLbSearch(val) {
+        lbSearch = val.toLowerCase();
+        lbPage[activeLbTab] = 1;
+        renderLbTable(activeLbTab);
+    }
+
+    function rankBadge(n) {
+        const cls  = n === 1 ? 'rank-1' : n === 2 ? 'rank-2' : n === 3 ? 'rank-3' : 'rank-other';
+        const icon = n === 1 ? '🥇' : n === 2 ? '🥈' : n === 3 ? '🥉' : n;
+        return `<span class="rank-badge ${cls}">${icon}</span>`;
+    }
+
+    function pctChip(val) {
+        const v = parseFloat(val);
+        if (isNaN(v)) return `<span class="pct-chip pct-flat">N/A</span>`;
+        const cls  = v > 0 ? 'pct-pos' : v < 0 ? 'pct-neg' : 'pct-flat';
+        const sign = v > 0 ? '+' : '';
+        return `<span class="pct-chip ${cls}">${sign}${v.toFixed(1)}%</span>`;
+    }
+
+    function miniBar(val, maxVal, color) {
+        const pct = maxVal > 0 ? Math.min(100, (val / maxVal) * 100) : 0;
+        return `<div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+    }
+
+    function winRateBar(growth, total) {
+        const pct = total ? Math.round((growth / total) * 100) : 0;
+        return `<div class="inline-flex items-center gap-1.5">
+            <div class="w-10 h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                <div style="width:${pct}%;background:#2E963D;height:100%"></div>
+            </div>
+            <span style="font-size:0.7rem;font-weight:700;color:#374151">${pct}%</span>
+        </div>`;
+    }
+
+    function fmtNum(n) {
+        return parseFloat(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    }
+
+    function renderLbTable(tab) {
+        const allRows  = lbData[tab];
+        const filtered = lbSearch
+            ? allRows.filter(r => JSON.stringify(Object.values(r)).toLowerCase().includes(lbSearch))
+            : allRows;
+        const sorted     = getSortedRows(tab, filtered);
+        const page       = lbPage[tab];
+        const start      = (page - 1) * LB_PAGE_SIZE;
+        const pageRows   = sorted.slice(start, start + LB_PAGE_SIZE);
+        const totalPages = Math.ceil(sorted.length / LB_PAGE_SIZE);
+        const maxVol     = sorted.length ? Math.max(...sorted.map(r => r.mtd)) : 1;
+
+        const tbody = document.getElementById(tab + '-lb-body');
+        tbody.innerHTML = pageRows.map((r, i) => {
+            const rank    = start + i + 1;
+            const winRate = winRateBar(r.growth, r.total);
+            const nameCell = `<td>
+                <div style="font-weight:700;color:#111827;font-size:0.8rem">${r.name}</div>
+                ${miniBar(r.mtd, maxVol, '#2E963D')}
+            </td>`;
+            const regionCell  = tab === 'so' ? `<td><span style="font-size:0.7rem;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:20px;font-weight:600">${r.region || '—'}</span></td>` : '';
+            const soCountCell = tab === 'rh' ? `<td style="text-align:center;font-weight:600;color:#6B7280">${r.soCount || '—'}</td>` : '';
+            return `<tr>
+                <td style="padding-left:20px">${rankBadge(rank)}</td>
+                ${nameCell}${regionCell}
+                <td style="text-align:right;font-family:monospace;font-weight:600;color:#1F2937">${fmtNum(r.mtd)}</td>
+                <td style="text-align:right;font-family:monospace;color:#9CA3AF">${fmtNum(r.lymtd)}</td>
+                <td style="text-align:right">${pctChip(r.yoy)}</td>
+                <td style="text-align:center;font-weight:700;color:#2E963D">${r.growth}</td>
+                <td style="text-align:center;font-weight:700;color:#DF2027">${r.decline}</td>
+                <td style="text-align:center;font-weight:700;color:#3B82F6">${r.newAccts}</td>
+                <td style="text-align:center;font-weight:600;color:#6B7280">${r.total}</td>
+                <td style="text-align:center">${winRate}</td>
+                ${soCountCell}
+            </tr>`;
+        }).join('');
+
+        const paginEl  = document.getElementById(tab + '-lb-pagination');
+        const btnStyle = 'padding:4px 14px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
+
+        if (sorted.length > LB_PAGE_SIZE) {
+            const range = 3;
+            let pageButtons = '';
+            for (let p = 1; p <= totalPages; p++) {
+                if (p === 1 || p === totalPages || (p >= page - range && p <= page + range)) {
+                    const isActive = p === page;
+                    pageButtons += `<button onclick="lbChangePage('${tab}',${p})" style="${btnStyle}${isActive ? 'background:#2E963D;color:white;border-color:#2E963D;' : 'color:#374151;'}">${p}</button>`;
+                } else if (p === page - range - 1 || p === page + range + 1) {
+                    pageButtons += `<span style="padding:4px 6px;color:#9CA3AF">…</span>`;
                 }
+            }
+            paginEl.innerHTML = `
+                <span>${sorted.length} records · Page ${page} of ${totalPages} · ${LB_PAGE_SIZE}/page</span>
+                <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+                    <button onclick="lbChangePage('${tab}',${page - 1})" ${page <= 1 ? 'disabled' : ''} style="${btnStyle}opacity:${page <= 1 ? '0.35' : '1'}">← Prev</button>
+                    ${pageButtons}
+                    <button onclick="lbChangePage('${tab}',${page + 1})" ${page >= totalPages ? 'disabled' : ''} style="${btnStyle}opacity:${page >= totalPages ? '0.35' : '1'}">Next →</button>
+                </div>`;
+        } else {
+            paginEl.innerHTML = `<span>${sorted.length} records · All shown</span>`;
+        }
+    }
 
-                let toggleBtn = card.rows ? `<button class="panel-section-toggle collapsed text-gray-400 ml-auto hover:text-gray-700 transition-colors" onclick="toggleInsightDetail(this, 'detail-${type}-${i}')">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>` : '';
+    function lbChangePage(tab, page) {
+        lbPage[tab] = page;
+        renderLbTable(tab);
+        document.getElementById('lb-panel-' + tab).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-                container.append(`<div class="insight-card ${type}" style="background:${c.bg}; border-color:${c.border}">
-                    <div class="flex items-start gap-2.5">
-                        <span class="text-xl flex-shrink-0 mt-0.5">${card.icon}</span>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-start gap-2">
-                                <p class="font-bold text-[0.72rem] leading-tight" style="color:${c.titleColor}">${card.title}</p>
-                                ${toggleBtn}
-                            </div>
-                            <p class="text-[0.67rem] text-gray-500 mt-1 leading-relaxed">${card.desc}</p>
+    function buildLeaderboardData(data) {
+        const idx     = col => globalColumns.findIndex(c => c.title === col);
+        const iMTD    = idx('MTD'),        iLYMTD  = idx('LYMTD');
+        const iTrend  = idx('Sales_Trend');
+        const iSE     = idx('SE_Name'),    iSO     = idx('SO_Name'), iRegion = idx('Region');
+
+        const seMap = {}, soMap = {}, rhMap = {};
+        const soRegionMap = {};
+
+        data.forEach(row => {
+            const mtd    = parseFloat(row[iMTD])   || 0;
+            const lymtd  = parseFloat(row[iLYMTD]) || 0;
+            const trend  = String(row[iTrend]  || '').trim();
+            const se     = String(row[iSE]     || '').trim();
+            const so     = String(row[iSO]     || '').trim();
+            const region = String(row[iRegion] || '').trim();
+
+            function bump(map, key) {
+                if (!key) return;
+                if (!map[key]) map[key] = { mtd: 0, lymtd: 0, growth: 0, decline: 0, newAccts: 0, total: 0 };
+                map[key].mtd   += mtd;
+                map[key].lymtd += lymtd;
+                map[key].total += 1;
+                if (trend === 'Growth')                              map[key].growth++;
+                else if (trend === 'Decline')                        map[key].decline++;
+                else if (trend === 'New Customer' || trend === 'New') map[key].newAccts++;
+            }
+
+            bump(seMap, se);
+            bump(soMap, so);
+            bump(rhMap, region);
+            if (so && region) soRegionMap[so] = region;
+        });
+
+        const soCountPerRegion = {};
+        Object.entries(soRegionMap).forEach(([so, reg]) => {
+            soCountPerRegion[reg] = (soCountPerRegion[reg] || 0) + 1;
+        });
+
+        function toArray(map, extraFn) {
+            return Object.entries(map).map(([name, d]) => {
+                const yoy  = d.lymtd > 0 ? ((d.mtd - d.lymtd) / d.lymtd * 100) : (d.mtd > 0 ? 100 : 0);
+                const base = { name, mtd: d.mtd, lymtd: d.lymtd, yoy: yoy.toFixed(1), growth: d.growth, decline: d.decline, newAccts: d.newAccts, total: d.total };
+                return extraFn ? { ...base, ...extraFn(name) } : base;
+            }).sort((a, b) => b.mtd - a.mtd);
+        }
+
+        lbData.se = toArray(seMap);
+        lbData.so = toArray(soMap, name => ({ region: soRegionMap[name] || '' }));
+        lbData.rh = toArray(rhMap, name => ({ soCount: soCountPerRegion[name] || 0 }));
+
+        lbSearch = '';
+        document.getElementById('lb-search-input').value = '';
+        lbPage = { se: 1, so: 1, rh: 1 };
+        ['se', 'so', 'rh'].forEach(t => updateSortIcons(t));
+
+        // Team KPI cards
+        $('#tkpi-se-count').text(lbData.se.length.toLocaleString());
+        if (lbData.se.length > 0) {
+            const best = lbData.se[0];
+            $('#tkpi-top-se-name').text(best.name);
+            $('#tkpi-top-se-vol').text(fmtNum(best.mtd) + ' LPD MTD');
+
+            const validSEs = lbData.se.filter(s => parseFloat(s.lymtd) > 0);
+            const avgYoY   = validSEs.length ? (validSEs.reduce((sum, s) => sum + parseFloat(s.yoy), 0) / validSEs.length) : 0;
+            const avgEl    = document.getElementById('tkpi-avg-growth');
+            avgEl.textContent = (avgYoY > 0 ? '+' : '') + avgYoY.toFixed(1) + '%';
+            avgEl.className = 'text-2xl font-black ' + (avgYoY >= 0 ? 'text-[#2E963D]' : 'text-[#DF2027]');
+
+            const worstSE = [...lbData.se].sort((a, b) => b.decline - a.decline)[0];
+            if (worstSE && worstSE.decline > 0) {
+                $('#tkpi-worst-se-name').text(worstSE.name);
+                $('#tkpi-worst-se-decl').text(worstSE.decline + ' declining accounts');
+            } else {
+                $('#tkpi-worst-se-name').text('None');
+                $('#tkpi-worst-se-decl').text('No declines detected');
+            }
+        }
+
+        renderLbTable(activeLbTab);
+    }
+
+    // =====================================================
+    // SMART INSIGHTS ENGINE
+    // =====================================================
+    function computeAndRenderInsights(data) {
+        const idx      = col => globalColumns.findIndex(c => c.title === col);
+        const iMTD     = idx('MTD'),       iLYMTD  = idx('LYMTD');
+        const iAbsDiff = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+        const iPct     = idx('MTD_vs_LYMTD_Growth_Percentage');
+        const iTrend   = idx('Sales_Trend');
+        const iCust    = idx('CustomerName'), iSE = idx('SE_Name'), iSEMob = idx('SE_Mobile');
+        const iLastOrder = idx('Last_Order_Date');
+        const iSO      = idx('SO_Name'), iProd = idx('Product');
+        const iLM      = idx('LM');
+
+        const today = new Date();
+        let insights = { critical: [], action: [], positive: [] };
+        let totalMTD = 0, totalLYMTD = 0;
+        let goneDark = [], heavyDecline = [], inactiveList = [], stagnantList = [];
+        let newCustomers = [], topGrowthAccounts = [];
+        let seDeclineMap = {}, seGrowthMap = {};
+
+        data.forEach(row => {
+            const mtd     = parseFloat(row[iMTD])     || 0;
+            const lymtd   = parseFloat(row[iLYMTD])   || 0;
+            const lm      = parseFloat(row[iLM])       || 0;
+            const absDiff = parseFloat(row[iAbsDiff])  || 0;
+            const pct     = parseFloat(row[iPct])      || 0;
+            const trend   = String(row[iTrend]   || '').trim();
+            const cust    = String(row[iCust]    || 'Unknown').trim();
+            const se      = String(row[iSE]      || 'Unassigned').trim();
+            const seMob   = String(row[iSEMob]   || '').trim();
+            const so      = String(row[iSO]      || '').trim();
+            const prod    = String(row[iProd]    || '').trim();
+            const lastOrd = String(row[iLastOrder]|| '').trim();
+
+            totalMTD   += mtd;
+            totalLYMTD += lymtd;
+
+            if (lymtd > 1 && mtd === 0 && trend === 'Decline')
+                goneDark.push({ cust, se, seMob, so, prod, lymtd: lymtd.toFixed(1) });
+
+            if (pct < -0.30 && lymtd > 3 && trend === 'Decline')
+                heavyDecline.push({ cust, se, seMob, so, prod, pct: (pct * 100).toFixed(1), absDiff: absDiff.toFixed(2), lymtd: lymtd.toFixed(1) });
+
+            if (lastOrd && mtd > 0) {
+                const daysSince = Math.floor((today - new Date(lastOrd)) / 86400000);
+                if (daysSince >= 7) inactiveList.push({ cust, se, seMob, so, prod, daysSince, mtd: mtd.toFixed(1) });
+            }
+
+            if (trend === 'Stagnant' && lm > 10 && mtd < lm * 0.5)
+                stagnantList.push({ cust, se, seMob, so, prod, lm: lm.toFixed(1), mtd: mtd.toFixed(1) });
+
+            if (trend === 'New Customer' || trend === 'New')
+                newCustomers.push({ cust, se, so, prod, mtd: mtd.toFixed(1) });
+
+            if (trend === 'Growth' && absDiff > 5)
+                topGrowthAccounts.push({ cust, se, so, prod, absDiff: absDiff.toFixed(2), pct: (pct * 100).toFixed(1) });
+
+            if (se && se !== 'Unassigned') {
+                if (!seDeclineMap[se]) seDeclineMap[se] = { count: 0, vol: 0, mobile: seMob };
+                if (!seGrowthMap[se])  seGrowthMap[se]  = { count: 0, vol: 0, mobile: seMob };
+                if (trend === 'Decline') { seDeclineMap[se].count++; seDeclineMap[se].vol += Math.abs(absDiff); }
+                if (trend === 'Growth')  { seGrowthMap[se].count++;  seGrowthMap[se].vol  += absDiff; }
+            }
+        });
+
+        goneDark.sort((a, b) => parseFloat(b.lymtd) - parseFloat(a.lymtd));
+        heavyDecline.sort((a, b) => parseFloat(a.pct) - parseFloat(b.pct));
+        inactiveList.sort((a, b) => b.daysSince - a.daysSince);
+        stagnantList.sort((a, b) => parseFloat(b.lm) - parseFloat(a.lm));
+        topGrowthAccounts.sort((a, b) => parseFloat(b.absDiff) - parseFloat(a.absDiff));
+
+        const seDeclineRanked = Object.entries(seDeclineMap).sort((a, b) => b[1].count - a[1].count).slice(0, 5);
+        const seGrowthRanked  = Object.entries(seGrowthMap).sort((a, b)  => b[1].count - a[1].count).slice(0, 5);
+        const overallPct  = totalLYMTD > 0 ? ((totalMTD - totalLYMTD) / totalLYMTD * 100) : 0;
+        const overallDiff = totalMTD - totalLYMTD;
+
+        // Build insight cards
+        if (overallPct < -10) insights.critical.push({ icon: '📉', title: `Overall Volume Down ${Math.abs(overallPct).toFixed(1)}% vs Last Year`, desc: `Current view is tracking ${Math.abs(overallDiff).toFixed(0)} LPD below LYMTD. Immediate strategic review recommended.`, rows: null });
+        if (goneDark.length > 0)     insights.critical.push({ icon: '🔴', title: `${goneDark.length} Account${goneDark.length > 1 ? 's' : ''} Gone Dark`,               desc: `Customers who ordered last year but have ZERO sales this month. Risk of permanent churn.`, rows: goneDark.slice(0, 8),      rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">GONE DARK</div><div style="font-size:0.65rem;color:#6B7280">Was ${r.lymtd} LPD</div></div></div>` });
+        if (heavyDecline.length > 0) insights.critical.push({ icon: '⚠️', title: `${heavyDecline.length} Account${heavyDecline.length > 1 ? 's' : ''} with >30% YoY Decline`, desc: `High-impact accounts losing significant volume. SE intervention required.`,              rows: heavyDecline.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">${r.pct}%</div><div style="font-size:0.65rem;color:#6B7280">${r.absDiff} LPD drop</div></div></div>` });
+        if (seDeclineRanked.length > 0) insights.critical.push({ icon: '👤', title: 'SEs with Highest Decline Account Count', desc: `These executives have the most accounts trending downward.`, rows: seDeclineRanked, rowFn: ([name, d]) => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">${d.count} accounts</div><div style="font-size:0.65rem;color:#6B7280">${d.vol.toFixed(0)} LPD lost</div></div></div>` });
+
+        if (inactiveList.length > 0)     insights.action.push({ icon: '📅', title: `${inactiveList.length} Customers — No Order in 7+ Days`,    desc: `Active MTD customers who haven't ordered in over a week. Follow-up needed.`,          rows: inactiveList.slice(0, 8),  rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-amber-600" style="font-size:0.75rem">${r.daysSince}d ago</div><div style="font-size:0.65rem;color:#6B7280">MTD: ${r.mtd} LPD</div></div></div>` });
+        if (stagnantList.length > 0)     insights.action.push({ icon: '😐', title: `${stagnantList.length} High-Value Stagnant Accounts`,         desc: `Strong Last Month performance but underperforming MTD. Demand activation opportunity.`, rows: stagnantList.slice(0, 8),  rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-amber-600" style="font-size:0.75rem">${r.mtd} LPD</div><div style="font-size:0.65rem;color:#6B7280">LM was ${r.lm} LPD</div></div></div>` });
+
+        if (newCustomers.length > 0) { const newVol = newCustomers.reduce((s, r) => s + parseFloat(r.mtd), 0); insights.positive.push({ icon: '🌱', title: `${newCustomers.length} New Customers Acquired This Month`, desc: `Contributing ${newVol.toFixed(0)} LPD of fresh volume. Pipeline expansion in progress.`, rows: newCustomers.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div><span class="se-pill mt-1">👤 ${r.se}</span></div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.mtd} LPD</div><div style="font-size:0.65rem;color:#6B7280">NEW</div></div></div>` }); }
+        if (topGrowthAccounts.length > 0) insights.positive.push({ icon: '🚀', title: `Top Growth Accounts — Momentum Leaders`,           desc: `Accounts driving the most absolute volume growth vs last year.`,                       rows: topGrowthAccounts.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div><span class="se-pill mt-1">👤 ${r.se}</span></div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.absDiff} LPD</div><div style="font-size:0.65rem;color:#6B7280">+${r.pct}% YoY</div></div></div>` });
+        if (seGrowthRanked.length > 0)   insights.positive.push({ icon: '🏆', title: 'Top Performing SEs — Growth Champions',             desc: `Executives leading the most growth accounts. Recognition and best-practice sharing recommended.`, rows: seGrowthRanked, rowFn: ([name, d]) => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">${d.count} accts</div><div style="font-size:0.65rem;color:#6B7280">+${d.vol.toFixed(0)} LPD gained</div></div></div>` });
+
+        currentInsights = insights;
+        renderInsightsPanel(insights);
+
+        if (isFirstLoad && insights.critical.length > 0) {
+            isFirstLoad = false;
+            setTimeout(() => showCriticalToast(insights.critical), 2000);
+        } else {
+            isFirstLoad = false;
+        }
+    }
+
+    function renderInsightsPanel(insights) {
+        const totalCritical = insights.critical.length;
+        const totalAction   = insights.action.length;
+        const totalPositive = insights.positive.length;
+
+        if (totalCritical > 0) { $('#insightsBadge').text(totalCritical).removeClass('hidden'); $('#bellIcon').addClass('bell-ring'); setTimeout(() => $('#bellIcon').removeClass('bell-ring'), 600); }
+        else { $('#insightsBadge').addClass('hidden'); }
+
+        $('#tab-badge-critical').text(totalCritical);
+        $('#tab-badge-action').text(totalAction);
+        $('#tab-badge-positive').text(totalPositive);
+        $('#panel-total-critical').text(totalCritical);
+        $('#panel-total-action').text(totalAction);
+        $('#panel-total-positive').text(totalPositive);
+        $('#insightTimestamp').text('Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+        renderInsightSection('critical', insights.critical);
+        renderInsightSection('action',   insights.action);
+        renderInsightSection('positive', insights.positive);
+    }
+
+    function renderInsightSection(type, cards) {
+        const container = $(`#insight-tab-${type}`);
+        container.empty();
+        const colorMap = {
+            critical: { bg: '#FFF5F5', border: '#FECACA', titleColor: '#B91C1C' },
+            action:   { bg: '#FFFBEB', border: '#FDE68A', titleColor: '#92400E' },
+            positive: { bg: '#F0FDF4', border: '#BBF7D0', titleColor: '#166534' }
+        };
+        const c = colorMap[type];
+
+        if (cards.length === 0) {
+            let msg = type === 'critical' ? '✅ No critical alerts for this view.' : type === 'action' ? '👍 No action points right now.' : '📊 Filter data to see wins.';
+            container.html(`<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">${type === 'positive' ? '🌟' : '✅'}</div><p class="text-sm font-medium">${msg}</p></div>`);
+            return;
+        }
+
+        cards.forEach((card, i) => {
+            let detailHtml = '';
+            if (card.rows && card.rows.length > 0 && card.rowFn) {
+                let rowsHtml = card.rows.map(r => card.rowFn(r)).join('');
+                let moreNote = card.rows.length >= 8 ? '<div class="text-center mt-2 text-xs text-gray-400">Showing top results. Open Master Table for full list.</div>' : '';
+                detailHtml = `<div class="mt-3 panel-section-body" id="detail-${type}-${i}" style="max-height:0px">${rowsHtml}${moreNote}</div>`;
+            }
+            let toggleBtn = card.rows ? `<button class="panel-section-toggle collapsed text-gray-400 ml-auto hover:text-gray-700" onclick="toggleInsightDetail(this,'detail-${type}-${i}')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>` : '';
+
+            container.append(`<div class="insight-card ${type}" style="background:${c.bg};border-color:${c.border}">
+                <div class="flex items-start gap-2.5">
+                    <span class="text-xl flex-shrink-0 mt-0.5">${card.icon}</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-start gap-2">
+                            <p class="font-bold text-[0.72rem] leading-tight" style="color:${c.titleColor}">${card.title}</p>
+                            ${toggleBtn}
                         </div>
+                        <p class="text-[0.67rem] text-gray-500 mt-1 leading-relaxed">${card.desc}</p>
                     </div>
-                    ${detailHtml}
+                </div>
+                ${detailHtml}
+            </div>`);
+        });
+    }
+
+    function toggleInsightDetail(btn, detailId) {
+        const el = document.getElementById(detailId);
+        if (btn.classList.contains('collapsed')) { el.style.maxHeight = el.scrollHeight + 'px'; btn.classList.remove('collapsed'); }
+        else { el.style.maxHeight = '0px'; btn.classList.add('collapsed'); }
+    }
+
+    function switchInsightTab(tab) {
+        $('.insight-tab-content').addClass('hidden');
+        $(`#insight-tab-${tab}`).removeClass('hidden');
+        $('.insight-tab-btn').removeClass('active text-[#DF2027] border-[#DF2027] text-amber-600 border-amber-400 text-[#2E963D] border-[#2E963D]').addClass('text-gray-500 border-transparent');
+        const colorMap = { critical: 'text-[#DF2027] border-[#DF2027]', action: 'text-amber-600 border-amber-400', positive: 'text-[#2E963D] border-[#2E963D]' };
+        $(`[data-tab="${tab}"]`).removeClass('text-gray-500 border-transparent').addClass('active ' + colorMap[tab]);
+    }
+
+    function openInsightsPanel()  { $('#insightsPanel').addClass('open'); $('#panelOverlay').addClass('active'); trackEvent('Insights Panel Opened', 'User opened smart insights panel'); }
+    function closeInsightsPanel() { $('#insightsPanel').removeClass('open'); $('#panelOverlay').removeClass('active'); }
+
+    function showCriticalToast(criticals) {
+        if (!criticals || criticals.length === 0) return;
+        const top = criticals[0];
+        $('#toastTitle').text(top.title);
+        $('#toastMessage').text(top.desc);
+        $('#criticalToast').addClass('show');
+        const bar = document.getElementById('toastProgress');
+        bar.style.width = '100%';
+        setTimeout(() => { bar.style.width = '0%'; bar.style.transitionDuration = '8s'; }, 50);
+        toastTimer = setTimeout(() => dismissToast(), 8000);
+    }
+
+    function dismissToast() { clearTimeout(toastTimer); $('#criticalToast').removeClass('show'); }
+
+    // =====================================================
+    // TAB SWITCHING — with lazy customer tab render
+    // =====================================================
+    function switchTab(tabId) {
+        $('.tab-content').addClass('hidden');
+        $('#' + tabId).removeClass('hidden');
+        $('.sidebar-link').removeClass('active');
+        $(`[data-target="${tabId}"]`).addClass('active');
+
+        const subtitles = {
+            'view-overview':  "Here is today's overview.",
+            'view-team':      "Review Sales Executive, Sales Office, and Regional performance.",
+            'view-customer':  "Analyze customer segments and churn risk."
+        };
+        $('#header-subtitle').text(subtitles[tabId] || '');
+
+        // ── PERFORMANCE: Lazy-render customer tab only on first visit or if dirty ──
+        if (tabId === 'view-customer' && customerTabDirty && lastCustomerData) {
+            requestAnimationFrame(() => {
+                renderCustomerInsightsTab(lastCustomerData);
+                customerTabDirty = false;
+            });
+        }
+
+        if (myDataTable) myDataTable.columns.adjust().draw();
+
+        trackEvent('Tab Switch', {
+            'view-overview':  'Overview',
+            'view-team':      'Team Performance',
+            'view-customer':  'Customer'
+        }[tabId]);
+    }
+
+    // =====================================================
+    // EXPORT CSV
+    // =====================================================
+    function exportData() {
+        trackEvent('Export CSV', 'Exported Global Filtered Table');
+        let csvContent = "data:text/csv;charset=utf-8,";
+        let headers = myDataTable.columns().header().toArray().map(h => `"${h.innerText.trim()}"`);
+        csvContent += headers.join(",") + "\r\n";
+        myDataTable.rows({ search: 'applied' }).data().each(function(row) {
+            let safeRow = row.map(cell => cell == null ? '""' : `"${String(cell).replace(/"/g, '""')}"`);
+            csvContent += safeRow.join(",") + "\r\n";
+        });
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Heritage_Samarth_Export.csv");
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
+
+    // =====================================================
+    // ANALYTICS TRACKING
+    // =====================================================
+    function trackEvent(actionName, details) {
+        fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: actionName, details: details }),
+            keepalive: true
+        }).catch(() => {});
+    }
+
+    // =====================================================
+    // SESSION END
+    // =====================================================
+    let sessionEndSent = false;
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden' && !sessionEndSent) { sessionEndSent = true; trackEvent('Session End', 'User navigated away or minimised tab'); }
+        if (document.visibilityState === 'visible') { sessionEndSent = false; checkStaleData(); }
+    });
+    window.addEventListener('beforeunload', function() {
+        if (!sessionEndSent) { sessionEndSent = true; trackEvent('Session End', 'Browser tab/window closed'); }
+    });
+
+    // =====================================================
+    // MANUAL REFRESH + "X MIN AGO" TICKER
+    // =====================================================
+    let dataLoadedAt    = null;
+    let timeAgoInterval = null;
+
+    function setDataLoadedAt(serverTimeStr) {
+        if (!serverTimeStr || serverTimeStr === 'Never') return;
+        dataLoadedAt = Date.now();
+        startTimeAgoTicker();
+        checkStaleData();
+    }
+
+    function startTimeAgoTicker() {
+        if (timeAgoInterval) clearInterval(timeAgoInterval);
+        updateTimeAgoLabel();
+        timeAgoInterval = setInterval(updateTimeAgoLabel, 30000);
+    }
+
+    function updateTimeAgoLabel() {
+        if (!dataLoadedAt) return;
+        const diffMin = Math.floor((Date.now() - dataLoadedAt) / 60000);
+        let label = diffMin < 1 ? 'Just now' : diffMin < 60 ? `${diffMin} min ago` : `${Math.floor(diffMin / 60)}h ${diffMin % 60}m ago`;
+        $('#time-ago-label').text(label);
+        if (diffMin >= 90)      $('#sync-dot').removeClass('bg-brand bg-amber-400').addClass('bg-[#DF2027]');
+        else if (diffMin >= 45) $('#sync-dot').removeClass('bg-brand bg-[#DF2027]').addClass('bg-amber-400');
+        else                    $('#sync-dot').removeClass('bg-amber-400 bg-[#DF2027]').addClass('bg-brand');
+    }
+
+    function checkStaleData() {
+        if (!dataLoadedAt) return;
+        const diffMin = Math.floor((Date.now() - dataLoadedAt) / 60000);
+        if (diffMin >= 60) {
+            if ($('#staleBanner').length === 0) {
+                $('main').prepend(`<div id="staleBanner" class="bg-amber-50 border-b border-amber-200 px-8 py-2.5 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-amber-700 text-sm"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Data is <strong>${diffMin} minutes old</strong>. You may be viewing stale figures.</span></div>
+                    <button onclick="manualRefresh()" class="text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors border border-amber-200">Refresh Now</button>
                 </div>`);
-            });
-        }
-
-        function toggleInsightDetail(btn, detailId) {
-            const el = document.getElementById(detailId);
-            const isCollapsed = btn.classList.contains('collapsed');
-            if (isCollapsed) {
-                el.style.maxHeight = el.scrollHeight + 'px';
-                btn.classList.remove('collapsed');
-            } else {
-                el.style.maxHeight = '0px';
-                btn.classList.add('collapsed');
             }
-        }
+        } else { $('#staleBanner').remove(); }
+    }
 
-        function switchInsightTab(tab) {
-            $('.insight-tab-content').addClass('hidden');
-            $(`#insight-tab-${tab}`).removeClass('hidden');
-            $('.insight-tab-btn').removeClass('active text-[#DF2027] border-[#DF2027] text-amber-600 border-amber-400 text-[#2E963D] border-[#2E963D]').addClass('text-gray-500 border-transparent');
-            const colorMap = { critical: 'text-[#DF2027] border-[#DF2027]', action: 'text-amber-600 border-amber-400', positive: 'text-[#2E963D] border-[#2E963D]' };
-            $(`[data-tab="${tab}"]`).removeClass('text-gray-500 border-transparent').addClass('active ' + colorMap[tab]);
-        }
+    function manualRefresh() {
+        $('#refreshIcon').addClass('animate-spin');
+        $('#refreshBtn').prop('disabled', true);
+        $('#last-updated').text('Refreshing...');
+        $('#time-ago-label').text('');
+        trackEvent('Manual Refresh', 'User triggered manual data refresh');
 
-        // =====================================================
-        // PANEL OPEN/CLOSE
-        // =====================================================
-        function openInsightsPanel() {
-            $('#insightsPanel').addClass('open');
-            $('#panelOverlay').addClass('active');
-            trackEvent('Insights Panel Opened', 'User opened smart insights panel');
-        }
-        function closeInsightsPanel() {
-            $('#insightsPanel').removeClass('open');
-            $('#panelOverlay').removeClass('active');
-        }
-
-        // =====================================================
-        // CRITICAL TOAST
-        // =====================================================
-        function showCriticalToast(criticals) {
-            if (!criticals || criticals.length === 0) return;
-            const top = criticals[0];
-            $('#toastTitle').text(top.title);
-            $('#toastMessage').text(top.desc);
-            $('#criticalToast').addClass('show');
-            
-            // Progress bar countdown (8 seconds)
-            const bar = document.getElementById('toastProgress');
-            bar.style.width = '100%';
-            setTimeout(() => { bar.style.width = '0%'; bar.style.transitionDuration = '8s'; }, 50);
-            
-            toastTimer = setTimeout(() => dismissToast(), 8000);
-        }
-
-        function dismissToast() {
-            clearTimeout(toastTimer);
-            $('#criticalToast').removeClass('show');
-        }
-
-        // =====================================================
-        // DASHBOARD RENDER ENGINE (unchanged from original)
-        // =====================================================
-        function updateDashboardComponents(data) {
-            const idx = col => globalColumns.findIndex(c => c.title === col);
-            const iTrend = idx('Sales_Trend'); const iSales = idx('MTD');
-            const iRegion = idx('Region'); const iSO = idx('SO_Name');
-            const iCustGrp = idx('CustomerGroup'); const iCustName = idx('CustomerName');
-            const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
-            const iSE = idx('SE_Name'); const iLYMTD = idx('LYMTD');
-
-            let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0 };
-            let regionData = {}, soData = {}, custGrpData = {}, churnList = [];
-            let seDataMap = {}; 
-
-            data.forEach(row => {
-                let trend    = iTrend > -1 ? String(row[iTrend] || '').trim() : 'Stable';
-                let salesVal = iSales > -1 ? parseFloat(row[iSales]) || 0 : 0;
-                let lymtdVal = iLYMTD > -1 ? parseFloat(row[iLYMTD]) || 0 : 0;
-                let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
-                let reg      = iRegion > -1 ? String(row[iRegion] || 'Unknown').trim() : 'All Regions';
-                let so       = iSO > -1 ? String(row[iSO] || 'Unknown').trim() : 'All Sales Offices';
-                let custGrp  = iCustGrp > -1 ? String(row[iCustGrp] || 'Other').trim() : 'Other';
-                let custName = iCustName > -1 ? String(row[iCustName] || 'Unknown').trim() : 'Unknown';
-                let seName   = iSE > -1 ? String(row[iSE] || 'Unassigned').trim() : 'Unassigned';
-
-                if (trend === 'Growth') { stats.growth++; stats.growthVol += dropVal; }
-                else if (trend === 'Decline') { stats.decline++; stats.declineVol += Math.abs(dropVal); }
-                else if (trend === 'New Customer' || trend === 'New') { stats.new++; stats.newVol += salesVal; }
-                else { stats.stable++; }
-
-                stats.sales += salesVal;
-                stats.lymtd += lymtdVal; 
-                regionData[reg] = (regionData[reg] || 0) + salesVal;
-                soData[so] = (soData[so] || 0) + salesVal;
-                custGrpData[custGrp] = (custGrpData[custGrp] || 0) + salesVal;
-
-                if (trend === 'Decline' && dropVal < 0) churnList.push({ name: custName, region: reg !== 'All Regions' ? reg : so, drop: dropVal });
-
-                if (seName !== '') {
-                    if (!seDataMap[seName]) seDataMap[seName] = { sales: 0, lymtd: 0, growth: 0, decline: 0, new: 0 };
-                    seDataMap[seName].sales += salesVal;
-                    seDataMap[seName].lymtd += lymtdVal;
-                    if (trend === 'Growth') seDataMap[seName].growth++;
-                    else if (trend === 'Decline') seDataMap[seName].decline++;
-                    else if (trend === 'New Customer' || trend === 'New') seDataMap[seName].new++;
-                }
-            });
-
-            $('#kpi-sales').text((stats.sales).toLocaleString(undefined, {maximumFractionDigits: 0}));
-            let volDiff = stats.sales - stats.lymtd;
-            let diffElem = $('#kpi-sales-diff'), diffBadge = $('#kpi-sales-diff-badge'), volCardBorder = $('#vol-card-border');
-            if (volDiff > 0) {
-                diffElem.html(`&uarr; +${volDiff.toLocaleString(undefined, {maximumFractionDigits: 0})} YoY`);
-                diffBadge.removeClass('bg-red-50 text-[#DF2027] border-red-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-green-50 text-[#2E963D] border-green-100');
-                volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
-            } else if (volDiff < 0) {
-                diffElem.html(`&darr; ${volDiff.toLocaleString(undefined, {maximumFractionDigits: 0})} YoY`);
-                diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-red-50 text-[#DF2027] border-red-100');
-                volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
-            } else {
-                diffElem.html(`&minus; Flat YoY`);
-                diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-red-50 text-[#DF2027] border-red-100').addClass('bg-gray-50 text-gray-500 border-gray-200');
-                volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
-            }
-
-            $('#kpi-growth').text(stats.growth.toLocaleString());
-            $('#kpi-growth-vol').text('+' + stats.growthVol.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' LPD');
-            $('#kpi-decline').text(stats.decline.toLocaleString());
-            $('#kpi-decline-vol').text('-' + stats.declineVol.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' LPD');
-            $('#kpi-new').text(stats.new.toLocaleString());
-            $('#kpi-new-vol').text('+' + stats.newVol.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' LPD');
-
-            let overviewBarData = {};
-            let barLabel = "";
-            if ("{{ user.role }}" === "RH" || Object.keys(regionData).length <= 1) {
-                overviewBarData = soData; barLabel = "Sales Office (MTD)";
-                $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> SO Performance (MTD)');
-            } else {
-                overviewBarData = regionData; barLabel = "Regional Sales (MTD)";
-                $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg> Regional Sales (MTD)');
-            }
-
-            renderOverviewCharts(overviewBarData, stats, barLabel);
-            let soArray = Object.keys(soData).map(key => ({ name: key, val: soData[key] }));
-            soArray.sort((a, b) => b.val - a.val);
-            renderRegionalCharts(soArray.slice(0, 5), soArray.slice(-5).reverse());
-            renderCustomerCharts(custGrpData);
-            
-            churnList.sort((a, b) => a.drop - b.drop);
-            let churnHtml = '';
-            churnList.slice(0, 15).forEach(c => {
-                churnHtml += `<tr class="hover:bg-red-50 transition-colors"><td class="px-4 py-3 font-medium text-gray-800">${c.name}</td><td class="px-4 py-3 text-gray-500">${c.region}</td><td class="px-4 py-3 font-bold text-[#DF2027] text-right">${c.drop.toFixed(2)}</td></tr>`;
-            });
-            $('#churnTableBody').html(churnHtml);
-
-            let seArray = Object.keys(seDataMap).map(se => {
-                let d = seDataMap[se];
-                let growthPct = d.lymtd > 0 ? ((d.sales - d.lymtd) / d.lymtd) * 100 : (d.sales > 0 ? 100 : 0);
-                return [se, d.sales.toFixed(1), d.lymtd.toFixed(1), growthPct.toFixed(1), d.growth, d.decline, d.new];
-            });
-
-            initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
-            initSETable(seArray);
-        }
-
-        Chart.defaults.font.family = "'Inter', sans-serif";
-        const brandColors = { green: '#2E963D', red: '#DF2027', blue: '#3B82F6', palette: ['#2E963D', '#DF2027', '#F59E0B', '#3B82F6', '#64748B', '#14B8A6'] };
-
-        function renderOverviewCharts(barData, stats, barLabel) {
-            if(charts.overviewRegion) charts.overviewRegion.destroy();
-            if(charts.overviewHealth) charts.overviewHealth.destroy();
-            charts.overviewRegion = new Chart(document.getElementById('overviewRegionChart'), { type: 'bar', data: { labels: Object.keys(barData), datasets: [{ label: barLabel, data: Object.values(barData), backgroundColor: brandColors.green, borderRadius: 4, maxBarThickness: 50 }] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } } });
-            charts.overviewHealth = new Chart(document.getElementById('overviewHealthChart'), { type: 'doughnut', data: { labels: ['Growth', 'Decline', 'New', 'Stable'], datasets: [{ data: [stats.growth, stats.decline, stats.new, stats.stable], backgroundColor: [brandColors.green, brandColors.red, brandColors.blue, '#E2E8F0'], borderWidth: 0 }] }, options: { maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } } });
-        }
-        function renderRegionalCharts(top5, bottom5) {
-            if(charts.topBranches) charts.topBranches.destroy();
-            if(charts.bottomBranches) charts.bottomBranches.destroy();
-            charts.topBranches = new Chart(document.getElementById('topBranchesChart'), { type: 'bar', data: { labels: top5.map(d => d.name), datasets: [{ data: top5.map(d => d.val), backgroundColor: brandColors.green, borderRadius: 4 }] }, options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-            charts.bottomBranches = new Chart(document.getElementById('bottomBranchesChart'), { type: 'bar', data: { labels: bottom5.map(d => d.name), datasets: [{ data: bottom5.map(d => d.val), backgroundColor: brandColors.red, borderRadius: 4 }] }, options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-        }
-        function renderCustomerCharts(custGrpData) {
-            if(charts.customerGroup) charts.customerGroup.destroy();
-            charts.customerGroup = new Chart(document.getElementById('customerGroupChart'), { type: 'pie', data: { labels: Object.keys(custGrpData), datasets: [{ data: Object.values(custGrpData), backgroundColor: brandColors.palette }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' } } } });
-        }
-
-        function initTable(data, columns, trendIdx) {
-            if (myDataTable) { myDataTable.clear(); myDataTable.rows.add(data); myDataTable.draw(); return; }
-            myDataTable = $('#salesTable').DataTable({
-                data: data, columns: columns, pageLength: 15, scrollX: true, scrollCollapse: true, autoWidth: false, deferRender: true,
-                columnDefs: [{ targets: trendIdx, render: function(data) {
-                    let trimData = String(data||'').trim();
-                    if (trimData === 'Growth') return '<span class="badge badge-growth">Growth</span>';
-                    if (trimData === 'Decline') return '<span class="badge badge-decline">Decline</span>';
-                    if (trimData === 'New Customer' || trimData === 'New') return '<span class="badge badge-new">New</span>';
-                    return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${trimData || 'Stable'}</span>`;
-                }}],
-                language: { search: "", searchPlaceholder: "Search within results..." },
-                dom: '<"top"f>rt<"bottom"p><"clear">'
-            });
-            $('.dataTables_filter').appendTo('#table-actions');
-            $('.dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]');
-            $('.dataTables_filter label').contents().filter(function(){ return this.nodeType === 3; }).remove();
-        }
-
-        function initSETable(dataArray) {
-            if (seDataTable) { seDataTable.clear(); seDataTable.rows.add(dataArray); seDataTable.draw(); return; }
-            seDataTable = $('#seTable').DataTable({
-                data: dataArray, pageLength: 15, scrollX: true, scrollCollapse: true, autoWidth: false, order: [[1, 'desc']],
-                columnDefs: [
-                    { targets: 0, className: 'font-bold text-gray-800' },
-                    { targets: [1, 2], className: 'text-right text-gray-600 font-mono' },
-                    { targets: 3, className: 'text-right font-bold', render: function(data) {
-                        let val = parseFloat(data);
-                        if (val > 0) return `<span class="text-[#2E963D]">+${val}%</span>`;
-                        if (val < 0) return `<span class="text-[#DF2027]">${val}%</span>`;
-                        return `<span class="text-gray-500">${val}%</span>`;
-                    }},
-                    { targets: [4, 5, 6], className: 'text-center' }
-                ],
-                language: { search: "", searchPlaceholder: "Search Executive..." },
-                dom: '<"top"f>rt<"bottom"p><"clear">'
-            });
-            $('#seTable_wrapper .dataTables_filter').appendTo('#se-table-actions');
-            $('#seTable_wrapper .dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D]');
-            $('#seTable_wrapper .dataTables_filter label').contents().filter(function(){ return this.nodeType === 3; }).remove();
-        }
-
-        function trackEvent(actionName, details) {
-            fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: actionName, details: details }), keepalive: true }).catch(e => console.log('Analytics ping failed'));
-        }
-
-        function switchTab(tabId) {
-            $('.tab-content').addClass('hidden'); $('#' + tabId).removeClass('hidden');
-            $('.sidebar-link').removeClass('active'); $(`[data-target="${tabId}"]`).addClass('active');
-            const subtitles = { 'view-overview': "Here is today's overview.", 'view-regional': "Deep dive into geographic performance.", 'view-team': "Review Sales Executive performance and territory health.", 'view-customer': "Analyze customer segments and churn risk." };
-            $('#header-subtitle').text(subtitles[tabId]);
-            if(myDataTable) myDataTable.columns.adjust().draw();
-            if(seDataTable) seDataTable.columns.adjust().draw();
-            trackEvent('Tab Switch', { 'view-overview': 'Overview', 'view-regional': 'Regional', 'view-team': 'Team Performance', 'view-customer': 'Customer' }[tabId]);
-        }
-
-        function exportData() {
-            trackEvent('Export CSV', 'Exported Global Filtered Table');
-            let csvContent = "data:text/csv;charset=utf-8,";
-            let headers = myDataTable.columns().header().toArray().map(h => `"${h.innerText.trim()}"`);
-            csvContent += headers.join(",") + "\r\n";
-            myDataTable.rows({ search: 'applied' }).data().each(function(row) {
-                let safeRow = row.map(cell => cell == null ? '""' : `"${String(cell).replace(/"/g, '""')}"`);
-                csvContent += safeRow.join(",") + "\r\n";
-            });
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Heritage_Samarth_Export.csv");
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        }
-
-        // =====================================================
-        // BUG FIX: SESSION END — pagehide fires 6-8x per session
-        // (back/forward navigation, tab switches, network calls).
-        // SOLUTION: Use visibilitychange (hidden) as the reliable
-        // "user left" signal. Guard with a flag so it fires once
-        // per page lifecycle, not per visibility event.
-        // =====================================================
-        let sessionEndSent = false;
-
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden' && !sessionEndSent) {
-                sessionEndSent = true;
-                trackEvent('Session End', 'User navigated away or minimised tab');
-            }
-            if (document.visibilityState === 'visible') {
-                // User came back — reset so the next departure is tracked
-                sessionEndSent = false;
-                // Also check stale data: warn if cached data is >60 min old
-                checkStaleData();
-            }
-        });
-
-        // Fallback for browsers where visibilitychange may not fire (rare mobile)
-        window.addEventListener('beforeunload', function() {
-            if (!sessionEndSent) {
-                sessionEndSent = true;
-                trackEvent('Session End', 'Browser tab/window closed');
-            }
-        });
-
-        // =====================================================
-        // UX: MANUAL REFRESH + "X MIN AGO" TICKER
-        // =====================================================
-        let dataLoadedAt = null;   // Epoch ms when data was fetched
-        let timeAgoInterval = null;
-
-        function setDataLoadedAt(serverTimeStr) {
-            // serverTimeStr is like "02:45 PM" — convert to a JS Date for today
-            if (!serverTimeStr || serverTimeStr === 'Never') return;
-            dataLoadedAt = Date.now();   // Approximate: we treat "right now" as load time
-            startTimeAgoTicker();
-            checkStaleData();
-        }
-
-        function startTimeAgoTicker() {
-            if (timeAgoInterval) clearInterval(timeAgoInterval);
-            updateTimeAgoLabel();
-            timeAgoInterval = setInterval(updateTimeAgoLabel, 30000); // every 30s
-        }
-
-        function updateTimeAgoLabel() {
-            if (!dataLoadedAt) return;
-            const diffMs = Date.now() - dataLoadedAt;
-            const diffMin = Math.floor(diffMs / 60000);
-            let label = '';
-            if (diffMin < 1)       label = 'Just now';
-            else if (diffMin < 60) label = `${diffMin} min ago`;
-            else                   label = `${Math.floor(diffMin / 60)}h ${diffMin % 60}m ago`;
-            $('#time-ago-label').text(label);
-
-            // Turn sync dot amber if stale (>45 min), red if very stale (>90 min)
-            if (diffMin >= 90) {
-                $('#sync-dot').removeClass('bg-brand bg-amber-400').addClass('bg-[#DF2027]');
-            } else if (diffMin >= 45) {
-                $('#sync-dot').removeClass('bg-brand bg-[#DF2027]').addClass('bg-amber-400');
-            } else {
-                $('#sync-dot').removeClass('bg-amber-400 bg-[#DF2027]').addClass('bg-brand');
-            }
-        }
-
-        function checkStaleData() {
-            if (!dataLoadedAt) return;
-            const diffMin = Math.floor((Date.now() - dataLoadedAt) / 60000);
-            if (diffMin >= 60) {
-                // Show a gentle stale-data banner
-                if ($('#staleBanner').length === 0) {
-                    $('main').prepend(`
-                        <div id="staleBanner" class="bg-amber-50 border-b border-amber-200 px-8 py-2.5 flex items-center justify-between">
-                            <div class="flex items-center gap-2 text-amber-700 text-sm">
-                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                <span>Data is <strong>${diffMin} minutes old</strong>. You may be viewing stale figures.</span>
-                            </div>
-                            <button onclick="manualRefresh()" class="text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors border border-amber-200">
-                                Refresh Now
-                            </button>
-                        </div>`);
-                }
-            } else {
+        $.ajax({
+            url: '/api/data', type: 'GET',
+            success: function(res) {
+                $('#last-updated').text(res.last_updated);
+                globalData    = res.data;
+                globalColumns = res.columns;
+                dataLoadedAt  = Date.now();
+                buildGlobalSlicers();
+                applyFiltersAndUpdate();
+                startTimeAgoTicker();
                 $('#staleBanner').remove();
+                $('#refreshIcon').removeClass('animate-spin');
+                $('#refreshBtn').prop('disabled', false);
+                $('#sync-dot').addClass('bg-brand').removeClass('bg-amber-400 bg-[#DF2027]');
+                showInfoToast('Data refreshed successfully');
+            },
+            error: function() {
+                $('#last-updated').text('Refresh failed');
+                $('#refreshIcon').removeClass('animate-spin');
+                $('#refreshBtn').prop('disabled', false);
             }
-        }
+        });
+    }
 
-        function manualRefresh() {
-            // Spin the icon
-            $('#refreshIcon').addClass('animate-spin');
-            $('#refreshBtn').prop('disabled', true);
-            $('#last-updated').text('Refreshing...');
-            $('#time-ago-label').text('');
-
-            // Bust the server cache by calling /api/data fresh
-            // The server caches for 1hr (CACHE_TTL). To force reload server-side,
-            // the cleanest approach without a new endpoint is a page reload.
-            // If you add ?force=1 support to /api/data in app.py, switch to $.ajax below.
-            trackEvent('Manual Refresh', 'User triggered manual data refresh');
-
-            $.ajax({
-                url: '/api/data',
-                type: 'GET',
-                success: function(res) {
-                    $('#last-updated').text(res.last_updated);
-                    globalData   = res.data;
-                    globalColumns = res.columns;
-                    dataLoadedAt  = Date.now();
-
-                    // Rebuild everything
-                    buildGlobalSlicers();
-                    applyFiltersAndUpdate();
-                    startTimeAgoTicker();
-                    $('#staleBanner').remove();
-
-                    // Reset button
-                    $('#refreshIcon').removeClass('animate-spin');
-                    $('#refreshBtn').prop('disabled', false);
-
-                    // Brief green flash on sync dot
-                    $('#sync-dot').addClass('bg-brand').removeClass('bg-amber-400 bg-[#DF2027]');
-
-                    // Toast confirmation
-                    showInfoToast('Data refreshed successfully');
-                },
-                error: function() {
-                    $('#last-updated').text('Refresh failed');
-                    $('#refreshIcon').removeClass('animate-spin');
-                    $('#refreshBtn').prop('disabled', false);
-                }
-            });
-        }
-
-        function showInfoToast(msg) {
-            // Reuse criticalToast structure with green styling briefly
-            const el = document.getElementById('criticalToast');
-            document.getElementById('toastTitle').textContent = '✅ ' + msg;
-            document.getElementById('toastMessage').textContent = 'All charts, KPIs and insights have been updated.';
-            el.style.borderTopColor = '#2E963D';
-            document.getElementById('toastProgress').style.backgroundColor = '#2E963D';
-            el.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => { el.classList.remove('show'); el.style.borderTopColor = ''; }, 3500);
-        }
+    function showInfoToast(msg) {
+        const el = document.getElementById('criticalToast');
+        document.getElementById('toastTitle').textContent = '✅ ' + msg;
+        document.getElementById('toastMessage').textContent = 'All charts, KPIs and insights have been updated.';
+        el.style.borderTopColor = '#2E963D';
+        document.getElementById('toastProgress').style.backgroundColor = '#2E963D';
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { el.classList.remove('show'); el.style.borderTopColor = ''; }, 3500);
+    }
     </script>
 </body>
 </html>
