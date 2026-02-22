@@ -3,487 +3,1302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samarth | Admin Control</title>
+    <title>Samarth | Admin Control Centre</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
-        :root { --brand: #2E963D; --accent: #DF2027; }
-        .text-brand { color: var(--brand); }
-        .bg-brand { background-color: var(--brand); }
-        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: #64748B; font-weight: 600; transition: all 0.2s; cursor: pointer; }
-        .sidebar-link:hover { background-color: #F1F5F9; color: #334155; }
-        .sidebar-link.active { background-color: #FFF6F1; color: var(--brand); }
-        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; }
-        .modal-enter-active { opacity: 1 !important; transform: scale(1) !important; transition: all 0.2s; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; margin: 0; }
+        :root {
+            --brand: #2E963D;
+            --brand-dark: #1F6B2A;
+            --brand-light: #E8F5E9;
+            --red: #DF2027;
+            --red-light: #FEF2F2;
+            --slate: #64748B;
+            --sidebar-w: 240px;
+        }
+
+        /* ── Layout ── */
+        #layout { display: flex; height: 100vh; overflow: hidden; }
+        #sidebar { width: var(--sidebar-w); background: #0F172A; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
+        #main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+        /* ── Sidebar ── */
+        .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .sidebar-logo img { height: 32px; object-fit: contain; }
+        .sidebar-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #475569; padding: 20px 24px 6px; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 24px; color: #94A3B8; font-size: 0.85rem; font-weight: 500;
+            cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: #E2E8F0; }
+        .sidebar-link.active { background: rgba(46,150,61,0.15); color: #4ADE80; border-left-color: #2E963D; }
+        .sidebar-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+        .sidebar-badge { margin-left: auto; background: #DF2027; color: white; font-size: 0.6rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
+        .sidebar-footer { margin-top: auto; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.07); }
+
+        /* ── Top bar ── */
+        #topbar { background: white; border-bottom: 1px solid #E2E8F0; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; position: sticky; top: 0; z-index: 30; }
+        .page-title { font-size: 1.1rem; font-weight: 800; color: #0F172A; }
+        .page-subtitle { font-size: 0.75rem; color: #94A3B8; margin-top: 1px; }
+
+        /* ── Tab content ── */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── Cards ── */
+        .card { background: white; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .kpi-card { background: white; border-radius: 12px; border: 1px solid #E2E8F0; padding: 20px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+
+        /* ── Role badges ── */
+        .role-badge { font-size: 0.65rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+        .role-Superadmin { background: #FDF4FF; color: #7E22CE; border: 1px solid #E9D5FF; }
+        .role-CXO { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; }
+        .role-RH { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+        .role-BM { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+
+        /* ── Scope badge ── */
+        .scope-all { background: #F0FDF4; color: #166534; }
+        .scope-so  { background: #EFF6FF; color: #1D4ED8; }
+
+        /* ── User row ── */
+        .user-row { display: grid; grid-template-columns: 44px 1fr 140px 220px 1fr 120px; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid #F8FAFC; transition: background 0.12s; }
+        .user-row:hover { background: #F8FAFC; }
+        .user-row:last-child { border-bottom: none; }
+        .user-avatar { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; }
+
+        /* ── Table header row ── */
+        .user-row-header { display: grid; grid-template-columns: 44px 1fr 140px 220px 1fr 120px; gap: 16px; padding: 10px 24px; background: #F9FAFB; border-bottom: 2px solid #E5E7EB; }
+        .user-row-header span { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #9CA3AF; }
+
+        /* ── Button styles ── */
+        .btn-primary { background: var(--brand); color: white; border: none; padding: 9px 20px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 7px; }
+        .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(46,150,61,0.3); }
+        .btn-secondary { background: white; color: #374151; border: 1px solid #D1D5DB; padding: 9px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 7px; }
+        .btn-secondary:hover { background: #F9FAFB; border-color: #9CA3AF; }
+        .btn-danger { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+        .btn-danger:hover { background: #FEE2E2; }
+        .btn-ghost { background: transparent; color: #6B7280; border: 1px solid #E5E7EB; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .btn-ghost:hover { background: #F9FAFB; color: #374151; }
+
+        /* ── Modal ── */
+        #modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; }
+        #modal-overlay.open { display: flex; }
+        #modal-box { background: white; border-radius: 16px; width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,0.25); animation: modalIn 0.2s ease; }
+        @keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(8px); } to { opacity:1; transform: scale(1) translateY(0); } }
+        .modal-header { padding: 24px 28px 0; border-bottom: 1px solid #F1F5F9; padding-bottom: 18px; }
+        .modal-body { padding: 24px 28px; }
+        .modal-footer { padding: 16px 28px; background: #F9FAFB; border-top: 1px solid #E5E7EB; border-radius: 0 0 16px 16px; display: flex; justify-content: flex-end; gap: 10px; }
+        .form-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6B7280; margin-bottom: 5px; display: block; }
+        .form-input { width: 100%; border: 1.5px solid #E2E8F0; border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; font-family: inherit; outline: none; transition: border-color 0.15s, box-shadow 0.15s; color: #111827; background: white; }
+        .form-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(46,150,61,0.12); }
+        .form-select { width: 100%; border: 1.5px solid #E2E8F0; border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; font-family: inherit; outline: none; transition: border-color 0.15s; background: white; cursor: pointer; color: #111827; }
+        .form-select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(46,150,61,0.12); }
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { margin-bottom: 16px; }
+
+        /* ── Search ── */
+        .search-bar { position: relative; }
+        .search-bar input { padding-left: 36px; }
+        .search-bar svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #9CA3AF; pointer-events: none; }
+
+        /* ── Cache status ── */
+        .cache-fresh { background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+        .cache-stale { background: #FEF9C3; border: 1.5px solid #FDE047; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+        .cache-dot-fresh { width: 10px; height: 10px; border-radius: 50%; background: #22C55E; animation: pulse-green 2s infinite; flex-shrink: 0; }
+        .cache-dot-stale { width: 10px; height: 10px; border-radius: 50%; background: #EAB308; flex-shrink: 0; }
+        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); } 50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); } }
+
+        /* ── Chart containers ── */
+        .chart-wrap { position: relative; height: 240px; }
+        .chart-wrap-sm { position: relative; height: 180px; }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #F1F5F9; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+        /* ── Activity feed ── */
+        .feed-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F8FAFC; }
+        .feed-row:last-child { border-bottom: none; }
+        .feed-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+        .action-Login      { background: #F0FDF4; }
+        .action-Logout     { background: #FEF2F2; }
+        .action-Export     { background: #EFF6FF; }
+        .action-Filter     { background: #FFF7ED; }
+        .action-Tab        { background: #F5F3FF; }
+        .action-Refresh    { background: #F0FDF4; }
+        .action-Insights   { background: #FEF9C3; }
+        .action-Other      { background: #F8FAFC; }
+
+        /* ── Trend chip ── */
+        .trend-up   { color: #16A34A; background: #DCFCE7; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; }
+        .trend-down { color: #DC2626; background: #FEE2E2; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; }
+        .trend-flat { color: #6B7280; background: #F3F4F6; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; }
+
+        /* ── Toast ── */
+        #toast { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #0F172A; color: white; padding: 14px 20px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 10px; transform: translateY(80px); opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; max-width: 320px; }
+        #toast.show { transform: translateY(0); opacity: 1; }
+        #toast.success { background: #052e16; border: 1px solid #166534; }
+        #toast.error { background: #450a0a; border: 1px solid #991B1B; }
+
+        /* ── Empty state ── */
+        .empty-state { text-align: center; padding: 48px 24px; color: #9CA3AF; }
+        .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .empty-state h4 { font-size: 0.95rem; font-weight: 700; color: #374151; margin-bottom: 6px; }
+        .empty-state p { font-size: 0.8rem; }
+
+        /* ── Pagination ── */
+        .pag-btn { padding: 5px 12px; border-radius: 6px; border: 1px solid #E5E7EB; background: white; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.12s; color: #374151; }
+        .pag-btn:hover { background: #F9FAFB; }
+        .pag-btn.active { background: var(--brand); color: white; border-color: var(--brand); }
+        .pag-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col z-10 shadow-sm flex-shrink-0">
-        <div class="p-6">
-            <div class="mb-8 flex flex-col items-center border-b border-gray-100 pb-6">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage Logo" class="h-10 object-contain mb-3">
-                <h1 class="font-extrabold text-gray-900 leading-tight text-center">Samarth<br><span class="text-brand text-[10px] font-bold uppercase tracking-widest">Admin Control</span></h1>
+<div id="layout">
+
+    <!-- ════════════════ SIDEBAR ════════════════ -->
+    <aside id="sidebar">
+        <div class="sidebar-logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage">
+            <div style="margin-top:10px">
+                <div style="color:#E2E8F0;font-size:0.85rem;font-weight:800;letter-spacing:-0.02em">Admin Control</div>
+                <div style="color:#475569;font-size:0.67rem;font-weight:600;margin-top:1px">Heritage Samarth</div>
             </div>
-            <nav class="space-y-2">
-                <a onclick="switchTab('view-users')" data-target="view-users" class="sidebar-link active">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    User Management
-                </a>
-                <a onclick="switchTab('view-analytics')" data-target="view-analytics" class="sidebar-link">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    Usage Analytics
-                </a>
-                <div class="pt-4 mt-4 border-t border-gray-100">
-                    <a href="/" class="sidebar-link text-gray-500">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path></svg>
-                        Back to Dashboard
-                    </a>
-                </div>
-            </nav>
         </div>
-        <div class="mt-auto p-6 border-t border-gray-100 bg-gray-50">
-            <a href="/logout" class="flex items-center gap-2 text-sm text-red-500 hover:text-red-700 font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Sign Out Admin
+
+        <div style="padding-top:8px;flex:1;overflow-y:auto">
+            <div class="sidebar-label">Overview</div>
+            <a class="sidebar-link active" onclick="switchTab('tab-overview')" data-tab="tab-overview">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                System Overview
+            </a>
+
+            <div class="sidebar-label" style="margin-top:8px">Management</div>
+            <a class="sidebar-link" onclick="switchTab('tab-users')" data-tab="tab-users">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                Users & Access
+                <span class="sidebar-badge" id="sb-user-count">0</span>
+            </a>
+            <a class="sidebar-link" onclick="switchTab('tab-cache')" data-tab="tab-cache">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+                Cache & Data
+            </a>
+
+            <div class="sidebar-label" style="margin-top:8px">Analytics</div>
+            <a class="sidebar-link" onclick="switchTab('tab-analytics')" data-tab="tab-analytics">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Usage Analytics
+            </a>
+            <a class="sidebar-link" onclick="switchTab('tab-activity')" data-tab="tab-activity">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                Activity Log
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                <div style="width:32px;height:32px;border-radius:8px;background:#1E293B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#4ADE80">A</div>
+                <div>
+                    <div style="color:#E2E8F0;font-size:0.78rem;font-weight:700">Admin</div>
+                    <div style="color:#475569;font-size:0.65rem">Superadmin</div>
+                </div>
+            </div>
+            <a href="/" style="display:flex;align-items:center;gap:8px;color:#475569;font-size:0.78rem;font-weight:600;text-decoration:none;margin-bottom:8px;transition:color 0.15s" onmouseover="this.style.color='#94A3B8'" onmouseout="this.style.color='#475569'">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Dashboard
+            </a>
+            <a href="/logout" style="display:flex;align-items:center;gap:8px;color:#DC2626;font-size:0.78rem;font-weight:600;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='#DC2626'">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                Sign Out
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto relative">
+    <!-- ════════════════ MAIN ════════════════ -->
+    <main id="main">
 
-        <!-- USER MANAGEMENT TAB -->
-        <div id="view-users" class="tab-content block">
-            <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-900">System Users & Roles</h2>
-                        <p class="text-sm text-gray-500 mt-1">Manage Dashboard access, roles, and Row-Level Security (RLS) scopes.</p>
-                    </div>
-                    <button onclick="openModal()" class="bg-brand hover:bg-[#247A31] text-white px-5 py-2.5 rounded-lg font-bold shadow-md transition-colors flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        Create New User
-                    </button>
+        <!-- Top bar -->
+        <div id="topbar">
+            <div>
+                <div class="page-title" id="topbar-title">System Overview</div>
+                <div class="page-subtitle" id="topbar-sub">Platform health and at-a-glance metrics</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="text-align:right">
+                    <div style="font-size:0.68rem;color:#94A3B8;font-weight:600">TODAY</div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#1E293B" id="topbar-date">—</div>
                 </div>
-            </header>
-            <div class="p-8">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-xs font-bold">
-                            <tr><th class="px-6 py-4">User</th><th class="px-6 py-4">Role & Title</th><th class="px-6 py-4">Security Scope</th><th class="px-6 py-4 text-right">Actions</th></tr>
+                <div style="width:1px;height:32px;background:#E2E8F0"></div>
+                <div style="display:flex;align-items:center;gap:6px">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#22C55E" id="system-dot"></div>
+                    <span style="font-size:0.78rem;font-weight:600;color:#374151" id="system-status-text">System Online</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ OVERVIEW TAB ══════════ -->
+        <div id="tab-overview" class="tab-content active" style="padding:28px 32px">
+
+            <!-- System KPI row -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+                <div class="kpi-card" style="border-top:3px solid #2E963D">
+                    <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Total Users</div>
+                    <div style="font-size:2rem;font-weight:900;color:#0F172A;line-height:1" id="ov-total-users">—</div>
+                    <div style="font-size:0.72rem;color:#6B7280;margin-top:6px" id="ov-active-users">— active today</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #3B82F6">
+                    <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Sessions Today</div>
+                    <div style="font-size:2rem;font-weight:900;color:#1D4ED8;line-height:1" id="ov-sessions">—</div>
+                    <div style="font-size:0.72rem;color:#6B7280;margin-top:6px" id="ov-sessions-sub">login events</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #F59E0B">
+                    <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Data Exports</div>
+                    <div style="font-size:2rem;font-weight:900;color:#D97706;line-height:1" id="ov-exports">—</div>
+                    <div style="font-size:0.72rem;color:#6B7280;margin-top:6px">total CSV downloads</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #DF2027">
+                    <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Cache Status</div>
+                    <div style="font-size:1.1rem;font-weight:900;color:#0F172A;line-height:1;margin-top:4px" id="ov-cache-status">—</div>
+                    <div style="font-size:0.72rem;color:#6B7280;margin-top:6px" id="ov-cache-next">Next: —</div>
+                </div>
+            </div>
+
+            <!-- Main content row -->
+            <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;margin-bottom:20px">
+
+                <!-- DAU trend -->
+                <div class="card" style="padding:24px">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px">
+                        <div>
+                            <div style="font-size:0.9rem;font-weight:800;color:#111827">Daily Active Users — Last 30 Days</div>
+                            <div style="font-size:0.72rem;color:#94A3B8;margin-top:2px">Unique users with at least one action per day</div>
+                        </div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="dauTrendChart"></canvas></div>
+                </div>
+
+                <!-- Role distribution -->
+                <div class="card" style="padding:24px">
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:4px">Role Distribution</div>
+                    <div style="font-size:0.72rem;color:#94A3B8;margin-bottom:18px">Active user accounts by role</div>
+                    <div class="chart-wrap-sm"><canvas id="roleDonutChart"></canvas></div>
+                    <div id="role-legend" style="margin-top:16px;display:flex;flex-direction:column;gap:8px"></div>
+                </div>
+            </div>
+
+            <!-- Bottom row: top users + recent alerts -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+                <!-- Most active users -->
+                <div class="card">
+                    <div style="padding:20px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center">
+                        <div style="font-size:0.9rem;font-weight:800;color:#111827">Most Active Users</div>
+                        <span style="font-size:0.68rem;color:#94A3B8;font-weight:600">Last 30 days</span>
+                    </div>
+                    <div id="top-users-list" style="padding:8px 0"></div>
+                </div>
+
+                <!-- Action breakdown -->
+                <div class="card">
+                    <div style="padding:20px 24px;border-bottom:1px solid #F1F5F9">
+                        <div style="font-size:0.9rem;font-weight:800;color:#111827">Feature Engagement</div>
+                        <div style="font-size:0.72rem;color:#94A3B8;margin-top:2px">Action distribution across all users</div>
+                    </div>
+                    <div style="padding:20px 24px">
+                        <div class="chart-wrap-sm"><canvas id="overviewActionChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ USERS TAB ══════════ -->
+        <div id="tab-users" class="tab-content" style="padding:28px 32px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="search-bar" style="position:relative">
+                        <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#9CA3AF;pointer-events:none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                        <input type="text" id="user-search" oninput="filterUsers()" placeholder="Search by name or email…" class="form-input" style="padding-left:36px;width:280px">
+                    </div>
+                    <select id="user-role-filter" onchange="filterUsers()" class="form-select" style="width:160px">
+                        <option value="">All Roles</option>
+                        <option value="Superadmin">Superadmin</option>
+                        <option value="CXO">CXO</option>
+                        <option value="RH">Regional Head</option>
+                        <option value="BM">Branch Manager</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="openModal()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    Add User
+                </button>
+            </div>
+
+            <!-- User table -->
+            <div class="card" style="overflow:hidden">
+                <div class="user-row-header">
+                    <span></span>
+                    <span>User</span>
+                    <span>Role</span>
+                    <span>Security Scope</span>
+                    <span>Last Login</span>
+                    <span style="text-align:right">Actions</span>
+                </div>
+                <div id="user-table-body"></div>
+                <div id="user-table-empty" class="empty-state" style="display:none">
+                    <div class="icon">🔍</div>
+                    <h4>No users found</h4>
+                    <p>Try adjusting your search or filter criteria</p>
+                </div>
+                <div id="user-pagination" style="padding:14px 24px;border-top:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center"></div>
+            </div>
+        </div>
+
+        <!-- ══════════ CACHE TAB ══════════ -->
+        <div id="tab-cache" class="tab-content" style="padding:28px 32px">
+            <div style="max-width:800px">
+
+                <!-- Cache status card -->
+                <div class="card" style="padding:28px;margin-bottom:20px">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px">
+                        <div>
+                            <div style="font-size:1rem;font-weight:800;color:#111827;margin-bottom:4px">Data Cache Status</div>
+                            <div style="font-size:0.78rem;color:#6B7280">The system loads data once at 9:00 AM daily and serves all users from this snapshot.</div>
+                        </div>
+                        <button class="btn-primary" id="force-refresh-btn" onclick="triggerForceRefresh()">
+                            <svg id="fr-icon" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            Force Refresh Now
+                        </button>
+                    </div>
+
+                    <div id="cache-status-block" style="margin-bottom:24px">
+                        <!-- Filled by JS -->
+                    </div>
+
+                    <!-- Cache details grid -->
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+                        <div style="background:#F9FAFB;border-radius:10px;padding:16px">
+                            <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:#9CA3AF;letter-spacing:0.07em;margin-bottom:6px">Loaded At</div>
+                            <div style="font-size:0.9rem;font-weight:800;color:#111827" id="cache-loaded-at">—</div>
+                        </div>
+                        <div style="background:#F9FAFB;border-radius:10px;padding:16px">
+                            <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:#9CA3AF;letter-spacing:0.07em;margin-bottom:6px">Total Rows</div>
+                            <div style="font-size:0.9rem;font-weight:800;color:#111827" id="cache-row-count">—</div>
+                        </div>
+                        <div style="background:#F9FAFB;border-radius:10px;padding:16px">
+                            <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:#9CA3AF;letter-spacing:0.07em;margin-bottom:6px">Next Scheduled</div>
+                            <div style="font-size:0.9rem;font-weight:800;color:#111827" id="cache-next-refresh">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cache schedule explainer -->
+                <div class="card" style="padding:28px">
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:16px">How the Cache Works</div>
+                    <div style="display:flex;flex-direction:column;gap:16px">
+                        <div style="display:flex;gap:16px;align-items:start">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0">🌙</div>
+                            <div>
+                                <div style="font-size:0.82rem;font-weight:700;color:#111827">Overnight DB Refresh (2–5 AM)</div>
+                                <div style="font-size:0.75rem;color:#6B7280;margin-top:2px">The source MSSQL database refreshes with latest sales data overnight.</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:16px;align-items:start">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0">⚡</div>
+                            <div>
+                                <div style="font-size:0.82rem;font-weight:700;color:#111827">First Request After 9 AM → Cache Load</div>
+                                <div style="font-size:0.75rem;color:#6B7280;margin-top:2px">The app fetches a fresh snapshot from the database and holds it in memory.</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:16px;align-items:start">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#FFF7ED;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0">👥</div>
+                            <div>
+                                <div style="font-size:0.82rem;font-weight:700;color:#111827">All Users Served From Cache</div>
+                                <div style="font-size:0.75rem;color:#6B7280;margin-top:2px">Every dashboard view is served from the same snapshot until the next 9 AM window.</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:16px;align-items:start">
+                            <div style="width:32px;height:32px;border-radius:8px;background:#FEF2F2;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0">🔑</div>
+                            <div>
+                                <div style="font-size:0.82rem;font-weight:700;color:#111827">Force Refresh (Superadmin Only)</div>
+                                <div style="font-size:0.75rem;color:#6B7280;margin-top:2px">Use the button above to manually reload data outside the scheduled window.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ ANALYTICS TAB ══════════ -->
+        <div id="tab-analytics" class="tab-content" style="padding:28px 32px">
+
+            <!-- KPIs -->
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px">
+                <div class="kpi-card" style="border-top:3px solid #2E963D">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">DAU (Today)</div>
+                    <div style="font-size:1.8rem;font-weight:900;color:#166534;line-height:1" id="an-dau">—</div>
+                    <div style="font-size:0.68rem;color:#6B7280;margin-top:5px">unique users</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #3B82F6">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">MAU (30d)</div>
+                    <div style="font-size:1.8rem;font-weight:900;color:#1D4ED8;line-height:1" id="an-mau">—</div>
+                    <div style="font-size:0.68rem;color:#6B7280;margin-top:5px">monthly active</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #8B5CF6">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Sessions</div>
+                    <div style="font-size:1.8rem;font-weight:900;color:#7C3AED;line-height:1" id="an-sessions">—</div>
+                    <div style="font-size:0.68rem;color:#6B7280;margin-top:5px">login events</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #F59E0B">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Exports</div>
+                    <div style="font-size:1.8rem;font-weight:900;color:#D97706;line-height:1" id="an-exports">—</div>
+                    <div style="font-size:0.68rem;color:#6B7280;margin-top:5px">CSV downloads</div>
+                </div>
+                <div class="kpi-card" style="border-top:3px solid #14B8A6">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;margin-bottom:8px">Avg Session</div>
+                    <div style="font-size:1.8rem;font-weight:900;color:#0F766E;line-height:1" id="an-avg-session">—</div>
+                    <div style="font-size:0.68rem;color:#6B7280;margin-top:5px">minutes/session</div>
+                </div>
+            </div>
+
+            <!-- Filter by user -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                <div style="font-size:0.9rem;font-weight:800;color:#111827">Engagement by User</div>
+                <select id="an-user-filter" onchange="renderAnalytics()" class="form-select" style="width:240px">
+                    <option value="ALL">All Users</option>
+                </select>
+            </div>
+
+            <!-- Charts row -->
+            <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-bottom:20px">
+                <div class="card" style="padding:24px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                        <div style="font-size:0.85rem;font-weight:800;color:#111827">Daily Active Users — Trend</div>
+                        <span style="font-size:0.65rem;background:#F0FDF4;color:#166534;border:1px solid #BBF7D0;padding:3px 10px;border-radius:20px;font-weight:700">Last 30 Days</span>
+                    </div>
+                    <div class="chart-wrap"><canvas id="an-dau-trend"></canvas></div>
+                </div>
+                <div class="card" style="padding:24px">
+                    <div style="font-size:0.85rem;font-weight:800;color:#111827;margin-bottom:16px">Feature Engagement Breakdown</div>
+                    <div class="chart-wrap"><canvas id="an-action-chart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Per-user engagement table -->
+            <div class="card" style="overflow:hidden">
+                <div style="padding:18px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-size:0.85rem;font-weight:800;color:#111827">Per-User Engagement Summary</div>
+                    <span style="font-size:0.68rem;color:#94A3B8">Sorted by most active</span>
+                </div>
+                <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse">
+                        <thead>
+                            <tr style="background:#F9FAFB;border-bottom:2px solid #E5E7EB">
+                                <th style="padding:10px 20px;text-align:left;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">User</th>
+                                <th style="padding:10px 16px;text-align:center;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Sessions</th>
+                                <th style="padding:10px 16px;text-align:center;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Exports</th>
+                                <th style="padding:10px 16px;text-align:center;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Filters</th>
+                                <th style="padding:10px 16px;text-align:center;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Tab Switches</th>
+                                <th style="padding:10px 16px;text-align:center;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Total Actions</th>
+                                <th style="padding:10px 16px;text-align:center;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Time Spent</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9CA3AF">Last Seen</th>
+                            </tr>
                         </thead>
-                        <tbody id="userTableBody" class="divide-y divide-gray-100"></tbody>
+                        <tbody id="per-user-table"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ANALYTICS TAB -->
-        <div id="view-analytics" class="tab-content hidden">
-            <header class="bg-white border-b border-gray-200 py-6 px-8 sticky top-0 z-20 flex justify-between items-center">
+        <!-- ══════════ ACTIVITY LOG TAB ══════════ -->
+        <div id="tab-activity" class="tab-content" style="padding:28px 32px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-900">Product Usage Analytics</h2>
-                    <p class="text-sm text-gray-500 mt-1">Track platform adoption, feature engagement, and high-intent actions.</p>
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827">Full Activity Log</div>
+                    <div style="font-size:0.72rem;color:#94A3B8;margin-top:2px" id="activity-count-label">Loading…</div>
                 </div>
-                <div class="flex items-center gap-3 bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <select id="userTrackerSelect" class="bg-transparent border-none text-sm font-bold text-gray-700 outline-none w-48 cursor-pointer" onchange="renderAnalytics()">
-                        <option value="ALL">All Users (Global)</option>
+                <div style="display:flex;gap:10px">
+                    <select id="act-filter-user" onchange="renderActivityLog()" class="form-select" style="width:200px">
+                        <option value="">All Users</option>
+                    </select>
+                    <select id="act-filter-action" onchange="renderActivityLog()" class="form-select" style="width:180px">
+                        <option value="">All Actions</option>
+                        <option value="Login">Login</option>
+                        <option value="Logout">Logout</option>
+                        <option value="Export CSV">Export CSV</option>
+                        <option value="Global Filter Applied">Filter Applied</option>
+                        <option value="Tab Switch">Tab Switch</option>
+                        <option value="Manual Refresh">Manual Refresh</option>
+                        <option value="Force Refresh">Force Refresh</option>
+                        <option value="Insights Panel Opened">Insights Opened</option>
                     </select>
                 </div>
-            </header>
-            <div class="p-8">
-                <!-- Bug Fix Banner -->
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
-                    <span class="text-xl flex-shrink-0">🔧</span>
-                    <div class="text-xs text-amber-800">
-                        <p class="font-bold mb-1">2 Analytics Bugs Fixed in This Version:</p>
-                        <p><strong>1. Filter key mismatch:</strong> Dashboard logged <code class="bg-amber-100 px-1 rounded">Global Filter Applied</code>, admin chart expected <code class="bg-amber-100 px-1 rounded">Filter</code> — always showed 0. Fixed via <code class="bg-amber-100 px-1 rounded">normaliseAction()</code> map.</p>
-                        <p class="mt-1"><strong>2. Session End inflation:</strong> <code class="bg-amber-100 px-1 rounded">pagehide</code> fired 6–8x per session (back/forward, tab switches). Fixed on dashboard via <code class="bg-amber-100 px-1 rounded">visibilitychange</code> + one-shot flag. Fixed here via 5-second deduplication window per user.</p>
-                    </div>
-                </div>
+            </div>
 
-                <!-- Primary KPIs -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                    <div class="stat-card border-l-4 border-l-blue-500">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-dau">Daily Active Users (DAU)</p>
-                        <h3 class="text-3xl font-black text-gray-900" id="kpi-dau">0</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Unique users with ≥1 action today (local date)</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-indigo-500">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-mau">Monthly Active (MAU)</p>
-                        <h3 class="text-3xl font-black text-indigo-600" id="kpi-mau">0</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Unique users active in last 30 days</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-[#2E963D]">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-time">Total Time Spent</p>
-                        <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-time">0m</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Max − min event timestamp per user/day</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-[#DF2027]">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1" id="label-exports">Data Exports</p>
-                        <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-exports">0</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Export CSV button clicks</p>
-                    </div>
+            <div class="card" style="overflow:hidden">
+                <div id="activity-feed" style="padding:4px 0"></div>
+                <div id="activity-empty" class="empty-state" style="display:none">
+                    <div class="icon">📭</div>
+                    <h4>No activity records found</h4>
+                    <p>Try changing your filter criteria</p>
                 </div>
-                <!-- Secondary KPIs -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="stat-card border-l-4 border-l-purple-400">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Sessions (Logins)</p>
-                        <h3 class="text-3xl font-black text-purple-600" id="kpi-sessions">0</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Login events = session starts</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-teal-400">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Filter Actions</p>
-                        <h3 class="text-3xl font-black text-teal-600" id="kpi-filters">0</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Global Context Filter applied events</p>
-                    </div>
-                    <div class="stat-card border-l-4 border-l-orange-400">
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Tab Switches</p>
-                        <h3 class="text-3xl font-black text-orange-600" id="kpi-tabs">0</h3>
-                        <p class="text-[10px] text-gray-400 mt-2">Section navigation events</p>
-                    </div>
-                </div>
+                <div id="activity-pagination" style="padding:12px 24px;border-top:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center"></div>
+            </div>
+        </div>
 
-                <!-- Charts + Feed -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div class="stat-card">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="font-bold text-gray-800">Action Breakdown</h3>
-                            <span class="text-[10px] bg-green-50 text-green-700 border border-green-200 px-2 py-1 rounded font-bold">✓ Bug Fixed</span>
-                        </div>
-                        <div class="h-64"><canvas id="actionChart"></canvas></div>
+    </main>
+</div>
+
+<!-- ════════════════ USER MODAL ════════════════ -->
+<div id="modal-overlay" onclick="closeModalOutside(event)">
+    <div id="modal-box">
+        <div class="modal-header">
+            <div style="font-size:1rem;font-weight:800;color:#0F172A" id="modal-title">Add New User</div>
+            <div style="font-size:0.75rem;color:#9CA3AF;margin-top:2px" id="modal-subtitle">Fill in the fields below to create a platform account</div>
+        </div>
+        <div class="modal-body">
+
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" id="u_email" class="form-input" placeholder="user@heritagefoods.in" required>
+                <div id="email-disabled-note" style="display:none;margin-top:5px;font-size:0.7rem;color:#9CA3AF">Email cannot be changed after creation.</div>
+            </div>
+
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="u_name" class="form-input" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password <span id="pass-optional" style="color:#9CA3AF;font-weight:400;text-transform:none;letter-spacing:0">(leave blank to keep)</span></label>
+                    <input type="text" id="u_pass" class="form-input" placeholder="Heritage@123" value="Heritage@123">
+                </div>
+            </div>
+
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select id="u_role" class="form-select">
+                        <option value="RH">Regional Head (RH)</option>
+                        <option value="CXO">Executive (CXO)</option>
+                        <option value="BM">Branch Manager (BM)</option>
+                        <option value="Superadmin">Superadmin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" id="u_title" class="form-input" placeholder="Regional Head – Tamil Nadu">
+                </div>
+            </div>
+
+            <!-- Scope section -->
+            <div style="background:#F9FAFB;border:1.5px solid #E2E8F0;border-radius:10px;padding:16px">
+                <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:12px;display:flex;align-items:center;gap:6px">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    Row-Level Security (Data Scope)
+                </div>
+                <div class="form-grid-2">
+                    <div>
+                        <label class="form-label">Scope Type</label>
+                        <select id="u_scope_type" class="form-select" onchange="toggleScopeValue()">
+                            <option value="SO">Sales Office (SO)</option>
+                            <option value="ALL">ALL — No Restrictions</option>
+                        </select>
                     </div>
-                    <div class="stat-card flex flex-col overflow-hidden">
-                        <h3 class="font-bold text-gray-800 mb-4">Detailed Activity Feed</h3>
-                        <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg" style="max-height: 300px;">
-                            <table class="w-full text-left text-xs">
-                                <thead class="bg-gray-50 text-gray-500 uppercase sticky top-0">
-                                    <tr>
-                                        <th class="px-4 py-2">Date & Time</th>
-                                        <th class="px-4 py-2" id="th-user">User</th>
-                                        <th class="px-4 py-2">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="activityFeedBody" class="divide-y divide-gray-100"></tbody>
-                            </table>
-                        </div>
+                    <div id="scope_val_container">
+                        <label class="form-label">Mapped SO Codes <span style="color:#9CA3AF;font-weight:400;text-transform:none">(comma-separated)</span></label>
+                        <input type="text" id="u_scope_value" class="form-input" placeholder="1940, 1941, 1942" style="font-family:monospace">
                     </div>
+                </div>
+                <div id="scope-all-note" style="display:none;margin-top:8px;font-size:0.72rem;color:#16A34A;background:#F0FDF4;padding:8px 12px;border-radius:6px;border:1px solid #BBF7D0">
+                    ✓ This user will see all data across all Sales Offices and Regions.
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- User Modal -->
-    <div id="userModal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
-        <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden opacity-0 transform scale-95" id="modalContent">
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900" id="modalTitle">Create User</h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-            </div>
-            <form id="userForm" class="p-6 space-y-4">
-                <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Email Address</label><input type="email" id="u_email" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Full Name</label><input type="text" id="u_name" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Password</label><input type="text" id="u_pass" required placeholder="Heritage@123" value="Heritage@123" class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Role</label>
-                        <select id="u_role" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white"><option value="RH">Regional Head (RH)</option><option value="CXO">Executive (CXO)</option><option value="Superadmin">Superadmin</option><option value="BM">Branch Manager (BM)</option></select>
-                    </div>
-                    <div><label class="block text-xs font-bold text-gray-600 uppercase mb-1">Job Title</label><input type="text" id="u_title" class="w-full border border-gray-300 rounded-lg px-4 py-2"></div>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-2">
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Scope Type</label>
-                    <select id="u_scope_type" onchange="toggleScopeValue()" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 mb-2 bg-white text-sm"><option value="SO">Sales Office (SO)</option><option value="ALL">ALL (No Restrictions)</option></select>
-                    <div id="scope_val_container"><label class="block text-xs font-medium text-gray-500 mb-1">Mapped SOs (Comma separated)</label><input type="text" id="u_scope_value" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-mono"></div>
-                </div>
-                <div class="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
-                    <button type="button" onclick="closeModal()" class="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">Cancel</button>
-                    <button type="submit" class="px-5 py-2 bg-brand text-white font-bold rounded-lg shadow-md hover:bg-[#247A31]">Save User</button>
-                </div>
-            </form>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveUser()" id="modal-save-btn">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Save User
+            </button>
         </div>
     </div>
+</div>
 
-    <script>
-        let actionChartInstance = null;
-        let globalLogs = [];
+<!-- Toast -->
+<div id="toast">
+    <span id="toast-icon">✅</span>
+    <span id="toast-msg">Done</span>
+</div>
 
-        // ================================================================
-        // ACTION NORMALISATION MAP — SINGLE SOURCE OF TRUTH
-        // 
-        // PURPOSE: Map every raw log action string produced by dashboard.html's
-        // trackEvent() calls → a canonical display label used in charts & KPIs.
-        //
-        // HOW TO MAINTAIN: Any time you add a new trackEvent(actionName, ...) call
-        // in dashboard.html, add a corresponding entry here. If you don't,
-        // the action falls into the 'Other' catch-all and won't appear in charts.
-        //
-        // RULES:
-        //   - Keys  = exact string passed as first arg to trackEvent()
-        //   - Values = display label shown in the admin chart
-        //   - Values starting with '_' are internal/lifecycle events:
-        //     they are counted in dedicated KPIs but excluded from the bar chart
-        // ================================================================
-        const ACTION_NORM_MAP = {
-            // ---- Navigation ----
-            'Tab Switch':               'Tab Switch',
+<script>
+// ═══════════════════════════════════════════════════
+// GLOBALS
+// ═══════════════════════════════════════════════════
+let allUsers    = {};   // email → user dict
+let allLogs     = [];   // raw activity logs
+let filteredUsers = []; // after search/filter
+let isEditMode  = false;
+let userPage    = 1;
+let actPage     = 1;
+const USER_PAGE_SIZE = 20;
+const ACT_PAGE_SIZE  = 50;
 
-            // ---- Filtering ----
-            // BUG FIX: dashboard sends 'Global Filter Applied', NOT 'Filter'
-            // Old admin chart used 'Filter' as key → always 0 counts. Fixed here.
-            'Global Filter Applied':    'Filter Applied',
-            'Filter Applied':           'Filter Applied',   // idempotent
-            'Filter':                   'Filter Applied',   // legacy fallback
+const ACTION_NORM_MAP = {
+    'Tab Switch':              'Tab Switch',
+    'Global Filter Applied':   'Filter Applied',
+    'Filter Applied':          'Filter Applied',
+    'Filter':                  'Filter Applied',
+    'Export CSV':              'Export CSV',
+    'Manual Refresh':          'Manual Refresh',
+    'Insights Panel Opened':   'Insights Opened',
+    'Force Refresh':           'Force Refresh',
+    'Login':                   '_Login',
+    'Logout':                  '_Logout',
+    'Session End':             '_Session End',
+    'Password Reset':          '_Password Reset',
+};
+const DEDUP_WINDOW_MS = 5000;
 
-            // ---- Data Actions ----
-            'Export CSV':               'Export CSV',
-            'Manual Refresh':           'Manual Refresh',
+const ROLE_COLORS = {
+    Superadmin: { bg: '#F5F3FF', text: '#7E22CE', initial: '#7E22CE', initBg: '#EDE9FE' },
+    CXO:        { bg: '#FFF7ED', text: '#C2410C', initial: '#C2410C', initBg: '#FFEDD5' },
+    RH:         { bg: '#EFF6FF', text: '#1D4ED8', initial: '#1D4ED8', initBg: '#DBEAFE' },
+    BM:         { bg: '#F0FDF4', text: '#166534', initial: '#166534', initBg: '#DCFCE7' },
+};
+const ACTION_ICONS = {
+    'Login': '🔐', 'Logout': '🚪', 'Export CSV': '📥',
+    'Filter Applied': '🔽', 'Tab Switch': '📌',
+    'Manual Refresh': '🔄', 'Force Refresh': '⚡',
+    'Insights Panel Opened': '💡', 'Session End': '⏹️',
+    'Password Reset': '🔑', 'Other': '📝'
+};
 
-            // ---- Insights Feature ----
-            'Insights Panel Opened':    'Insights Opened',
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+    fetchAll();
+});
 
-            // ---- Session Lifecycle (prefixed _ = excluded from bar chart) ----
-            'Login':                    '_Login',
-            'Logout':                   '_Logout',
-            'Session End':              '_Session End',
-        };
+function fetchAll() {
+    Promise.all([
+        fetch('/api/users').then(r => r.json()),
+        fetch('/api/analytics').then(r => r.json()),
+        fetch('/api/cache-status').then(r => r.json()),
+    ]).then(([users, logs, cache]) => {
+        allUsers = users;
+        allLogs  = deduplicateSessionEnds(logs);
+        updateSidebarUserCount(Object.keys(users).length);
+        renderOverviewTab(users, allLogs, cache);
+        renderUsersTab(users);
+        renderCacheTab(cache);
+        renderAnalyticsTab(allLogs, users);
+        renderActivityLog();
+        populateLogFilters();
+    }).catch(err => console.error('Failed to load admin data:', err));
+}
 
-        // ================================================================
-        // SESSION END DEDUPLICATION
-        //
-        // PROBLEM: Before the pagehide→visibilitychange fix in dashboard.html,
-        // 'Session End' was logged 6-8 times per real session because pagehide
-        // fires on tab switches, back/forward cache, and network requests.
-        //
-        // SOLUTION (server-side guard): If two 'Session End' events from the
-        // same user arrive within DEDUP_WINDOW_MS of each other, treat them
-        // as one. This is a read-time fix applied to the log file, not a
-        // deletion — raw logs remain intact.
-        //
-        // DEDUP_WINDOW_MS = 5000ms (5 seconds). Rationale: a genuine new session
-        // would require at least a Login event first, which takes more than 5s.
-        // ================================================================
-        const DEDUP_WINDOW_MS = 5000;
-
-        function deduplicateSessionEnds(logs) {
-            const result = [];
-            const lastSessionEnd = {}; // email → timestamp of last counted Session End
-
-            for (const log of logs) {
-                if (log.action === 'Session End') {
-                    const t = new Date(log.timestamp).getTime();
-                    const prev = lastSessionEnd[log.email];
-                    if (prev && (t - prev) < DEDUP_WINDOW_MS) {
-                        continue; // Skip — duplicate burst
-                    }
-                    lastSessionEnd[log.email] = t;
-                }
-                result.push(log);
-            }
-            return result;
+function deduplicateSessionEnds(logs) {
+    const result = [], last = {};
+    for (const log of logs) {
+        if (log.action === 'Session End') {
+            const t = new Date(log.timestamp).getTime(), prev = last[log.email];
+            if (prev && (t - prev) < DEDUP_WINDOW_MS) continue;
+            last[log.email] = t;
         }
+        result.push(log);
+    }
+    return result;
+}
 
-        function switchTab(tabId) {
-            $('.tab-content').addClass('hidden');
-            $('#' + tabId).removeClass('hidden');
-            $('.sidebar-link').removeClass('active');
-            $(`[data-target="${tabId}"]`).addClass('active');
-            if(tabId === 'view-analytics') { fetchAnalytics(); }
+// ═══════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════
+const TAB_META = {
+    'tab-overview':   { title: 'System Overview',      sub: 'Platform health and at-a-glance metrics' },
+    'tab-users':      { title: 'Users & Access',        sub: 'Manage user accounts, roles, and data scope' },
+    'tab-cache':      { title: 'Cache & Data',          sub: 'Monitor and control the data refresh pipeline' },
+    'tab-analytics':  { title: 'Usage Analytics',       sub: 'Track feature adoption and user engagement' },
+    'tab-activity':   { title: 'Activity Log',          sub: 'Full audit trail of platform events' },
+};
+function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+    const m = TAB_META[id] || {};
+    document.getElementById('topbar-title').textContent = m.title || '';
+    document.getElementById('topbar-sub').textContent   = m.sub   || '';
+}
+
+// ═══════════════════════════════════════════════════
+// OVERVIEW TAB
+// ═══════════════════════════════════════════════════
+let dauTrendChart, roleDonutChart, ovActionChart;
+
+function renderOverviewTab(users, logs, cache) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(today.getDate() - 30);
+
+    let dauToday = new Set(), sessions = 0, exports = 0;
+    const userActivity = {};
+
+    logs.forEach(log => {
+        const d = new Date(log.timestamp);
+        if (d >= today) dauToday.add(log.email);
+        if (log.action === 'Login') sessions++;
+        if (log.action === 'Export CSV') exports++;
+        if (d >= thirtyDaysAgo) {
+            if (!userActivity[log.email]) userActivity[log.email] = 0;
+            userActivity[log.email]++;
         }
+    });
 
-        // ---- USER MANAGEMENT ----
-        function loadUsers() {
-            $.get('/api/users', function(data) {
-                let html = '';
-                for (const [email, user] of Object.entries(data)) {
-                    let scopeDisplay = user.scope_type === 'ALL'
-                        ? '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Unrestricted</span>'
-                        : `<div class="text-xs font-bold text-gray-800">SO Map</div><div class="text-[10px] text-gray-500 font-mono mt-0.5 truncate max-w-[150px]">${Array.isArray(user.scope_value) ? user.scope_value.join(', ') : user.scope_value}</div>`;
-                    let delBtn = user.role === 'Superadmin' ? '' : `<button onclick="deleteUser('${email}')" class="text-red-500 hover:text-red-700 font-medium text-xs ml-3">Delete</button>`;
-                    html += `<tr>
-                        <td class="px-6 py-4"><div class="font-bold text-gray-900">${user.name}</div><div class="text-xs text-gray-500">${email}</div></td>
-                        <td class="px-6 py-4"><div class="font-bold text-gray-700">${user.role}</div><div class="text-xs text-gray-500">${user.title}</div></td>
-                        <td class="px-6 py-4">${scopeDisplay}</td>
-                        <td class="px-6 py-4 text-right"><button onclick="editUser('${email}', '${user.name}', '${user.password}', '${user.role}', '${user.title}', '${user.scope_type}', '${Array.isArray(user.scope_value) ? user.scope_value.join(', ') : (user.scope_value||'')}')" class="text-brand hover:text-[#247A31] font-bold text-xs bg-green-50 px-3 py-1.5 rounded-md">Edit</button>${delBtn}</td>
-                    </tr>`;
-                }
-                $('#userTableBody').html(html);
-            });
-        }
+    const userCount = Object.keys(users).length;
+    document.getElementById('ov-total-users').textContent = userCount;
+    document.getElementById('ov-active-users').textContent = `${dauToday.size} active today`;
+    document.getElementById('ov-sessions').textContent = sessions;
+    document.getElementById('ov-exports').textContent = exports;
+    document.getElementById('ov-cache-status').textContent = cache.is_fresh ? '✅ Fresh' : '⚠️ Stale';
+    document.getElementById('ov-cache-next').textContent = 'Next: ' + (cache.next_refresh || '—');
+    document.getElementById('sb-user-count').textContent = userCount;
 
-        let isEdit = false;
-        function toggleScopeValue() { $('#u_scope_type').val() === 'ALL' ? $('#scope_val_container').hide() : $('#scope_val_container').show(); }
-        function openModal() { isEdit = false; $('#userForm')[0].reset(); $('#u_email').prop('disabled', false).removeClass('bg-gray-100'); $('#modalTitle').text('Create New User'); toggleScopeValue(); $('#userModal').removeClass('hidden'); setTimeout(() => $('#modalContent').addClass('modal-enter-active'), 10); }
-        function editUser(e,n,p,r,t,st,sv) { isEdit = true; $('#u_email').val(e).prop('disabled', true).addClass('bg-gray-100'); $('#u_name').val(n); $('#u_pass').val(p); $('#u_role').val(r); $('#u_title').val(t); $('#u_scope_type').val(st); $('#u_scope_value').val(sv); $('#modalTitle').text('Edit User'); toggleScopeValue(); $('#userModal').removeClass('hidden'); setTimeout(() => $('#modalContent').addClass('modal-enter-active'), 10); }
-        function closeModal() { $('#modalContent').removeClass('modal-enter-active'); setTimeout(() => $('#userModal').addClass('hidden'), 200); }
+    // DAU 30-day trend
+    const dauByDay = {};
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i); d.setHours(0,0,0,0);
+        const key = d.toISOString().slice(0,10);
+        dauByDay[key] = new Set();
+    }
+    logs.forEach(log => {
+        const day = log.timestamp.slice(0,10);
+        if (dauByDay[day]) dauByDay[day].add(log.email);
+    });
+    const labels  = Object.keys(dauByDay).map(d => { const dt = new Date(d); return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); });
+    const values  = Object.values(dauByDay).map(s => s.size);
 
-        $('#userForm').submit(function(e) {
-            e.preventDefault();
-            const payload = { email: $('#u_email').val(), name: $('#u_name').val(), password: $('#u_pass').val(), role: $('#u_role').val(), title: $('#u_title').val(), scope_type: $('#u_scope_type').val(), scope_value: $('#u_scope_type').val() === 'ALL' ? null : $('#u_scope_value').val() };
-            $.ajax({ url: '/api/users', type: isEdit ? 'PUT' : 'POST', contentType: 'application/json', data: JSON.stringify(payload), success: function() { closeModal(); loadUsers(); }});
-        });
+    if (dauTrendChart) dauTrendChart.destroy();
+    dauTrendChart = new Chart(document.getElementById('dauTrendChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'DAU', data: values, borderColor: '#2E963D', backgroundColor: 'rgba(46,150,61,0.08)', fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 2, pointHoverRadius: 5 }] },
+        options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false }, tooltip: { callbacks: { title: t => t[0].label, label: t => ` ${t.raw} active users` } } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { color: '#F1F5F9' } } } }
+    });
 
-        function deleteUser(email) {
-            if(confirm('Revoke access for ' + email + '?')) {
-                $.ajax({ url: '/api/users', type: 'DELETE', contentType: 'application/json', data: JSON.stringify({email: email}), success: function() { loadUsers(); }});
-            }
-        }
+    // Role donut
+    const roleCounts = {};
+    Object.values(users).forEach(u => { roleCounts[u.role] = (roleCounts[u.role] || 0) + 1; });
+    const roleColors = { Superadmin: '#7C3AED', CXO: '#EA580C', RH: '#2563EB', BM: '#16A34A' };
+    const roleLabels = Object.keys(roleCounts), roleVals = Object.values(roleCounts);
+    const roleColArr = roleLabels.map(r => roleColors[r] || '#94A3B8');
 
-        // ================================================================
-        // ANALYTICS ENGINE
-        // ================================================================
-        function fetchAnalytics() {
-            $.get('/api/analytics', function(rawLogs) {
-                globalLogs = deduplicateSessionEnds(rawLogs);
+    if (roleDonutChart) roleDonutChart.destroy();
+    roleDonutChart = new Chart(document.getElementById('roleDonutChart'), {
+        type: 'doughnut',
+        data: { labels: roleLabels, datasets: [{ data: roleVals, backgroundColor: roleColArr, borderWidth: 0 }] },
+        options: { maintainAspectRatio: false, cutout: '72%', animation: false, plugins: { legend: { display: false } } }
+    });
 
-                let uniqueUsers = new Set();
-                globalLogs.forEach(l => uniqueUsers.add(l.email));
-                let options = '<option value="ALL">All Users (Global)</option>';
-                uniqueUsers.forEach(u => options += `<option value="${u}">${u}</option>`);
-                $('#userTrackerSelect').html(options);
+    // Custom legend
+    const legendEl = document.getElementById('role-legend');
+    legendEl.innerHTML = roleLabels.map((r, i) => `
+        <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:10px;height:10px;border-radius:3px;background:${roleColArr[i]};flex-shrink:0"></div>
+                <span style="font-size:0.75rem;color:#374151;font-weight:600">${r}</span>
+            </div>
+            <span style="font-size:0.75rem;font-weight:800;color:#111827">${roleVals[i]}</span>
+        </div>`).join('');
 
-                renderAnalytics();
-            });
-        }
+    // Top users
+    const topUsers = Object.entries(userActivity).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const maxAct = topUsers[0]?.[1] || 1;
+    document.getElementById('top-users-list').innerHTML = topUsers.length
+        ? topUsers.map(([email,count]) => {
+            const pct = Math.round(count/maxAct*100);
+            const u = users[email] || {};
+            const rc = ROLE_COLORS[u.role] || ROLE_COLORS.RH;
+            const initials = (u.name||email)[0].toUpperCase();
+            return `<div style="display:flex;align-items:center;gap:12px;padding:10px 24px;border-bottom:1px solid #F8FAFC">
+                <div style="width:32px;height:32px;border-radius:8px;background:${rc.initBg};color:${rc.initial};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.75rem;flex-shrink:0">${initials}</div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-size:0.78rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.name||email}</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:3px">
+                        <div style="flex:1;height:4px;background:#F1F5F9;border-radius:2px;overflow:hidden">
+                            <div style="width:${pct}%;height:100%;background:${rc.initial};border-radius:2px;transition:width 0.5s"></div>
+                        </div>
+                        <span style="font-size:0.65rem;color:#6B7280;font-weight:600;flex-shrink:0">${count} actions</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('')
+        : '<div class="empty-state"><p>No activity recorded yet</p></div>';
 
-        function renderAnalytics() {
-            const filterUser = $('#userTrackerSelect').val();
-            const today = new Date(); today.setHours(0,0,0,0);
-            const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(today.getDate() - 30);
+    // Action overview chart
+    const { actionCounts } = computeActionCounts(logs, 'ALL');
+    if (ovActionChart) ovActionChart.destroy();
+    const acLabels = Object.keys(actionCounts), acVals = Object.values(actionCounts);
+    const acColors = ['#2E963D','#3B82F6','#DF2027','#F59E0B','#8B5CF6','#14B8A6'];
+    ovActionChart = new Chart(document.getElementById('overviewActionChart'), {
+        type: 'bar',
+        data: { labels: acLabels, datasets: [{ data: acVals, backgroundColor: acColors, borderRadius: 5, maxBarThickness: 40 }] },
+        options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw} events` } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 10 } } }, y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } }, grid: { color: '#F1F5F9' } } } }
+    });
+}
 
-            let dauSet = new Set(), mauSet = new Set();
-            let userLogins = 0, exports = 0, filters = 0, tabs = 0, sessions = 0;
+// ═══════════════════════════════════════════════════
+// USERS TAB
+// ═══════════════════════════════════════════════════
+function renderUsersTab(users) {
+    allUsers = users;
+    filteredUsers = Object.entries(users);
+    filterUsers();
+}
 
-            // Bar chart action buckets — keys MUST match ACTION_NORM_MAP values (excluding _ prefix)
-            let actions = {
-                'Tab Switch':       0,
-                'Filter Applied':   0,   // FIXED: was 'Filter', now matches normalised value
-                'Export CSV':       0,
-                'Insights Opened':  0,
-                'Manual Refresh':   0,
-            };
+function filterUsers() {
+    const search = (document.getElementById('user-search').value || '').toLowerCase();
+    const role   = document.getElementById('user-role-filter').value;
+    filteredUsers = Object.entries(allUsers).filter(([email, u]) => {
+        const matchSearch = !search || email.includes(search) || (u.name||'').toLowerCase().includes(search);
+        const matchRole   = !role   || u.role === role;
+        return matchSearch && matchRole;
+    });
+    userPage = 1;
+    renderUserTable();
+}
 
-            let sessionMap = {};
-            let feedHtml = '';
-            let feedCount = 0;
+function renderUserTable() {
+    const total = filteredUsers.length;
+    const start = (userPage-1)*USER_PAGE_SIZE;
+    const page  = filteredUsers.slice(start, start+USER_PAGE_SIZE);
 
-            globalLogs.forEach(log => {
-                if (filterUser !== 'ALL' && log.email !== filterUser) return;
+    const tbody = document.getElementById('user-table-body');
+    const empty = document.getElementById('user-table-empty');
 
-                const logDate = new Date(log.timestamp);
-                const dateStr = log.timestamp.split(' ')[0];
-                const normAction = ACTION_NORM_MAP[log.action] || log.action;
+    if (total === 0) {
+        tbody.innerHTML = ''; empty.style.display = '';
+    } else {
+        empty.style.display = 'none';
+        tbody.innerHTML = page.map(([email, u]) => {
+            const rc = ROLE_COLORS[u.role] || ROLE_COLORS.RH;
+            const initials = (u.name||email).slice(0,2).toUpperCase();
+            const scopeText = u.scope_type === 'ALL'
+                ? '<span style="font-size:0.68rem;background:#F0FDF4;color:#166534;padding:3px 10px;border-radius:20px;font-weight:700">Unrestricted</span>'
+                : `<div style="font-size:0.72rem;font-weight:700;color:#1D4ED8">SO-Mapped</div><div style="font-size:0.65rem;color:#94A3B8;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${Array.isArray(u.scope_value)?u.scope_value.join(', '):(u.scope_value||'')}</div>`;
+            const lastLogin = u.last_login ? formatRelTime(u.last_login) : '<span style="color:#CBD5E1;font-size:0.72rem">Never</span>';
+            const isSA = u.role === 'Superadmin';
+            return `<div class="user-row">
+                <div style="width:38px;height:38px;border-radius:10px;background:${rc.initBg};color:${rc.initial};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem;flex-shrink:0">${initials}</div>
+                <div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.name||'—'}</div>
+                    <div style="font-size:0.7rem;color:#94A3B8;margin-top:1px">${email}</div>
+                    ${u.title ? `<div style="font-size:0.65rem;color:#CBD5E1;margin-top:1px">${u.title}</div>` : ''}
+                </div>
+                <div><span class="role-badge role-${u.role}">${u.role}</span></div>
+                <div>${scopeText}</div>
+                <div style="font-size:0.75rem;color:#374151">${lastLogin}</div>
+                <div style="display:flex;justify-content:flex-end;gap:6px">
+                    <button class="btn-ghost" onclick="editUser('${email}')">Edit</button>
+                    ${!isSA ? `<button class="btn-danger" onclick="deleteUser('${email}')">Remove</button>` : ''}
+                </div>
+            </div>`;
+        }).join('');
+    }
 
-                // DAU / MAU
-                if (filterUser === 'ALL') {
-                    if (logDate >= today)         dauSet.add(log.email);
-                    if (logDate >= thirtyDaysAgo) mauSet.add(log.email);
-                }
+    // Pagination
+    const totalPages = Math.ceil(total/USER_PAGE_SIZE);
+    const pag = document.getElementById('user-pagination');
+    if (total === 0) { pag.innerHTML = ''; return; }
+    let btns = '';
+    for (let p=1;p<=totalPages;p++) btns += `<button class="pag-btn ${p===userPage?'active':''}" onclick="userPage=${p};renderUserTable()">${p}</button>`;
+    pag.innerHTML = `<span style="font-size:0.75rem;color:#9CA3AF">${total} users · Showing ${start+1}–${Math.min(start+USER_PAGE_SIZE,total)}</span>
+        <div style="display:flex;gap:5px;align-items:center">
+            <button class="pag-btn" onclick="userPage=Math.max(1,userPage-1);renderUserTable()" ${userPage<=1?'disabled':''}>←</button>
+            ${btns}
+            <button class="pag-btn" onclick="userPage=Math.min(${totalPages},userPage+1);renderUserTable()" ${userPage>=totalPages?'disabled':''}>→</button>
+        </div>`;
+}
 
-                // KPI tallies (raw action checks for reliability)
-                if (log.action === 'Login')                                               { userLogins++; sessions++; }
-                if (log.action === 'Export CSV')                                          exports++;
-                if (log.action === 'Global Filter Applied' || log.action === 'Filter Applied') filters++;
-                if (log.action === 'Tab Switch')                                          tabs++;
+function formatRelTime(ts) {
+    if (!ts) return '—';
+    const diff = Date.now() - new Date(ts).getTime();
+    const m = Math.floor(diff/60000), h = Math.floor(m/60), d = Math.floor(h/24);
+    if (m < 1)  return '<span style="color:#22C55E;font-size:0.72rem;font-weight:700">Just now</span>';
+    if (m < 60) return `<span style="font-size:0.75rem">${m}m ago</span>`;
+    if (h < 24) return `<span style="font-size:0.75rem">${h}h ago</span>`;
+    if (d < 7)  return `<span style="font-size:0.75rem">${d}d ago</span>`;
+    return `<span style="font-size:0.75rem">${new Date(ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</span>`;
+}
 
-                // Bar chart (exclude _-prefixed lifecycle events)
-                if (!normAction.startsWith('_') && normAction in actions) {
-                    actions[normAction]++;
-                }
+function updateSidebarUserCount(n) {
+    document.getElementById('sb-user-count').textContent = n;
+}
 
-                // Time Spent: min/max event time per (user, day)
-                const sessionKey = `${log.email}_${dateStr}`;
-                if (!sessionMap[sessionKey]) {
-                    sessionMap[sessionKey] = { min: logDate, max: logDate };
-                } else {
-                    if (logDate < sessionMap[sessionKey].min) sessionMap[sessionKey].min = logDate;
-                    if (logDate > sessionMap[sessionKey].max) sessionMap[sessionKey].max = logDate;
-                }
+// ═══════════════════════════════════════════════════
+// CACHE TAB
+// ═══════════════════════════════════════════════════
+function renderCacheTab(cache) {
+    const fresh = cache.is_fresh;
+    const block = document.getElementById('cache-status-block');
+    block.innerHTML = `<div class="${fresh?'cache-fresh':'cache-stale'}">
+        <div class="${fresh?'cache-dot-fresh':'cache-dot-stale'}"></div>
+        <div>
+            <div style="font-size:0.85rem;font-weight:700;color:${fresh?'#166534':'#713F12'}">${fresh?'Cache is Fresh — Data is Up to Date':'Cache is Stale — Data may be outdated'}</div>
+            <div style="font-size:0.72rem;color:${fresh?'#4ADE80':'#EAB308'};margin-top:2px">
+                ${fresh?'Loaded after today\'s 9:00 AM window':'Not yet refreshed for today\'s 9:00 AM window'}
+            </div>
+        </div>
+    </div>`;
+    document.getElementById('cache-loaded-at').textContent  = cache.loaded_at || '—';
+    document.getElementById('cache-row-count').textContent  = cache.row_count ? cache.row_count.toLocaleString('en-IN') + ' rows' : '—';
+    document.getElementById('cache-next-refresh').textContent = cache.next_refresh || '—';
 
-                // Feed
-                if (feedCount < 150) {
-                    const timeDisplay = log.timestamp.split(' ')[1] || '';
-                    const displayLabel = normAction.startsWith('_') ? normAction.slice(1) : normAction;
-                    feedHtml += `<tr>
-                        <td class="px-4 py-3 whitespace-nowrap text-gray-500 font-mono text-[10px]">${dateStr} ${timeDisplay}</td>
-                        ${filterUser === 'ALL' ? `<td class="px-4 py-3 font-medium text-gray-800">${log.email.split('@')[0]}</td>` : ''}
-                        <td class="px-4 py-3"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase mr-2 border border-gray-200">${displayLabel}</span><span class="text-gray-500 truncate inline-block max-w-[180px]" style="vertical-align:bottom;">${log.details||''}</span></td>
-                    </tr>`;
-                    feedCount++;
-                }
-            });
+    // Update overview KPI too
+    document.getElementById('ov-cache-status').textContent = fresh ? '✅ Fresh' : '⚠️ Stale';
+    document.getElementById('ov-cache-next').textContent = 'Next: ' + (cache.next_refresh || '—');
+}
 
-            // Time Spent formula: sum(max_t - min_t) per user/day pair.
-            // If a user had only 1 event in a day → diff = 0 → floor to 2 min (conservative minimum).
-            let totalMinutes = 0;
-            for (const key in sessionMap) {
-                let diffMins = Math.floor((sessionMap[key].max - sessionMap[key].min) / 60000);
-                if (diffMins === 0) diffMins = 2;
-                totalMinutes += diffMins;
-            }
-            const hours = Math.floor(totalMinutes / 60);
-            const mins  = totalMinutes % 60;
-            const timeString = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+function triggerForceRefresh() {
+    const btn = document.getElementById('force-refresh-btn');
+    const icon = document.getElementById('fr-icon');
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    icon.style.animation = 'spin 1s linear infinite';
 
-            // Update KPIs
-            if (filterUser === 'ALL') {
-                $('#label-dau').text('Daily Active Users (DAU)');
-                $('#kpi-dau').text(dauSet.size);
-                $('#label-mau').text('Monthly Active (MAU)');
-                $('#kpi-mau').text(mauSet.size);
-                $('#label-time').text('Total Platform Time Spent');
-                $('#th-user').show();
-            } else {
-                $('#label-dau').text('Total User Logins');
-                $('#kpi-dau').text(userLogins);
-                $('#label-mau').text('Total Engagement Actions');
-                $('#kpi-mau').text(tabs + filters + exports);
-                $('#label-time').text('User Total Time Spent');
-                $('#th-user').hide();
-            }
-            $('#kpi-exports').text(exports);
-            $('#kpi-time').text(timeString);
-            $('#kpi-sessions').text(sessions);
-            $('#kpi-filters').text(filters);
-            $('#kpi-tabs').text(tabs);
-            $('#activityFeedBody').html(feedHtml);
+    // CSS spin
+    if (!document.getElementById('spin-style')) {
+        const s = document.createElement('style');
+        s.id = 'spin-style';
+        s.textContent = '@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }';
+        document.head.appendChild(s);
+    }
 
-            // Chart
-            if(actionChartInstance) actionChartInstance.destroy();
-            const chartColors = ['#3B82F6', '#2E963D', '#DF2027', '#8B5CF6', '#F59E0B'];
-            const chartLabels = Object.keys(actions);
-            const chartData   = Object.values(actions);
-            actionChartInstance = new Chart(document.getElementById('actionChart'), {
-                type: 'bar',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{ label: 'Event Count', data: chartData, backgroundColor: chartColors, borderRadius: 4 }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(ctx) {
-                                    const total = chartData.reduce((a, b) => a + b, 0);
-                                    const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
-                                    return `${pct}% of engagement actions`;
-                                }
-                            }
-                        }
-                    },
-                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { grid: { display: false } } }
-                }
-            });
-        }
+    fetch('/api/refresh', { method: 'POST' }).then(r => r.json()).then(data => {
+        btn.disabled = false; btn.style.opacity = ''; icon.style.animation = '';
+        fetch('/api/cache-status').then(r=>r.json()).then(c => renderCacheTab(c));
+        showToast('success', '✅ Cache refreshed successfully — ' + data.row_count?.toLocaleString() + ' rows loaded');
+    }).catch(() => {
+        btn.disabled = false; btn.style.opacity = ''; icon.style.animation = '';
+        showToast('error', '❌ Refresh failed. Check server logs.');
+    });
+}
 
-        $(document).ready(function() { loadUsers(); });
-    </script>
+// ═══════════════════════════════════════════════════
+// ANALYTICS TAB
+// ═══════════════════════════════════════════════════
+let anDauChart, anActionChart;
+
+function computeActionCounts(logs, filterUser) {
+    const actionCounts = { 'Tab Switch': 0, 'Filter Applied': 0, 'Export CSV': 0, 'Insights Opened': 0, 'Manual Refresh': 0 };
+    let sessions=0, exports=0, filters=0, tabs=0, dau=new Set(), mau=new Set(), sessions30=0;
+    const sessionMap={};
+    const today=new Date(); today.setHours(0,0,0,0);
+    const t30 = new Date(); t30.setDate(today.getDate()-30);
+
+    logs.forEach(log => {
+        if (filterUser !== 'ALL' && log.email !== filterUser) return;
+        const d = new Date(log.timestamp);
+        const norm = ACTION_NORM_MAP[log.action] || log.action;
+        if (d>=today) dau.add(log.email);
+        if (d>=t30) mau.add(log.email);
+        if (log.action==='Login') { sessions++; if(d>=t30) sessions30++; }
+        if (log.action==='Export CSV') exports++;
+        if (log.action==='Global Filter Applied'||log.action==='Filter Applied') filters++;
+        if (log.action==='Tab Switch') tabs++;
+        if (!norm.startsWith('_') && norm in actionCounts) actionCounts[norm]++;
+        const key = `${log.email}_${log.timestamp.slice(0,10)}`;
+        if (!sessionMap[key]) sessionMap[key]={min:d,max:d};
+        else { if(d<sessionMap[key].min) sessionMap[key].min=d; if(d>sessionMap[key].max) sessionMap[key].max=d; }
+    });
+    let totalMin=0;
+    Object.values(sessionMap).forEach(s => { const m=Math.floor((s.max-s.min)/60000); totalMin+=m<1?2:m; });
+    const avgMin = sessions30>0 ? Math.round(totalMin/sessions30) : 0;
+    return { actionCounts, dau:dau.size, mau:mau.size, sessions, exports, filters, tabs, avgMin };
+}
+
+function renderAnalyticsTab(logs, users) {
+    // Populate filter
+    const sel = document.getElementById('an-user-filter');
+    const unique = [...new Set(logs.map(l=>l.email))].sort();
+    sel.innerHTML = '<option value="ALL">All Users</option>' + unique.map(e=>`<option value="${e}">${(users[e]?.name)||e}</option>`).join('');
+    renderAnalytics();
+}
+
+function renderAnalytics() {
+    const filterUser = document.getElementById('an-user-filter')?.value || 'ALL';
+    const { actionCounts, dau, mau, sessions, exports, avgMin } = computeActionCounts(allLogs, filterUser);
+
+    document.getElementById('an-dau').textContent      = dau;
+    document.getElementById('an-mau').textContent      = mau;
+    document.getElementById('an-sessions').textContent = sessions;
+    document.getElementById('an-exports').textContent  = exports;
+    document.getElementById('an-avg-session').textContent = avgMin + 'm';
+
+    // DAU trend
+    const dauByDay = {};
+    for (let i=29;i>=0;i--) {
+        const d=new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
+        dauByDay[d.toISOString().slice(0,10)] = new Set();
+    }
+    allLogs.forEach(log => {
+        if (filterUser!=='ALL' && log.email!==filterUser) return;
+        const day = log.timestamp.slice(0,10);
+        if (dauByDay[day]) dauByDay[day].add(log.email);
+    });
+    const dLabels = Object.keys(dauByDay).map(d=>{const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'});});
+    const dValues = Object.values(dauByDay).map(s=>s.size);
+
+    if (anDauChart) anDauChart.destroy();
+    anDauChart = new Chart(document.getElementById('an-dau-trend'), {
+        type:'line',
+        data:{labels:dLabels,datasets:[{label:'Active Users',data:dValues,borderColor:'#2E963D',backgroundColor:'rgba(46,150,61,0.06)',fill:true,tension:0.4,borderWidth:2.5,pointRadius:2,pointHoverRadius:5}]},
+        options:{maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:t=>t[0].label,label:c=>` ${c.raw} ${filterUser==='ALL'?'unique users':'actions'}`}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:7,font:{size:10}}},y:{beginAtZero:true,ticks:{precision:0,font:{size:10}},grid:{color:'#F1F5F9'}}}}
+    });
+
+    // Action bar chart
+    if (anActionChart) anActionChart.destroy();
+    const acLabels = Object.keys(actionCounts), acVals = Object.values(actionCounts);
+    anActionChart = new Chart(document.getElementById('an-action-chart'), {
+        type:'bar',
+        data:{labels:acLabels,datasets:[{data:acVals,backgroundColor:['#2E963D','#3B82F6','#F59E0B','#8B5CF6','#14B8A6'],borderRadius:5,maxBarThickness:36}]},
+        options:{maintainAspectRatio:false,animation:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw} events`}}},scales:{x:{beginAtZero:true,ticks:{precision:0,font:{size:10}},grid:{color:'#F1F5F9'}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+    });
+
+    // Per-user table
+    const userStats = {};
+    allLogs.forEach(log => {
+        if (filterUser!=='ALL' && log.email!==filterUser) return;
+        if (!userStats[log.email]) userStats[log.email] = { sessions:0, exports:0, filters:0, tabs:0, total:0, lastSeen:log.timestamp, minTs:log.timestamp, maxTs:log.timestamp };
+        const u = userStats[log.email];
+        u.total++;
+        if (log.action==='Login') u.sessions++;
+        if (log.action==='Export CSV') u.exports++;
+        if (log.action==='Global Filter Applied'||log.action==='Filter Applied') u.filters++;
+        if (log.action==='Tab Switch') u.tabs++;
+        if (log.timestamp > u.lastSeen) u.lastSeen = log.timestamp;
+    });
+
+    const rows = Object.entries(userStats).sort((a,b)=>b[1].total-a[1].total);
+    const tbody = document.getElementById('per-user-table');
+    tbody.innerHTML = rows.map(([email, s]) => {
+        const u = allUsers[email] || {};
+        const rc = ROLE_COLORS[u.role] || ROLE_COLORS.RH;
+        const init = (u.name||email)[0].toUpperCase();
+        return `<tr style="border-bottom:1px solid #F9FAFB;transition:background 0.12s" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background=''">
+            <td style="padding:12px 20px">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:30px;height:30px;border-radius:8px;background:${rc.initBg};color:${rc.initial};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;flex-shrink:0">${init}</div>
+                    <div>
+                        <div style="font-size:0.78rem;font-weight:700;color:#111827">${u.name||email}</div>
+                        <div style="font-size:0.65rem;color:#94A3B8">${email}</div>
+                    </div>
+                </div>
+            </td>
+            <td style="padding:12px 16px;text-align:center;font-size:0.78rem;font-weight:700;color:#7C3AED">${s.sessions}</td>
+            <td style="padding:12px 16px;text-align:center;font-size:0.78rem;font-weight:700;color:#D97706">${s.exports}</td>
+            <td style="padding:12px 16px;text-align:center;font-size:0.78rem;font-weight:700;color:#0891B2">${s.filters}</td>
+            <td style="padding:12px 16px;text-align:center;font-size:0.78rem;font-weight:700;color:#4F46E5">${s.tabs}</td>
+            <td style="padding:12px 16px;text-align:center;font-size:0.78rem;font-weight:800;color:#111827">${s.total}</td>
+            <td style="padding:12px 16px;text-align:center">
+                <div style="font-size:0.75rem;font-weight:600;color:#374151">—</div>
+            </td>
+            <td style="padding:12px 16px;font-size:0.72rem;color:#6B7280">${formatRelTime(s.lastSeen).replace(/<[^>]+>/g,'')}</td>
+        </tr>`;
+    }).join('') || `<tr><td colspan="8" style="text-align:center;padding:32px;color:#9CA3AF;font-size:0.8rem">No activity data for this selection</td></tr>`;
+}
+
+// ═══════════════════════════════════════════════════
+// ACTIVITY LOG TAB
+// ═══════════════════════════════════════════════════
+function populateLogFilters() {
+    const users = [...new Set(allLogs.map(l=>l.email))].sort();
+    const uSel  = document.getElementById('act-filter-user');
+    uSel.innerHTML = '<option value="">All Users</option>' + users.map(e=>`<option value="${e}">${(allUsers[e]?.name)||e}</option>`).join('');
+}
+
+function renderActivityLog() {
+    const filterUser   = document.getElementById('act-filter-user').value;
+    const filterAction = document.getElementById('act-filter-action').value;
+
+    let rows = allLogs.filter(log => {
+        const matchUser   = !filterUser   || log.email === filterUser;
+        const matchAction = !filterAction || log.action === filterAction;
+        return matchUser && matchAction;
+    });
+
+    document.getElementById('activity-count-label').textContent = `${rows.length.toLocaleString()} events${filterUser||filterAction?' (filtered)':''}`;
+
+    const total = rows.length;
+    const start = (actPage-1)*ACT_PAGE_SIZE;
+    const page  = rows.slice(start, start+ACT_PAGE_SIZE);
+
+    const feed  = document.getElementById('activity-feed');
+    const empty = document.getElementById('activity-empty');
+
+    if (total === 0) {
+        feed.innerHTML = ''; empty.style.display = '';
+    } else {
+        empty.style.display = 'none';
+        const norm = a => ACTION_NORM_MAP[a] || a;
+        feed.innerHTML = page.map(log => {
+            const n       = norm(log.action);
+            const display = n.startsWith('_') ? n.slice(1) : n;
+            const icon    = ACTION_ICONS[display] || ACTION_ICONS['Other'];
+            const u       = allUsers[log.email] || {};
+            const parts   = log.timestamp.split(' ');
+            const dateStr = parts[0], timeStr = parts[1]||'';
+            const rc      = ROLE_COLORS[u.role]||ROLE_COLORS.RH;
+            return `<div class="feed-row" style="padding:12px 24px">
+                <div class="feed-icon action-${n.startsWith('_')?n.slice(1):n}" style="background:#F8FAFC;font-size:1rem;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${icon}</div>
+                <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                        <div style="width:22px;height:22px;border-radius:6px;background:${rc.initBg};color:${rc.initial};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.62rem;flex-shrink:0">${(u.name||log.email)[0].toUpperCase()}</div>
+                        <span style="font-size:0.78rem;font-weight:700;color:#111827">${u.name||log.email.split('@')[0]}</span>
+                        <span style="font-size:0.65rem;background:#F1F5F9;color:#6B7280;padding:2px 8px;border-radius:20px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em">${display}</span>
+                        ${log.details ? `<span style="font-size:0.72rem;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px">${log.details}</span>` : ''}
+                    </div>
+                </div>
+                <div style="text-align:right;flex-shrink:0;margin-left:12px">
+                    <div style="font-size:0.7rem;font-weight:600;color:#374151">${timeStr}</div>
+                    <div style="font-size:0.65rem;color:#CBD5E1">${dateStr}</div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // Pagination
+    const totalPages = Math.ceil(total/ACT_PAGE_SIZE);
+    const pag = document.getElementById('activity-pagination');
+    if (total === 0) { pag.innerHTML = ''; return; }
+    const range = 3;
+    let btns = '';
+    for (let p=1;p<=totalPages;p++) {
+        if (p===1||p===totalPages||(p>=actPage-range&&p<=actPage+range))
+            btns += `<button class="pag-btn ${p===actPage?'active':''}" onclick="actPage=${p};renderActivityLog()">${p}</button>`;
+        else if (p===actPage-range-1||p===actPage+range+1) btns += `<span style="padding:4px 4px;color:#9CA3AF">…</span>`;
+    }
+    pag.innerHTML = `<span style="font-size:0.75rem;color:#9CA3AF">${total} events · Page ${actPage} of ${totalPages}</span>
+        <div style="display:flex;gap:5px;align-items:center">
+            <button class="pag-btn" onclick="actPage=Math.max(1,actPage-1);renderActivityLog()" ${actPage<=1?'disabled':''}>← Prev</button>
+            ${btns}
+            <button class="pag-btn" onclick="actPage=Math.min(${totalPages},actPage+1);renderActivityLog()" ${actPage>=totalPages?'disabled':''}>Next →</button>
+        </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// USER MODAL
+// ═══════════════════════════════════════════════════
+function openModal() {
+    isEditMode = false;
+    document.getElementById('modal-title').textContent    = 'Add New User';
+    document.getElementById('modal-subtitle').textContent = 'Fill in the fields below to create a platform account';
+    document.getElementById('modal-save-btn').innerHTML   = '<svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Create User';
+    document.getElementById('u_email').value      = '';
+    document.getElementById('u_email').disabled   = false;
+    document.getElementById('email-disabled-note').style.display = 'none';
+    document.getElementById('u_name').value       = '';
+    document.getElementById('u_pass').value       = 'Heritage@123';
+    document.getElementById('u_role').value       = 'RH';
+    document.getElementById('u_title').value      = '';
+    document.getElementById('u_scope_type').value = 'SO';
+    document.getElementById('u_scope_value').value= '';
+    document.getElementById('pass-optional').style.display = 'none';
+    toggleScopeValue();
+    document.getElementById('modal-overlay').classList.add('open');
+}
+
+function editUser(email) {
+    const u = allUsers[email];
+    if (!u) return;
+    isEditMode = true;
+    document.getElementById('modal-title').textContent    = 'Edit User';
+    document.getElementById('modal-subtitle').textContent = `Updating account for ${email}`;
+    document.getElementById('modal-save-btn').innerHTML   = '<svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Save Changes';
+    document.getElementById('u_email').value      = email;
+    document.getElementById('u_email').disabled   = true;
+    document.getElementById('email-disabled-note').style.display = '';
+    document.getElementById('u_name').value       = u.name||'';
+    document.getElementById('u_pass').value       = '';
+    document.getElementById('u_role').value       = u.role||'RH';
+    document.getElementById('u_title').value      = u.title||'';
+    document.getElementById('u_scope_type').value = u.scope_type||'ALL';
+    document.getElementById('u_scope_value').value= Array.isArray(u.scope_value)?u.scope_value.join(', '):(u.scope_value||'');
+    document.getElementById('pass-optional').style.display = '';
+    toggleScopeValue();
+    document.getElementById('modal-overlay').classList.add('open');
+}
+
+function toggleScopeValue() {
+    const type = document.getElementById('u_scope_type').value;
+    document.getElementById('scope_val_container').style.display = type==='ALL'?'none':'';
+    document.getElementById('scope-all-note').style.display = type==='ALL'?'':'none';
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target.id==='modal-overlay') closeModal(); }
+
+function saveUser() {
+    const email = document.getElementById('u_email').value.trim().toLowerCase();
+    const name  = document.getElementById('u_name').value.trim();
+    const pass  = document.getElementById('u_pass').value.trim();
+    if (!email || !name) { showToast('error', '❌ Email and Name are required'); return; }
+    if (!isEditMode && !pass) { showToast('error', '❌ Password is required for new users'); return; }
+
+    const btn = document.getElementById('modal-save-btn');
+    btn.disabled = true; btn.style.opacity = '0.7';
+
+    const scope_type  = document.getElementById('u_scope_type').value;
+    const scope_value = scope_type==='ALL' ? null : document.getElementById('u_scope_value').value;
+    const payload = { email, name, password:pass, role:document.getElementById('u_role').value, title:document.getElementById('u_title').value.trim(), scope_type, scope_value };
+
+    fetch('/api/users', {
+        method: isEditMode ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(r => {
+        btn.disabled = false; btn.style.opacity = '';
+        if (!r.ok) return r.json().then(d => { throw new Error(d.error||'Unknown error'); });
+        return r.json();
+    }).then(() => {
+        closeModal();
+        showToast('success', `✅ User ${isEditMode?'updated':'created'} successfully`);
+        fetch('/api/users').then(r=>r.json()).then(u => { allUsers=u; renderUsersTab(u); updateSidebarUserCount(Object.keys(u).length); });
+    }).catch(err => {
+        btn.disabled = false; btn.style.opacity = '';
+        showToast('error', '❌ ' + (err.message||'Failed to save user'));
+    });
+}
+
+function deleteUser(email) {
+    if (!confirm(`Remove access for ${email}?\n\nThis will soft-delete the account.`)) return;
+    fetch('/api/users', { method:'DELETE', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email}) })
+        .then(r => r.json()).then(() => {
+            showToast('success', `✅ ${email} has been removed`);
+            fetch('/api/users').then(r=>r.json()).then(u => { allUsers=u; renderUsersTab(u); updateSidebarUserCount(Object.keys(u).length); });
+        }).catch(() => showToast('error', '❌ Failed to delete user'));
+}
+
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
+let _toastTimer;
+function showToast(type, msg) {
+    const el  = document.getElementById('toast');
+    const msgEl = document.getElementById('toast-msg');
+    el.className = 'show ' + type;
+    msgEl.textContent = msg;
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+</script>
 </body>
 </html>
