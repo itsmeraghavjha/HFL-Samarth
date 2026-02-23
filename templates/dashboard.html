@@ -1663,24 +1663,182 @@ function exportChurnTier(tier) {
     // =====================================================
     // MASTER DATA TABLE (DataTables)
     // =====================================================
-    function initTable(data, columns, trendIdx) {
-        if (myDataTable) { myDataTable.clear(); myDataTable.rows.add(data); myDataTable.draw(); return; }
-        myDataTable = $('#salesTable').DataTable({
-            data: data, columns: columns, pageLength: 15, scrollX: true, scrollCollapse: true, autoWidth: false, deferRender: true,
-            columnDefs: [{ targets: trendIdx, render: function(data) {
-                let t = String(data || '').trim();
-                if (t === 'Growth')                          return '<span class="badge badge-growth">Growth</span>';
-                if (t === 'Decline')                         return '<span class="badge badge-decline">Decline</span>';
-                if (t === 'New Customer' || t === 'New')     return '<span class="badge badge-new">New</span>';
-                return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${t || 'Stable'}</span>`;
-            }}],
-            language: { search: "", searchPlaceholder: "Search within results..." },
-            dom: '<"top"f>rt<"bottom"p><"clear">'
-        });
-        $('.dataTables_filter').appendTo('#table-actions');
-        $('.dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]');
-        $('.dataTables_filter label').contents().filter(function() { return this.nodeType === 3; }).remove();
+    // =====================================================
+// MASTER DATA TABLE (DataTables) — drop-in replacement
+// for the existing initTable() function in dashboard.html
+// =====================================================
+
+function initTable(data, columns, trendIdx) {
+
+    // ── Helper renderers ──────────────────────────────────────
+
+    // LPD volume: show 2 decimal places, no colour
+    function renderLpd(val) {
+        const n = parseFloat(val);
+        if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
+        return `<span style="font-family:monospace;font-size:0.8rem">${n.toFixed(2)}</span>`;
     }
+
+    // Signed LPD absolute difference: green positive, red negative
+    function renderAbsDiff(val) {
+        const n = parseFloat(val);
+        if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
+        const sign  = n > 0 ? '+' : '';
+        const color = n > 0 ? '#2E963D' : n < 0 ? '#DF2027' : '#6B7280';
+        const bg    = n > 0 ? '#DCFCE7' : n < 0 ? '#FEE2E2' : '#F3F4F6';
+        return `
+            <span style="font-family:monospace;font-size:0.78rem;font-weight:700;
+                         color:${color};background:${bg};padding:2px 7px;
+                         border-radius:5px;white-space:nowrap">
+                ${sign}${n.toFixed(2)}
+            </span>`;
+    }
+
+    // Growth percentage: stored as a decimal ratio (0.05 → 5%)
+    // Multiplies by 100 before display, shows % symbol and colour chip
+    function renderGrowthPct(val) {
+        const n = parseFloat(val);
+        if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
+        const pct   = n * 100;
+        const sign  = pct > 0 ? '+' : '';
+        const color = pct > 0 ? '#166534' : pct < 0 ? '#991B1B' : '#374151';
+        const bg    = pct > 0 ? '#DCFCE7' : pct < 0 ? '#FEE2E2' : '#F3F4F6';
+        const arrow = pct > 0 ? '▲' : pct < 0 ? '▼' : '—';
+        return `
+            <span style="font-family:monospace;font-size:0.75rem;font-weight:800;
+                         color:${color};background:${bg};padding:3px 8px;
+                         border-radius:20px;white-space:nowrap;letter-spacing:0.01em">
+                ${arrow} ${sign}${pct.toFixed(1)}%
+            </span>`;
+    }
+
+    // Sales Trend badge (existing logic, kept here for clarity)
+    function renderTrend(val) {
+        const t = String(val || '').trim();
+        if (t === 'Growth')                          return '<span class="badge badge-growth">▲ Growth</span>';
+        if (t === 'Decline')                         return '<span class="badge badge-decline">▼ Decline</span>';
+        if (t === 'New Customer' || t === 'New')     return '<span class="badge badge-new">✦ New</span>';
+        if (t === 'Stagnant')                        return '<span class="badge" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A">~ Stagnant</span>';
+        return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${t || 'Stable'}</span>`;
+    }
+
+    // Date: tidy display
+    function renderDate(val) {
+        if (!val || val === '') return '<span style="color:#CBD5E1">—</span>';
+        return `<span style="font-size:0.78rem;color:#475569">${val}</span>`;
+    }
+
+    // Phone: make clickable
+    function renderPhone(val) {
+        if (!val || val === '') return '<span style="color:#CBD5E1">—</span>';
+        return `<a href="tel:${val}" style="color:#1D4ED8;font-size:0.78rem;text-decoration:none;font-weight:600"
+                   onclick="event.stopPropagation()">📞 ${val}</a>`;
+    }
+
+    // ── Column name → index map ───────────────────────────────
+    const colIdx = {};
+    columns.forEach((c, i) => { colIdx[c.title] = i; });
+
+    // ── Build columnDefs ──────────────────────────────────────
+    // We build one entry per "type" of column, referencing all matching indices.
+
+    const LPD_COLS       = ['LYSM','LYMTD','LQ','LM','LMTD','MTD','LW','CW'];
+    const ABS_DIFF_COLS  = ['YoY_Abs_LPD_Diff','MTD_vs_LMTD_Abs_LPD_Diff','MTD_vs_LYMTD_Abs_LPD_Diff'];
+    const PCT_COLS       = ['YoY_Growth_Percentage','MTD_vs_LMTD_Growth_Percentage','MTD_vs_LYMTD_Growth_Percentage'];
+    const DATE_COLS      = ['Last_Order_Date'];
+    const PHONE_COLS     = ['SE_Mobile'];
+
+    function targets(names) {
+        return names.map(n => colIdx[n]).filter(i => i !== undefined);
+    }
+
+    const columnDefs = [];
+
+    if (targets(LPD_COLS).length)
+        columnDefs.push({ targets: targets(LPD_COLS),      render: (d) => renderLpd(d) });
+
+    if (targets(ABS_DIFF_COLS).length)
+        columnDefs.push({ targets: targets(ABS_DIFF_COLS), render: (d) => renderAbsDiff(d) });
+
+    if (targets(PCT_COLS).length)
+        columnDefs.push({ targets: targets(PCT_COLS),      render: (d) => renderGrowthPct(d) });
+
+    if (colIdx['Sales_Trend'] !== undefined)
+        columnDefs.push({ targets: colIdx['Sales_Trend'],  render: (d) => renderTrend(d) });
+
+    if (targets(DATE_COLS).length)
+        columnDefs.push({ targets: targets(DATE_COLS),     render: (d) => renderDate(d) });
+
+    if (targets(PHONE_COLS).length)
+        columnDefs.push({ targets: targets(PHONE_COLS),    render: (d) => renderPhone(d) });
+
+    // Nicer column header titles (human-readable aliases)
+    const HEADER_ALIASES = {
+        LYSM:                          'LYSM (LPD)',
+        LYMTD:                         'LYMTD (LPD)',
+        LQ:                            'Last Qtr (LPD)',
+        LM:                            'Last Month (LPD)',
+        LMTD:                          'LMTD (LPD)',
+        MTD:                           'MTD (LPD)',
+        LW:                            'Last Week (LPD)',
+        CW:                            'This Week (LPD)',
+        YoY_Abs_LPD_Diff:              'YoY Δ LPD',
+        MTD_vs_LMTD_Abs_LPD_Diff:     'MTD vs LMTD Δ LPD',
+        MTD_vs_LYMTD_Abs_LPD_Diff:    'MTD vs LYMTD Δ LPD',
+        YoY_Growth_Percentage:         'YoY Growth %',
+        MTD_vs_LMTD_Growth_Percentage: 'MTD vs LMTD %',
+        MTD_vs_LYMTD_Growth_Percentage:'MTD vs LYMTD %',
+        Sales_Trend:                   'Trend',
+        Last_Order_Date:               'Last Order',
+        SE_EmpID:                      'SE ID',
+        SE_Name:                       'Sales Exec',
+        SE_Mobile:                     'SE Mobile',
+        SO_Name:                       'Sales Office',
+        CustomerGroup:                 'Cust. Group',
+        PLANT_NAME:                    'Plant',
+    };
+
+    const displayColumns = columns.map(c => ({
+        title: HEADER_ALIASES[c.title] || c.title
+    }));
+
+    // ── Init or update the DataTable ──────────────────────────
+    if (myDataTable) {
+        myDataTable.clear();
+        myDataTable.rows.add(data);
+        myDataTable.draw();
+        return;
+    }
+
+    myDataTable = $('#salesTable').DataTable({
+        data:          data,
+        columns:       displayColumns,
+        pageLength:    15,
+        scrollX:       true,
+        scrollCollapse:true,
+        autoWidth:     false,
+        deferRender:   true,
+        columnDefs,
+        order:         [[colIdx['MTD_vs_LYMTD_Abs_LPD_Diff'] ?? 0, 'asc']],
+        language: {
+            search:            "",
+            searchPlaceholder: "Search within results...",
+            info:              "Showing _START_–_END_ of _TOTAL_ accounts",
+            paginate:          { previous: "‹ Prev", next: "Next ›" }
+        },
+        dom: '<"top"f>rt<"bottom"p><"clear">',
+    });
+
+    // Style the search box
+    $('.dataTables_filter').appendTo('#table-actions');
+    $('.dataTables_filter input').addClass(
+        'px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]'
+    );
+    $('.dataTables_filter label').contents().filter(function() {
+        return this.nodeType === 3;
+    }).remove();
+}
+
 
     // =====================================================
     // TEAM LEADERBOARD ENGINE

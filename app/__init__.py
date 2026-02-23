@@ -36,6 +36,14 @@ def create_app(config_name: str = None) -> Flask:
     # ── Register error handlers ───────────────────────────────
     _register_error_handlers(app)
 
+    # ── Start background cache scheduler ──────────────────────
+    # Runs as a daemon thread — triggers a DB refresh daily at CACHE_HOUR
+    # so data is ready before the first user request of the day.
+    # Skip in testing to avoid background threads during unit tests.
+    if config_name != "testing":
+        from app.services.scheduler import start_cache_scheduler
+        start_cache_scheduler(app)
+
     # ── Startup log ───────────────────────────────────────────
     app.logger.info(
         f"Heritage Samarth started — "
