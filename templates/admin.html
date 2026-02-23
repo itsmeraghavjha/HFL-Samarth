@@ -211,11 +211,11 @@
                     <div style="color:#475569;font-size:0.65rem">Superadmin</div>
                 </div>
             </div>
-            <a href="/" style="display:flex;align-items:center;gap:8px;color:#475569;font-size:0.78rem;font-weight:600;text-decoration:none;margin-bottom:8px;transition:color 0.15s" onmouseover="this.style.color='#94A3B8'" onmouseout="this.style.color='#475569'">
+            <a href="{{ url_for('dashboard.index') }}" style="display:flex;align-items:center;gap:8px;color:#475569;font-size:0.78rem;font-weight:600;text-decoration:none;margin-bottom:8px;transition:color 0.15s" onmouseover="this.style.color='#94A3B8'" onmouseout="this.style.color='#475569'">
                 <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Dashboard
             </a>
-            <a href="/logout" style="display:flex;align-items:center;gap:8px;color:#DC2626;font-size:0.78rem;font-weight:600;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='#DC2626'">
+            <a href="{{ url_for('auth.logout') }}" style="display:flex;align-items:center;gap:8px;color:#DC2626;font-size:0.78rem;font-weight:600;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='#DC2626'">
                 <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 Sign Out
             </a>

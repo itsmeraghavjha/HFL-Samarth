@@ -1,0 +1,17 @@
+# Web framework
+flask>=3.0.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Password hashing
+bcrypt>=4.1.0
+
+# SQL Server connection
+pyodbc>=5.1.0
+
+# Excel import (for import_bm.py)
+openpyxl>=3.1.0
+
+# Production WSGI server
+gunicorn>=21.0.0
