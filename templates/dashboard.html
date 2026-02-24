@@ -413,38 +413,42 @@
                     <div class="stat-card border-t-4 border-t-[#2E963D]" id="vol-card-border">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">MTD Sales Vol (LPD)</p>
                         <div>
-                            <h3 class="text-3xl font-black text-gray-900" id="kpi-sales">-</h3>
-                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border border-transparent" id="kpi-sales-diff-badge">
-                                <span id="kpi-sales-diff"></span>
-                            </div>
-                        </div>
+    <h3 class="text-3xl font-black text-gray-900" id="kpi-sales">-</h3>
+    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border border-transparent" id="kpi-sales-diff-badge">
+        <span id="kpi-sales-diff"></span>
+    </div>
+    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-sales-pct"></p>
+</div>
                     </div>
                     <div class="stat-card border-t-4 border-t-[#2E963D]">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Growth Accounts</p>
                         <div>
-                            <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-growth">-</h3>
-                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-green-50 text-[#2E963D] text-xs font-bold border border-green-100">
-                                &uarr; <span id="kpi-growth-vol">-</span>
-                            </div>
-                        </div>
+    <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-growth">-</h3>
+    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-green-50 text-[#2E963D] text-xs font-bold border border-green-100">
+        &uarr; <span id="kpi-growth-vol">-</span>
+    </div>
+    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-growth-pct"></p>
+</div>
                     </div>
                     <div class="stat-card border-t-4 border-t-[#DF2027]">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Decline Accounts</p>
                         <div>
-                            <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-decline">-</h3>
-                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-red-50 text-[#DF2027] text-xs font-bold border border-red-100">
-                                &darr; <span id="kpi-decline-vol">-</span>
-                            </div>
-                        </div>
+    <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-decline">-</h3>
+    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-red-50 text-[#DF2027] text-xs font-bold border border-red-100">
+        &darr; <span id="kpi-decline-vol">-</span>
+    </div>
+    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-decline-pct"></p>
+</div>
                     </div>
                     <div class="stat-card border-t-4 border-t-blue-500">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">New Customers</p>
                         <div>
-                            <h3 class="text-3xl font-black text-blue-600" id="kpi-new">-</h3>
-                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-50 text-blue-600 text-xs font-bold border border-blue-100">
-                                &plus; <span id="kpi-new-vol">-</span>
-                            </div>
-                        </div>
+    <h3 class="text-3xl font-black text-blue-600" id="kpi-new">-</h3>
+    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-50 text-blue-600 text-xs font-bold border border-blue-100">
+        &plus; <span id="kpi-new-vol">-</span>
+    </div>
+    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-new-pct"></p>
+</div>
                     </div>
                 </div>
 
@@ -917,34 +921,6 @@
     // DASHBOARD RENDER ENGINE
     // =====================================================
     function updateDashboardComponents(data) {
-        // const idx      = col => globalColumns.findIndex(c => c.title === col);
-        // const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
-        // const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
-        // const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
-        // const iLYMTD   = idx('LYMTD');
-
-        // let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0 };
-        // let regionData = {}, soData = {};
-
-        // data.forEach(row => {
-        //     let trend    = iTrend   > -1 ? String(row[iTrend]   || '').trim() : 'Stable';
-        //     let salesVal = iSales   > -1 ? parseFloat(row[iSales])   || 0 : 0;
-        //     let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
-        //     let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
-        //     let reg      = iRegion  > -1 ? String(row[iRegion]  || 'Unknown').trim() : 'All Regions';
-        //     let so       = iSO      > -1 ? String(row[iSO]      || 'Unknown').trim() : 'All SOs';
-
-        //     if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
-        //     else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
-        //     else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
-        //     else                                                 { stats.stable++; }
-
-        //     stats.sales += salesVal;
-        //     stats.lymtd += lymtdVal;
-        //     regionData[reg]  = (regionData[reg]  || 0) + salesVal;
-        //     soData[so]       = (soData[so]        || 0) + salesVal;
-        // });
-
         const idx      = col => globalColumns.findIndex(c => c.title === col);
         const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
         const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
@@ -986,45 +962,98 @@
             prodLYMTD[prod]  = (prodLYMTD[prod]  || 0) + lymtdVal;
         });
 
-        // KPI cards
-        $('#kpi-sales').text(stats.sales.toLocaleString(undefined, { maximumFractionDigits: 0 }));
-        let volDiff = stats.sales - stats.lymtd;
-        let diffElem = $('#kpi-sales-diff'), diffBadge = $('#kpi-sales-diff-badge'), volCardBorder = $('#vol-card-border');
+        // ── KPI Cards ─────────────────────────────────────────────────────────────
+        const fmt     = n  => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+        const calcPct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(1) : '0.0';
+
+        // Renders a pair of badges: [volume badge] [% badge] on the same line
+        // volText   — e.g. "↑ +53,700 LPD"
+        // pctText   — e.g. "+3.3% YoY"
+        // volStyle  — inline styles for volume badge
+        // pctStyle  — inline styles for % badge
+        function twoBadges(volText, pctText, volStyle, pctStyle) {
+            return `<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span style="padding:3px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;border:1px solid;${volStyle}">${volText}</span>
+                <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;border:1px solid;letter-spacing:0.01em;${pctStyle}">${pctText}</span>
+            </div>`;
+        }
+
+        // ── 1. MTD Sales Volume ───────────────────────────────────────────────────
+        $('#kpi-sales').text(fmt(stats.sales));
+        const volDiff    = stats.sales - stats.lymtd;
+        const volDiffPct = calcPct(Math.abs(volDiff), stats.lymtd);
+        const diffBadge  = $('#kpi-sales-diff-badge');
+        const volCardBorder = $('#vol-card-border');
+
         if (volDiff > 0) {
-            diffElem.html(`&uarr; +${volDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} YoY`);
-            diffBadge.removeClass('bg-red-50 text-[#DF2027] border-red-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-green-50 text-[#2E963D] border-green-100');
+            diffBadge.html(twoBadges(
+                `↑ +${fmt(volDiff)} LPD`,
+                `+${volDiffPct}% YoY`,
+                'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
+                'background:#F0FDF4;color:#166534;border-color:#86EFAC'
+            )).removeClass('border').css('padding', '0');
             volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
         } else if (volDiff < 0) {
-            diffElem.html(`&darr; ${volDiff.toLocaleString(undefined, { maximumFractionDigits: 0 })} YoY`);
-            diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-gray-50 text-gray-500 border-gray-200').addClass('bg-red-50 text-[#DF2027] border-red-100');
+            diffBadge.html(twoBadges(
+                `↓ ${fmt(volDiff)} LPD`,
+                `-${volDiffPct}% YoY`,
+                'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
+                'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
+            )).removeClass('border').css('padding', '0');
             volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
         } else {
-            diffElem.html(`&minus; Flat YoY`);
-            diffBadge.removeClass('bg-green-50 text-[#2E963D] border-green-100 bg-red-50 text-[#DF2027] border-red-100').addClass('bg-gray-50 text-gray-500 border-gray-200');
+            diffBadge.html(twoBadges(
+                `— Flat`,
+                `0.0% YoY`,
+                'background:#F3F4F6;color:#6B7280;border-color:#E5E7EB',
+                'background:#F9FAFB;color:#9CA3AF;border-color:#E5E7EB'
+            )).removeClass('border').css('padding', '0');
             volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
         }
 
+        // ── 2. Growth Accounts ────────────────────────────────────────────────────
+        // % = LPD gained by growth accounts ÷ total LYMTD  (same base as decline & new)
+        const growthPct = calcPct(stats.growthVol, stats.lymtd);
         $('#kpi-growth').text(stats.growth.toLocaleString());
-        $('#kpi-growth-vol').text('+' + stats.growthVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
+        $('#kpi-growth-vol').closest('div')
+            .attr('class', 'mt-2')
+            .css({ display: 'block' })
+            .html(twoBadges(
+                `↑ +${fmt(stats.growthVol)} LPD`,
+                `+${growthPct}% of LY vol`,
+                'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
+                'background:#F0FDF4;color:#166534;border-color:#86EFAC'
+            ));
+
+        // ── 3. Decline Accounts ───────────────────────────────────────────────────
+        // % = LPD lost by decline accounts ÷ total LYMTD  (same base)
+        const declinePct = calcPct(stats.declineVol, stats.lymtd);
         $('#kpi-decline').text(stats.decline.toLocaleString());
-        $('#kpi-decline-vol').text('-' + stats.declineVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
+        $('#kpi-decline-vol').closest('div')
+            .attr('class', 'mt-2')
+            .css({ display: 'block' })
+            .html(twoBadges(
+                `↓ -${fmt(stats.declineVol)} LPD`,
+                `-${declinePct}% of LY vol`,
+                'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
+                'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
+            ));
+
+        // ── 4. New Customers ──────────────────────────────────────────────────────
+        // % = new customer LPD ÷ LYMTD  (same base as growth & decline — fully comparable)
+        const newPct = calcPct(stats.newVol, stats.lymtd);
         $('#kpi-new').text(stats.new.toLocaleString());
-        $('#kpi-new-vol').text('+' + stats.newVol.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' LPD');
+        $('#kpi-new-vol').closest('div')
+            .attr('class', 'mt-2')
+            .css({ display: 'block' })
+            .html(twoBadges(
+                `+ +${fmt(stats.newVol)} LPD`,
+                `+${newPct}% of LY vol`,
+                'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE',
+                'background:#F5F8FF;color:#1D4ED8;border-color:#93C5FD'
+            ));
 
-        // Overview chart
-        // let overviewBarData = {};
-        // if ("{{ user.role }}" === "RH" || Object.keys(regionData).length <= 1) {
-        //     overviewBarData = soData;
-        //     $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> SO Performance (MTD)');
-        // } else {
-        //     overviewBarData = regionData;
-        //     $('#overview-chart-title').html('<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg> Regional Sales (MTD)');
-        // }
-
-        // renderOverviewCharts(overviewBarData, stats);
-
-
-        // Overview charts — role-aware grouping
+        // ── Overview charts — role-aware grouping ─────────────────────────────────
         const _role = "{{ user.role }}";
         let chartMTD, chartLYMTD, chartTitle, chartSubtitle;
         if (_role === 'BM' || Object.keys(regionMTD).length <= 1) {
@@ -1045,18 +1074,19 @@
 
         renderOverviewCharts(chartMTD, chartLYMTD, stats);
 
-        // ── PERFORMANCE: Mark customer tab dirty; only render if it's visible ──
+        // ── Customer tab — lazy render ────────────────────────────────────────────
         lastCustomerData = data;
         customerTabDirty = true;
         if (!document.getElementById('view-customer').classList.contains('hidden')) {
             requestAnimationFrame(() => renderCustomerInsightsTab(data));
         }
 
-        // Master table + Leaderboard (always needed)
+        // ── Master table + Leaderboard ────────────────────────────────────────────
         initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
         buildLeaderboardData(data);
     }
-
+    
+    
     // =====================================================
     // CHARTS  — update-in-place to avoid flicker
     // =====================================================

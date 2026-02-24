@@ -39,10 +39,20 @@ def create_app(config_name: str = None) -> Flask:
     # ── Start background cache scheduler ──────────────────────
     # Runs as a daemon thread — triggers a DB refresh daily at CACHE_HOUR
     # so data is ready before the first user request of the day.
-    # Skip in testing to avoid background threads during unit tests.
+    #
+    # WHY THE os.environ CHECK:
+    # Flask debug mode uses Werkzeug's reloader which spawns TWO processes:
+    #   Process 1 (reloader) — watches files for changes, WERKZEUG_RUN_MAIN not set
+    #   Process 2 (worker)   — actually handles HTTP requests, WERKZEUG_RUN_MAIN = 'true'
+    # Without this check, the scheduler starts in Process 1, fills ITS cache,
+    # but all requests go to Process 2 which has a completely separate empty cache.
+    # The check ensures the scheduler only starts in the process that serves requests.
+    import os
     if config_name != "testing":
-        from app.services.scheduler import start_cache_scheduler
-        start_cache_scheduler(app)
+        in_worker = (not app.debug) or (os.environ.get("WERKZEUG_RUN_MAIN") == "true")
+        if in_worker:
+            from app.services.scheduler import start_cache_scheduler
+            start_cache_scheduler(app)
 
     # ── Startup log ───────────────────────────────────────────
     app.logger.info(
