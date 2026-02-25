@@ -921,172 +921,161 @@
     // DASHBOARD RENDER ENGINE
     // =====================================================
     function updateDashboardComponents(data) {
-        const idx      = col => globalColumns.findIndex(c => c.title === col);
-        const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
-        const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
-        const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
-        const iLYMTD   = idx('LYMTD');
-        const iLM      = idx('LM');
-        const iLYSM    = idx('LYSM');
-        const iProdCol = idx('Product');
+    const idx      = col => globalColumns.findIndex(c => c.title === col);
+    const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
+    const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
+    const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+    const iLYMTD   = idx('LYMTD');
+    const iLM      = idx('LM');
+    const iLYSM    = idx('LYSM');
+    const iProdCol = idx('Product');
 
-        let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0, totalLM: 0, totalLYSM: 0 };
-        let regionMTD = {}, regionLYMTD = {}, soMTD = {}, soLYMTD = {}, prodMTD = {}, prodLYMTD = {};
+    let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0, totalLM: 0, totalLYSM: 0 };
+    let regionMTD = {}, regionLYMTD = {}, soMTD = {}, soLYMTD = {}, prodMTD = {}, prodLYMTD = {};
 
-        data.forEach(row => {
-            let trend    = iTrend    > -1 ? String(row[iTrend]    || '').trim() : 'Stable';
-            let salesVal = iSales    > -1 ? parseFloat(row[iSales])    || 0 : 0;
-            let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
-            let lmVal    = iLM      > -1 ? parseFloat(row[iLM])      || 0 : 0;
-            let lysmVal  = iLYSM    > -1 ? parseFloat(row[iLYSM])    || 0 : 0;
-            let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
-            let reg      = iRegion   > -1 ? String(row[iRegion]   || 'Unknown').trim() : 'All';
-            let so       = iSO      > -1 ? String(row[iSO]       || 'Unknown').trim() : 'All SOs';
-            let prod     = iProdCol > -1 ? String(row[iProdCol]  || 'Unknown').trim() : 'All';
+    data.forEach(row => {
+        let trend    = iTrend    > -1 ? String(row[iTrend]    || '').trim() : 'Stable';
+        let salesVal = iSales    > -1 ? parseFloat(row[iSales])    || 0 : 0;
+        let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
+        let lmVal    = iLM      > -1 ? parseFloat(row[iLM])      || 0 : 0;
+        let lysmVal  = iLYSM    > -1 ? parseFloat(row[iLYSM])    || 0 : 0;
+        let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
+        let reg      = iRegion   > -1 ? String(row[iRegion]   || 'Unknown').trim() : 'All';
+        let so       = iSO      > -1 ? String(row[iSO]       || 'Unknown').trim() : 'All SOs';
+        let prod     = iProdCol > -1 ? String(row[iProdCol]  || 'Unknown').trim() : 'All';
 
-            if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
-            else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
-            else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
-            else                                                 { stats.stable++; }
+        if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
+        else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
+        else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
+        else                                                 { stats.stable++; }
 
-            stats.sales     += salesVal;
-            stats.lymtd     += lymtdVal;
-            stats.totalLM   += lmVal;
-            stats.totalLYSM += lysmVal;
+        stats.sales     += salesVal;
+        stats.lymtd     += lymtdVal;
+        stats.totalLM   += lmVal;
+        stats.totalLYSM += lysmVal;
 
-            regionMTD[reg]   = (regionMTD[reg]   || 0) + salesVal;
-            regionLYMTD[reg] = (regionLYMTD[reg] || 0) + lymtdVal;
-            soMTD[so]        = (soMTD[so]        || 0) + salesVal;
-            soLYMTD[so]      = (soLYMTD[so]      || 0) + lymtdVal;
-            prodMTD[prod]    = (prodMTD[prod]     || 0) + salesVal;
-            prodLYMTD[prod]  = (prodLYMTD[prod]  || 0) + lymtdVal;
-        });
+        regionMTD[reg]   = (regionMTD[reg]   || 0) + salesVal;
+        regionLYMTD[reg] = (regionLYMTD[reg] || 0) + lymtdVal;
+        soMTD[so]        = (soMTD[so]        || 0) + salesVal;
+        soLYMTD[so]      = (soLYMTD[so]      || 0) + lymtdVal;
+        prodMTD[prod]    = (prodMTD[prod]     || 0) + salesVal;
+        prodLYMTD[prod]  = (prodLYMTD[prod]  || 0) + lymtdVal;
+    });
 
-        // ── KPI Cards ─────────────────────────────────────────────────────────────
-        const fmt     = n  => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
-        const calcPct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(1) : '0.0';
+    const fmt     = n  => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    const calcPct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(1) : '0.0';
 
-        // Renders a pair of badges: [volume badge] [% badge] on the same line
-        // volText   — e.g. "↑ +53,700 LPD"
-        // pctText   — e.g. "+3.3% YoY"
-        // volStyle  — inline styles for volume badge
-        // pctStyle  — inline styles for % badge
-        function twoBadges(volText, pctText, volStyle, pctStyle) {
-            return `<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
-                <span style="padding:3px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;border:1px solid;${volStyle}">${volText}</span>
-                <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;border:1px solid;letter-spacing:0.01em;${pctStyle}">${pctText}</span>
-            </div>`;
-        }
-
-        // ── 1. MTD Sales Volume ───────────────────────────────────────────────────
-        $('#kpi-sales').text(fmt(stats.sales));
-        const volDiff    = stats.sales - stats.lymtd;
-        const volDiffPct = calcPct(Math.abs(volDiff), stats.lymtd);
-        const diffBadge  = $('#kpi-sales-diff-badge');
-        const volCardBorder = $('#vol-card-border');
-
-        if (volDiff > 0) {
-            diffBadge.html(twoBadges(
-                `↑ +${fmt(volDiff)} LPD`,
-                `+${volDiffPct}% YoY`,
-                'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
-                'background:#F0FDF4;color:#166534;border-color:#86EFAC'
-            )).removeClass('border').css('padding', '0');
-            volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
-        } else if (volDiff < 0) {
-            diffBadge.html(twoBadges(
-                `↓ ${fmt(volDiff)} LPD`,
-                `-${volDiffPct}% YoY`,
-                'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
-                'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
-            )).removeClass('border').css('padding', '0');
-            volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
-        } else {
-            diffBadge.html(twoBadges(
-                `— Flat`,
-                `0.0% YoY`,
-                'background:#F3F4F6;color:#6B7280;border-color:#E5E7EB',
-                'background:#F9FAFB;color:#9CA3AF;border-color:#E5E7EB'
-            )).removeClass('border').css('padding', '0');
-            volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
-        }
-
-        // ── 2. Growth Accounts ────────────────────────────────────────────────────
-        // % = LPD gained by growth accounts ÷ total LYMTD  (same base as decline & new)
-        const growthPct = calcPct(stats.growthVol, stats.lymtd);
-        $('#kpi-growth').text(stats.growth.toLocaleString());
-        $('#kpi-growth-vol').closest('div')
-            .attr('class', 'mt-2')
-            .css({ display: 'block' })
-            .html(twoBadges(
-                `↑ +${fmt(stats.growthVol)} LPD`,
-                `+${growthPct}% of LY vol`,
-                'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
-                'background:#F0FDF4;color:#166534;border-color:#86EFAC'
-            ));
-
-        // ── 3. Decline Accounts ───────────────────────────────────────────────────
-        // % = LPD lost by decline accounts ÷ total LYMTD  (same base)
-        const declinePct = calcPct(stats.declineVol, stats.lymtd);
-        $('#kpi-decline').text(stats.decline.toLocaleString());
-        $('#kpi-decline-vol').closest('div')
-            .attr('class', 'mt-2')
-            .css({ display: 'block' })
-            .html(twoBadges(
-                `↓ -${fmt(stats.declineVol)} LPD`,
-                `-${declinePct}% of LY vol`,
-                'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
-                'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
-            ));
-
-        // ── 4. New Customers ──────────────────────────────────────────────────────
-        // % = new customer LPD ÷ LYMTD  (same base as growth & decline — fully comparable)
-        const newPct = calcPct(stats.newVol, stats.lymtd);
-        $('#kpi-new').text(stats.new.toLocaleString());
-        $('#kpi-new-vol').closest('div')
-            .attr('class', 'mt-2')
-            .css({ display: 'block' })
-            .html(twoBadges(
-                `+ +${fmt(stats.newVol)} LPD`,
-                `+${newPct}% of LY vol`,
-                'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE',
-                'background:#F5F8FF;color:#1D4ED8;border-color:#93C5FD'
-            ));
-
-        // ── Overview charts — role-aware grouping ─────────────────────────────────
-        const _role = "{{ user.role }}";
-        let chartMTD, chartLYMTD, chartTitle, chartSubtitle;
-        if (_role === 'BM' || Object.keys(regionMTD).length <= 1) {
-            chartMTD      = prodMTD;    chartLYMTD  = prodLYMTD;
-            chartTitle    = 'Product Performance — MTD vs Same Period Last Year';
-            chartSubtitle = 'Milk · Curd · ButterMilk — YoY% shown above bars';
-        } else if (_role === 'RH') {
-            chartMTD      = soMTD;      chartLYMTD  = soLYMTD;
-            chartTitle    = 'Sales Office Performance — MTD vs Same Period Last Year';
-            chartSubtitle = 'Your SOs ranked by volume — YoY% shown above bars';
-        } else {
-            chartMTD      = regionMTD;  chartLYMTD  = regionLYMTD;
-            chartTitle    = 'Regional Performance — MTD vs Same Period Last Year';
-            chartSubtitle = 'All regions · YoY% shown above bars';
-        }
-        $('#overview-chart-title').text(chartTitle);
-        $('#overview-chart-subtitle').text(chartSubtitle);
-
-        renderOverviewCharts(chartMTD, chartLYMTD, stats);
-
-        // ── Customer tab — lazy render ────────────────────────────────────────────
-        lastCustomerData = data;
-        customerTabDirty = true;
-        if (!document.getElementById('view-customer').classList.contains('hidden')) {
-            requestAnimationFrame(() => renderCustomerInsightsTab(data));
-        }
-
-        // ── Master table + Leaderboard ────────────────────────────────────────────
-        initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
-        buildLeaderboardData(data);
+    function twoBadges(volText, pctText, volStyle, pctStyle) {
+        return `<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span style="padding:3px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;border:1px solid;${volStyle}">${volText}</span>
+            <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;border:1px solid;letter-spacing:0.01em;${pctStyle}">${pctText}</span>
+        </div>`;
     }
-    
-    
+
+    // ── 1. MTD Sales Volume ───────────────────────────────────────────────────
+    $('#kpi-sales').text(fmt(stats.sales));
+    const volDiff    = stats.sales - stats.lymtd;
+    const volDiffPct = calcPct(Math.abs(volDiff), stats.lymtd);
+    const diffBadge  = $('#kpi-sales-diff-badge');
+    const volCardBorder = $('#vol-card-border');
+
+    if (volDiff > 0) {
+        diffBadge.html(twoBadges(
+            `↑ +${fmt(volDiff)} LPD`,
+            `+${volDiffPct}% YoY`,
+            'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
+            'background:#F0FDF4;color:#166534;border-color:#86EFAC'
+        )).removeClass('border').css('padding', '0');
+        volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
+    } else if (volDiff < 0) {
+        diffBadge.html(twoBadges(
+            `↓ ${fmt(volDiff)} LPD`,
+            `-${volDiffPct}% YoY`,
+            'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
+            'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
+        )).removeClass('border').css('padding', '0');
+        volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
+    } else {
+        diffBadge.html(twoBadges(
+            `— Flat`,
+            `0.0% YoY`,
+            'background:#F3F4F6;color:#6B7280;border-color:#E5E7EB',
+            'background:#F9FAFB;color:#9CA3AF;border-color:#E5E7EB'
+        )).removeClass('border').css('padding', '0');
+        volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
+    }
+
+    // ── 2. Growth Accounts ────────────────────────────────────────────────────
+    const growthPct = calcPct(stats.growthVol, stats.lymtd);
+    $('#kpi-growth').text(stats.growth.toLocaleString());
+    $('#kpi-growth').next('div')
+        .attr('class', 'mt-2')
+        .css({ display: 'block' })
+        .html(twoBadges(
+            `↑ +${fmt(stats.growthVol)} LPD`,
+            `+${growthPct}% of LY vol`,
+            'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
+            'background:#F0FDF4;color:#166534;border-color:#86EFAC'
+        ));
+
+    // ── 3. Decline Accounts ───────────────────────────────────────────────────
+    const declinePct = calcPct(stats.declineVol, stats.lymtd);
+    $('#kpi-decline').text(stats.decline.toLocaleString());
+    $('#kpi-decline').next('div')
+        .attr('class', 'mt-2')
+        .css({ display: 'block' })
+        .html(twoBadges(
+            `↓ -${fmt(stats.declineVol)} LPD`,
+            `-${declinePct}% of LY vol`,
+            'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
+            'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
+        ));
+
+    // ── 4. New Customers ──────────────────────────────────────────────────────
+    const newPct = calcPct(stats.newVol, stats.lymtd);
+    $('#kpi-new').text(stats.new.toLocaleString());
+    $('#kpi-new').next('div')
+        .attr('class', 'mt-2')
+        .css({ display: 'block' })
+        .html(twoBadges(
+            `+ +${fmt(stats.newVol)} LPD`,
+            `+${newPct}% of LY vol`,
+            'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE',
+            'background:#F5F8FF;color:#1D4ED8;border-color:#93C5FD'
+        ));
+
+    // ── Overview charts — role-aware grouping ─────────────────────────────────
+    const _role = "{{ user.role }}";
+    let chartMTD, chartLYMTD, chartTitle, chartSubtitle;
+    if (_role === 'BM' || Object.keys(regionMTD).length <= 1) {
+        chartMTD      = prodMTD;    chartLYMTD  = prodLYMTD;
+        chartTitle    = 'Product Performance — MTD vs Same Period Last Year';
+        chartSubtitle = 'Milk · Curd · ButterMilk — YoY% shown above bars';
+    } else if (_role === 'RH') {
+        chartMTD      = soMTD;      chartLYMTD  = soLYMTD;
+        chartTitle    = 'Sales Office Performance — MTD vs Same Period Last Year';
+        chartSubtitle = 'Your SOs ranked by volume — YoY% shown above bars';
+    } else {
+        chartMTD      = regionMTD;  chartLYMTD  = regionLYMTD;
+        chartTitle    = 'Regional Performance — MTD vs Same Period Last Year';
+        chartSubtitle = 'All regions · YoY% shown above bars';
+    }
+    $('#overview-chart-title').text(chartTitle);
+    $('#overview-chart-subtitle').text(chartSubtitle);
+
+    renderOverviewCharts(chartMTD, chartLYMTD, stats);
+
+    // ── Customer tab — lazy render ────────────────────────────────────────────
+    lastCustomerData = data;
+    customerTabDirty = true;
+    if (!document.getElementById('view-customer').classList.contains('hidden')) {
+        requestAnimationFrame(() => renderCustomerInsightsTab(data));
+    }
+
+    // ── Master table + Leaderboard ────────────────────────────────────────────
+    initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
+    buildLeaderboardData(data);
+}
     // =====================================================
     // CHARTS  — update-in-place to avoid flicker
     // =====================================================
