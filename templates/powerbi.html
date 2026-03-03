@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heritage Samarth | Power BI Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; margin: 0; overflow: hidden; }
+
+        :root {
+            --brand:       #2E963D;
+            --brand-dark:  #1F6B2A;
+            --brand-light: #E8F5E9;
+            --red:         #DF2027;
+            --topbar-h:    64px;
+            --tab-h:       48px;
+        }
+
+        /* ── Top bar ── */
+        #topbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--topbar-h);
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+            z-index: 50;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 8px 14px; border-radius: 8px;
+            border: 1px solid #E2E8F0; background: #F9FAFB;
+            color: #374151; font-size: 0.8rem; font-weight: 600;
+            text-decoration: none; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .back-btn:hover { background: #F1F5F9; border-color: #CBD5E1; color: #111827; }
+        .back-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+        .brand-lockup { display: flex; align-items: center; gap: 12px; }
+        .brand-lockup img { height: 28px; object-fit: contain; }
+        .brand-divider { width: 1px; height: 28px; background: #E2E8F0; }
+        .brand-title { font-size: 0.95rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; }
+        .brand-sub { font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; }
+
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+        .user-chip {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 12px 6px 8px;
+            background: #F8FAFC; border: 1px solid #E2E8F0;
+            border-radius: 20px;
+        }
+        .user-avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--brand-light); color: var(--brand);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.7rem; flex-shrink: 0;
+        }
+        .user-name { font-size: 0.75rem; font-weight: 600; color: #374151; }
+        .user-role { font-size: 0.62rem; color: #94A3B8; margin-top: 1px; }
+
+        .pbi-badge {
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 12px; border-radius: 20px;
+            background: #F0F4FF; border: 1px solid #DBEAFE;
+            font-size: 0.7rem; font-weight: 700; color: #1D4ED8;
+        }
+
+        /* ── Region tab bar (wide-access roles only) ── */
+        #tab-bar {
+            position: fixed;
+            top: var(--topbar-h); left: 0; right: 0;
+            height: var(--tab-h);
+            background: white;
+            border-bottom: 2px solid #E2E8F0;
+            display: flex; align-items: stretch;
+            padding: 0 24px;
+            gap: 2px;
+            z-index: 40;
+            overflow-x: auto;
+        }
+        #tab-bar::-webkit-scrollbar { height: 3px; }
+        #tab-bar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+        .region-tab {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 0 20px;
+            font-size: 0.82rem; font-weight: 600; color: #6B7280;
+            cursor: pointer; border: none; background: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.15s; white-space: nowrap;
+        }
+        .region-tab:hover { color: #374151; background: #F9FAFB; }
+        .region-tab.active {
+            color: var(--brand); font-weight: 700;
+            border-bottom-color: var(--brand);
+        }
+        .region-tab .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #E2E8F0; flex-shrink: 0;
+            transition: background 0.15s;
+        }
+        .region-tab.active .dot { background: var(--brand); }
+
+        /* ── iframe wrapper ── */
+        #iframe-container {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            /* top is set by JS based on whether tab bar is shown */
+        }
+        #pbi-frame {
+            width: 100%; height: 100%;
+            border: none; display: block;
+        }
+
+        /* ── Loading overlay ── */
+        #loading-overlay {
+            position: absolute; inset: 0;
+            background: white;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 16px; z-index: 10;
+            transition: opacity 0.3s;
+        }
+        #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid #E2E8F0;
+            border-top-color: var(--brand);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text { font-size: 0.85rem; font-weight: 600; color: #6B7280; }
+        .loading-sub  { font-size: 0.72rem; color: #94A3B8; margin-top: -8px; }
+
+        /* ── Single-region header (RH/BM) ── */
+        #region-header {
+            position: fixed;
+            background: linear-gradient(135deg, var(--brand), #1F6B2A);
+            color: white;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px;
+            z-index: 40;
+        }
+        .rh-region-name { font-size: 0.9rem; font-weight: 800; }
+        .rh-region-sub  { font-size: 0.65rem; font-weight: 600; opacity: 0.75; margin-top: 1px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+        /* ── No report fallback ── */
+        #no-report {
+            position: fixed; inset: 0; background: #F8FAFC;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 12px; padding: 32px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════ TOP BAR ════════════════ -->
+<div id="topbar">
+    <div class="topbar-left">
+        <!-- Back button -->
+        <a href="{{ url_for('dashboard.index') }}" class="back-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Dashboard
+        </a>
+
+        <div class="brand-divider"></div>
+
+        <!-- Brand -->
+        <div class="brand-lockup">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage">
+            <div>
+                <div class="brand-title">Samarth</div>
+                <div class="brand-sub">Analytics Engine</div>
+            </div>
+        </div>
+
+        <div class="brand-divider"></div>
+
+        <!-- Power BI badge -->
+        <div class="pbi-badge">
+            <!-- Power BI icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M5 3h4v18H5V3zm5 4h4v14h-4V7zm5-2h4v16h-4V5z"/>
+            </svg>
+            Power BI Reports
+        </div>
+    </div>
+
+    <div class="topbar-right">
+        {% if user.role in ['Superadmin', 'CXO'] %}
+        <div style="font-size:0.72rem;color:#94A3B8;font-weight:600">
+            {{ all_regions | length }} Regions
+        </div>
+        {% endif %}
+
+        <!-- User chip -->
+        <div class="user-chip">
+            <div class="user-avatar">{{ user.name[0] | upper }}</div>
+            <div>
+                <div class="user-name">{{ user.name }}</div>
+                <div class="user-role">{{ user.role }} {% if user.title %}· {{ user.title }}{% endif %}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ════════════════ REGION TAB BAR (CXO / Superadmin) ════════════════ -->
+{% if user.role in ['Superadmin', 'CXO'] %}
+<div id="tab-bar" role="tablist">
+    {% for region in all_regions %}
+    <button
+        class="region-tab {% if loop.first %}active{% endif %}"
+        role="tab"
+        data-region="{{ region }}"
+        data-url="{{ reports[region] }}"
+        onclick="switchRegion(this)"
+        aria-selected="{% if loop.first %}true{% else %}false{% endif %}"
+    >
+        <span class="dot"></span>
+        {{ region }}
+    </button>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- ════════════════ SINGLE-REGION HEADER (RH / BM) ════════════════ -->
+{% if user.role in ['RH', 'BM'] %}
+<div id="region-header" style="top: var(--topbar-h); height: 44px; left: 0; right: 0;">
+    <div>
+        <div class="rh-region-name">{{ single_region }} Region</div>
+        <div class="rh-region-sub">Power BI Performance Report</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;opacity:0.8;font-size:0.7rem;font-weight:600">
+        <span id="rh-status-dot" style="width:7px;height:7px;border-radius:50%;background:#4ADE80;display:inline-block"></span>
+        <span id="rh-status-text">Loading…</span>
+    </div>
+</div>
+{% endif %}
+
+
+<!-- ════════════════ IFRAME CONTAINER ════════════════ -->
+{% if (user.role in ['RH', 'BM'] and not embed_url) %}
+
+<!-- No report found for this region -->
+<div id="no-report" style="top: calc(var(--topbar-h) + 44px);">
+    <div style="font-size:3rem;margin-bottom:4px">📊</div>
+    <div style="font-size:1.1rem;font-weight:800;color:#0F172A">Report Not Available</div>
+    <div style="font-size:0.85rem;color:#6B7280;max-width:360px;line-height:1.6">
+        No Power BI report is configured for
+        <strong>{{ single_region }}</strong>.
+        Please contact your administrator.
+    </div>
+    <a href="{{ url_for('dashboard.index') }}"
+       style="margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+              background:#2E963D;color:white;padding:10px 20px;border-radius:8px;
+              font-size:0.82rem;font-weight:700;text-decoration:none">
+        ← Back to Dashboard
+    </a>
+</div>
+
+{% else %}
+
+<div id="iframe-container">
+    <!-- Loading state -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div>
+            <div class="loading-text">Loading Power BI Report…</div>
+            <div class="loading-sub">This may take a few seconds</div>
+        </div>
+    </div>
+
+    <iframe
+        id="pbi-frame"
+        title="Power BI Report"
+        allowfullscreen
+        {% if user.role in ['RH', 'BM'] %}
+        src="{{ embed_url }}"
+        {% else %}
+        src="{{ reports[default_region] }}"
+        {% endif %}
+    ></iframe>
+</div>
+
+{% endif %}
+
+
+<script>
+// ── Layout constants passed from Flask ────────────────────────────────────
+const ROLE         = "{{ user.role }}";
+const HAS_TABS     = {{ 'true' if user.role in ['Superadmin', 'CXO'] else 'false' }};
+const REPORTS      = {{ reports | tojson }};
+const TOPBAR_H     = 64;
+const TAB_H        = 48;
+const RH_HEADER_H  = 44;
+
+// ── Set iframe container top position ────────────────────────────────────
+function layoutFrameContainer() {
+    const container = document.getElementById('iframe-container');
+    if (!container) return;
+
+    let topOffset = TOPBAR_H;
+    if (HAS_TABS)                         topOffset += TAB_H;
+    if (ROLE === 'RH' || ROLE === 'BM')   topOffset += RH_HEADER_H;
+
+    container.style.top = topOffset + 'px';
+}
+
+layoutFrameContainer();
+
+// ── iframe load handler ───────────────────────────────────────────────────
+const frame   = document.getElementById('pbi-frame');
+const overlay = document.getElementById('loading-overlay');
+
+if (frame) {
+    frame.addEventListener('load', function () {
+        if (overlay) overlay.classList.add('hidden');
+
+        // Update RH status indicator if present
+        const dot  = document.getElementById('rh-status-dot');
+        const txt  = document.getElementById('rh-status-text');
+        if (dot && txt) {
+            dot.style.background = '#22C55E';
+            txt.textContent = 'Report Loaded';
+        }
+    });
+
+    // Fallback: hide overlay after 15s in case load event misfires
+    setTimeout(() => { if (overlay) overlay.classList.add('hidden'); }, 15000);
+}
+
+// ── Region switcher (CXO / Superadmin only) ───────────────────────────────
+function switchRegion(btn) {
+    if (!btn) return;
+
+    // Update tabs
+    document.querySelectorAll('.region-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+
+    // Show loading overlay and swap src
+    if (overlay) overlay.classList.remove('hidden');
+    if (frame)   frame.src = btn.dataset.url;
+
+    // Analytics tracking
+    trackEvent('Power BI Region Switch', btn.dataset.region);
+}
+
+// ── Usage tracking ────────────────────────────────────────────────────────
+function trackEvent(action, details) {
+    fetch('/api/track', {
+        method:    'POST',
+        headers:   { 'Content-Type': 'application/json' },
+        body:      JSON.stringify({ action, details }),
+        keepalive: true,
+    }).catch(() => {});
+}
+
+// Track initial page load
+trackEvent('Power BI Page View', ROLE === 'RH' || ROLE === 'BM'
+    ? '{{ single_region }}'
+    : 'All Regions'
+);
+</script>
+</body>
+</html>

@@ -318,6 +318,20 @@
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     <span class="sidebar-text">Customer Insights</span>
                 </a>
+
+
+                <a href="{{ url_for('dashboard.powerbi') }}"
+   class="sidebar-link"
+   title="Power BI Reports">
+    <!-- Power BI bar-chart icon -->
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M9 19V6l2-2 2 2v13M3 19V10l3-3 3 3v9M15 19V4l3-3 3 3v15"/>
+    </svg>
+    <span class="sidebar-text">Survey Insights</span>
+</a>
+
+
                 
                 {% if user.role == 'Superadmin' %}
                 <div class="mt-4 pt-4 border-t border-gray-100 sidebar-text">
@@ -1056,10 +1070,12 @@
         chartTitle    = 'Sales Office Performance — MTD vs Same Period Last Year';
         chartSubtitle = 'Your SOs ranked by volume — YoY% shown above bars';
     } else {
-        chartMTD      = regionMTD;  chartLYMTD  = regionLYMTD;
-        chartTitle    = 'Regional Performance — MTD vs Same Period Last Year';
-        chartSubtitle = 'All regions · YoY% shown above bars';
-    }
+    const EXCLUDED_REGIONS = new Set(['MP', 'CG', 'Unknown', 'KERALA', 'EAST', 'OD', 'Z-4']);
+    chartMTD   = Object.fromEntries(Object.entries(regionMTD).filter(([k]) => !EXCLUDED_REGIONS.has(k)));
+    chartLYMTD = Object.fromEntries(Object.entries(regionLYMTD).filter(([k]) => !EXCLUDED_REGIONS.has(k)));
+    chartTitle    = 'Regional Performance — MTD vs Same Period Last Year';
+    chartSubtitle = 'All regions · YoY% shown above bars';
+}
     $('#overview-chart-title').text(chartTitle);
     $('#overview-chart-subtitle').text(chartSubtitle);
 
