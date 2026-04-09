@@ -286,6 +286,99 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+
+        /* =====================================================
+           MULTI-SELECT FILTER STYLES
+        ===================================================== */
+        .ms-wrapper { position: relative; user-select: none; }
+        .ms-trigger {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 6px; width: 100%; min-height: 38px; padding: 6px 10px 6px 12px;
+            background: white; border: 1.5px solid #E2E8F0; border-radius: 10px;
+            cursor: pointer; transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .ms-trigger:hover { border-color: #CBD5E1; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .ms-trigger.open { border-color: #2E963D; box-shadow: 0 0 0 3px rgba(46,150,61,0.12), 0 2px 8px rgba(0,0,0,0.06); }
+        .ms-trigger.has-selection { border-color: #2E963D; background: linear-gradient(135deg, #FAFFFE 0%, #F0FDF4 100%); }
+        .ms-trigger-left { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; overflow: hidden; }
+        .ms-placeholder { font-size: 0.72rem; color: #94A3B8; font-style: italic; }
+        .ms-count-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            height: 18px; min-width: 18px; padding: 0 5px; background: #2E963D;
+            color: white; font-size: 0.6rem; font-weight: 800; border-radius: 20px;
+            flex-shrink: 0; animation: badgePop 0.2s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes badgePop { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
+        .ms-chevron {
+            flex-shrink: 0; width: 14px; height: 14px; color: #94A3B8;
+            transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), color 0.18s;
+        }
+        .ms-trigger.open .ms-chevron { transform: rotate(180deg); color: #2E963D; }
+        .ms-dropdown {
+            position: absolute; top: calc(100% + 6px); left: 0; z-index: 500;
+            width: max(100%, 220px); min-width: 200px; background: white;
+            border: 1.5px solid #E2E8F0; border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 20px 40px -8px rgba(0,0,0,0.12);
+            overflow: hidden; transform-origin: top center;
+            animation: dropdownOpen 0.18s cubic-bezier(0.34,1.2,0.64,1) forwards;
+        }
+        @keyframes dropdownOpen {
+            from { opacity: 0; transform: scaleY(0.88) translateY(-4px); }
+            to   { opacity: 1; transform: scaleY(1) translateY(0); }
+        }
+        .ms-search-wrap { padding: 10px 10px 6px; border-bottom: 1px solid #F1F5F9; position: relative; }
+        .ms-search {
+            width: 100%; padding: 6px 10px 6px 30px; font-size: 0.72rem;
+            border: 1.5px solid #E2E8F0; border-radius: 7px; background: #F8FAFC;
+            color: #334155; outline: none; box-sizing: border-box;
+            transition: border-color 0.15s, box-shadow 0.15s; font-family: 'Inter', sans-serif;
+        }
+        .ms-search:focus { border-color: #2E963D; box-shadow: 0 0 0 2.5px rgba(46,150,61,0.14); background: white; }
+        .ms-search-icon { position: absolute; left: 19px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94A3B8; }
+        .ms-quick-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 5px 10px; border-bottom: 1px solid #F1F5F9; background: #F8FAFC;
+        }
+        .ms-quick-btn { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+        .ms-quick-btn.select-all { color: #2E963D; background: #E8F5EA; border-color: #BBF7D0; }
+        .ms-quick-btn.select-all:hover { background: #BBF7D0; }
+        .ms-quick-btn.clear-all { color: #64748B; background: white; border-color: #E2E8F0; }
+        .ms-quick-btn.clear-all:hover { color: #DF2027; border-color: #FECACA; background: #FFF5F5; }
+        .ms-quick-count { font-size: 0.62rem; color: #94A3B8; font-weight: 500; }
+        .ms-options { max-height: 200px; overflow-y: auto; padding: 4px 0; overscroll-behavior: contain; }
+        .ms-options::-webkit-scrollbar { width: 4px; }
+        .ms-options::-webkit-scrollbar-track { background: #F8FAFC; }
+        .ms-options::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+        .ms-option {
+            display: flex; align-items: center; gap: 9px; padding: 7px 12px;
+            cursor: pointer; transition: background 0.1s; font-size: 0.75rem; color: #334155;
+        }
+        .ms-option:hover { background: #F8FAFC; }
+        .ms-option.selected { background: linear-gradient(90deg, rgba(46,150,61,0.06), transparent); }
+        .ms-checkbox {
+            flex-shrink: 0; width: 15px; height: 15px; border: 1.5px solid #CBD5E1;
+            border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.14s; background: white;
+        }
+        .ms-option.selected .ms-checkbox { background: #2E963D; border-color: #2E963D; box-shadow: 0 0 0 2px rgba(46,150,61,0.15); }
+        .ms-checkbox-tick { display: none; }
+        .ms-option.selected .ms-checkbox-tick { display: block; }
+        .ms-option-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+        .ms-option.selected .ms-option-text { color: #1A4C21; font-weight: 600; }
+        .ms-empty { text-align: center; padding: 18px 12px; font-size: 0.72rem; color: #94A3B8; }
+        .ms-pills-strip { display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; max-width: 120px; }
+        .ms-pill {
+            display: inline-flex; align-items: center; padding: 1px 7px;
+            background: #E8F5EA; color: #2E963D; border: 1px solid rgba(46,150,61,0.25);
+            border-radius: 20px; font-size: 0.6rem; font-weight: 700; white-space: nowrap;
+            max-width: 80px; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
+        }
+        .ms-more-pill {
+            display: inline-flex; align-items: center; padding: 1px 7px;
+            background: #F1F5F9; color: #64748B; border: 1px solid #E2E8F0;
+            border-radius: 20px; font-size: 0.6rem; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -319,20 +412,13 @@
                     <span class="sidebar-text">Customer Insights</span>
                 </a>
 
+                <a href="{{ url_for('dashboard.powerbi') }}" class="sidebar-link" title="Power BI Reports">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l2-2 2 2v13M3 19V10l3-3 3 3v9M15 19V4l3-3 3 3v15"/>
+                    </svg>
+                    <span class="sidebar-text">Survey Insights</span>
+                </a>
 
-                <a href="{{ url_for('dashboard.powerbi') }}"
-   class="sidebar-link"
-   title="Power BI Reports">
-    <!-- Power BI bar-chart icon -->
-    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M9 19V6l2-2 2 2v13M3 19V10l3-3 3 3v9M15 19V4l3-3 3 3v15"/>
-    </svg>
-    <span class="sidebar-text">Survey Insights</span>
-</a>
-
-
-                
                 {% if user.role == 'Superadmin' %}
                 <div class="mt-4 pt-4 border-t border-gray-100 sidebar-text">
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-4 mb-2">System</p>
@@ -405,12 +491,17 @@
 
         <!-- Global Filters -->
         <div class="px-8 pt-8 max-w-[1500px] mx-auto">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-brand"></div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 relative">
+                <div class="absolute top-0 left-0 w-1 h-full bg-brand rounded-l-xl"></div>
                 <div class="flex items-center gap-2 mb-4">
                     <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
                     <span class="font-bold text-sm text-gray-700 uppercase tracking-wider">Global Context Filters</span>
                     <span class="text-xs text-gray-400 ml-2">Applies to all KPIs, Charts, and Tables below</span>
+                    <button id="clear-all-filters-btn" onclick="clearAllMsFilters()" style="display:none"
+                        class="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-red-600 bg-red-50 border border-red-200 hover:bg-red-100 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                        Clear All Filters
+                    </button>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="slicer-container"></div>
             </div>
@@ -423,59 +514,58 @@
                  OVERVIEW TAB
             ================================================ -->
             <div id="view-overview" class="tab-content block">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
                     <div class="stat-card border-t-4 border-t-[#2E963D]" id="vol-card-border">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">MTD Sales Vol (LPD)</p>
                         <div>
-    <h3 class="text-3xl font-black text-gray-900" id="kpi-sales">-</h3>
-    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border border-transparent" id="kpi-sales-diff-badge">
-        <span id="kpi-sales-diff"></span>
-    </div>
-    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-sales-pct"></p>
-</div>
+                            <h3 class="text-3xl font-black text-gray-900" id="kpi-sales">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border border-transparent" id="kpi-sales-diff-badge">
+                                <span id="kpi-sales-diff"></span>
+                            </div>
+                            <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-sales-pct"></p>
+                        </div>
                     </div>
                     <div class="stat-card border-t-4 border-t-[#2E963D]">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Growth Accounts</p>
                         <div>
-    <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-growth">-</h3>
-    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-green-50 text-[#2E963D] text-xs font-bold border border-green-100">
-        &uarr; <span id="kpi-growth-vol">-</span>
-    </div>
-    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-growth-pct"></p>
-</div>
+                            <h3 class="text-3xl font-black text-[#2E963D]" id="kpi-growth">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-green-50 text-[#2E963D] text-xs font-bold border border-green-100">
+                                &uarr; <span id="kpi-growth-vol">-</span>
+                            </div>
+                            <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-growth-pct"></p>
+                        </div>
                     </div>
                     <div class="stat-card border-t-4 border-t-[#DF2027]">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Decline Accounts</p>
                         <div>
-    <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-decline">-</h3>
-    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-red-50 text-[#DF2027] text-xs font-bold border border-red-100">
-        &darr; <span id="kpi-decline-vol">-</span>
-    </div>
-    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-decline-pct"></p>
-</div>
+                            <h3 class="text-3xl font-black text-[#DF2027]" id="kpi-decline">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-red-50 text-[#DF2027] text-xs font-bold border border-red-100">
+                                &darr; <span id="kpi-decline-vol">-</span>
+                            </div>
+                            <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-decline-pct"></p>
+                        </div>
                     </div>
                     <div class="stat-card border-t-4 border-t-blue-500">
                         <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">New Customers</p>
                         <div>
-    <h3 class="text-3xl font-black text-blue-600" id="kpi-new">-</h3>
-    <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-50 text-blue-600 text-xs font-bold border border-blue-100">
-        &plus; <span id="kpi-new-vol">-</span>
+                            <h3 class="text-3xl font-black text-blue-600" id="kpi-new">-</h3>
+                            <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-50 text-blue-600 text-xs font-bold border border-blue-100">
+                                &plus; <span id="kpi-new-vol">-</span>
+                            </div>
+                            <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-new-pct"></p>
+                        </div>
+                    </div>
+                    <div class="stat-card border-t-4 border-t-amber-400">
+    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-2">Stagnant Accounts</p>
+    <div>
+        <h3 class="text-3xl font-black text-amber-500" id="kpi-stagnant">-</h3>
+        <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold border border-amber-100">
+            ~ <span id="kpi-stagnant-vol">-</span>
+        </div>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-stagnant-pct"></p>
     </div>
-    <p class="text-[10px] text-gray-400 font-semibold mt-1 pl-0.5" id="kpi-new-pct"></p>
 </div>
-                    </div>
                 </div>
-
-                <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                    <div class="stat-card col-span-2">
-                        <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2" id="overview-chart-title"></h3>
-                        <div class="h-64"><canvas id="overviewRegionChart"></canvas></div>
-                    </div>
-                    <div class="stat-card">
-                        <h3 class="font-bold text-gray-800 mb-6">Account Health Portfolio</h3>
-                        <div class="h-56 relative"><canvas id="overviewHealthChart"></canvas></div>
-                    </div>
-                </div> -->
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                     <div class="stat-card col-span-2">
@@ -520,7 +610,6 @@
             ================================================ -->
             <div id="view-team" class="tab-content hidden">
 
-                <!-- Team KPI Summary Cards -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-7">
                     <div class="team-kpi-card border-t-4 border-t-[#2E963D]">
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total SEs</p>
@@ -544,7 +633,6 @@
                     </div>
                 </div>
 
-                <!-- Leaderboard Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
@@ -634,111 +722,100 @@
             ================================================ -->
             <div id="view-customer" class="tab-content hidden">
 
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 p-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
-                    <span class="w-7 h-7 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-sm">🎯</span>
-                    Churn Risk Radar
-                </h3>
-                <p class="text-xs text-gray-400 mt-0.5 ml-9">Accounts with declining YoY volume — click a tier to filter</p>
-            </div>
-            <div class="flex items-center gap-3 flex-wrap">
-                <div class="flex items-center gap-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tier</label>
-                    <select id="churn-tier-filter" onchange="_churnPage=1;renderChurnTable()"
-                        class="border border-gray-300 rounded-lg text-xs py-2 px-3 outline-none focus:ring-2 focus:ring-[#2E963D] bg-gray-50">
-                        <option value="all">All Tiers</option>
-                        <option value="critical">🔴 Critical</option>
-                        <option value="high">🟠 High Risk</option>
-                        <option value="watch">🟡 Watch List</option>
-                    </select>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 p-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-sm">🎯</span>
+                                Churn Risk Radar
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-0.5 ml-9">Accounts with declining YoY volume — click a tier to filter</p>
+                        </div>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <div class="flex items-center gap-2">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tier</label>
+                                <select id="churn-tier-filter" onchange="_churnPage=1;renderChurnTable()"
+                                    class="border border-gray-300 rounded-lg text-xs py-2 px-3 outline-none focus:ring-2 focus:ring-[#2E963D] bg-gray-50">
+                                    <option value="all">All Tiers</option>
+                                    <option value="critical">🔴 Critical</option>
+                                    <option value="high">🟠 High Risk</option>
+                                    <option value="watch">🟡 Watch List</option>
+                                </select>
+                            </div>
+                            <input id="churn-search" type="text" placeholder="🔍  Search customer, SE, SO..."
+                                oninput="_churnPage=1;renderChurnTable()"
+                                class="border border-gray-300 rounded-lg text-xs py-2 px-3 outline-none focus:ring-2 focus:ring-[#2E963D] w-56 bg-gray-50">
+                            <button onclick="exportChurnTier('all')"
+                                class="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm whitespace-nowrap">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+                        <div onclick="selectChurnTier('all')" id="churn-pill-all"
+                            class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-gray-200 bg-gray-50 hover:border-gray-300 transition-all group" style="transition:all 0.2s">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">📊</span>
+                                <span id="churn-count-total" class="text-xl font-black text-gray-800">0</span>
+                            </div>
+                            <div class="font-bold text-gray-700 text-xs">All Accounts</div>
+                            <div class="text-[10px] text-gray-400 mt-0.5">Any YoY decline</div>
+                        </div>
+                        <div onclick="selectChurnTier('critical')" id="churn-pill-critical"
+                            class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-red-100 bg-red-50 hover:border-red-300 transition-all" style="transition:all 0.2s">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">🔴</span>
+                                <span id="churn-count-critical" class="text-xl font-black text-red-700">0</span>
+                            </div>
+                            <div class="font-bold text-red-700 text-xs">Critical Risk</div>
+                            <div class="text-[10px] text-red-400 mt-0.5">Gone dark <span class="font-bold">or</span> &gt;50% drop</div>
+                        </div>
+                        <div onclick="selectChurnTier('high')" id="churn-pill-high"
+                            class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-orange-100 bg-orange-50 hover:border-orange-300 transition-all" style="transition:all 0.2s">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">🟠</span>
+                                <span id="churn-count-high" class="text-xl font-black text-orange-700">0</span>
+                            </div>
+                            <div class="font-bold text-orange-700 text-xs">High Risk</div>
+                            <div class="text-[10px] text-orange-400 mt-0.5">30–50% YoY decline</div>
+                        </div>
+                        <div onclick="selectChurnTier('watch')" id="churn-pill-watch"
+                            class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-amber-100 bg-amber-50 hover:border-amber-300 transition-all" style="transition:all 0.2s">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">🟡</span>
+                                <span id="churn-count-watch" class="text-xl font-black text-amber-700">0</span>
+                            </div>
+                            <div class="font-bold text-amber-700 text-xs">Watch List</div>
+                            <div class="text-[10px] text-amber-400 mt-0.5">10–30% YoY decline</div>
+                        </div>
+                    </div>
                 </div>
-                <input id="churn-search" type="text" placeholder="🔍  Search customer, SE, SO..."
-                    oninput="_churnPage=1;renderChurnTable()"
-                    class="border border-gray-300 rounded-lg text-xs py-2 px-3 outline-none focus:ring-2 focus:ring-[#2E963D] w-56 bg-gray-50">
-                <button onclick="exportChurnTier('all')"
-                    class="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm whitespace-nowrap">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    Export CSV
-                </button>
-            </div>
-        </div>
 
-        <!-- Tier Criterion + Count Pills -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
-
-            <div onclick="selectChurnTier('all')" id="churn-pill-all"
-                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-gray-200 bg-gray-50 hover:border-gray-300 transition-all group"
-                style="transition:all 0.2s">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-lg">📊</span>
-                    <span id="churn-count-total" class="text-xl font-black text-gray-800">0</span>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr style="background:#F9FAFB;border-bottom:2px solid #E5E7EB">
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider">Tier</th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('cust')">Customer <span id="churn-si-cust"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('prod')">Product <span id="churn-si-prod"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('so')">Sales Office <span id="churn-si-so"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('se')">Sales Executive <span id="churn-si-se"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('mtd')">MTD LPD <span id="churn-si-mtd"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('lymtd')">LYMTD LPD <span id="churn-si-lymtd"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('lpd')">LPD Lost <span id="churn-si-lpd"></span></th>
+                                    <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('pct')">% Change <span id="churn-si-pct">↓</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="churn-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="churn-table-pagination" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
                 </div>
-                <div class="font-bold text-gray-700 text-xs">All Accounts</div>
-                <div class="text-[10px] text-gray-400 mt-0.5">Any YoY decline</div>
+
             </div>
-
-            <div onclick="selectChurnTier('critical')" id="churn-pill-critical"
-                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-red-100 bg-red-50 hover:border-red-300 transition-all"
-                style="transition:all 0.2s">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-lg">🔴</span>
-                    <span id="churn-count-critical" class="text-xl font-black text-red-700">0</span>
-                </div>
-                <div class="font-bold text-red-700 text-xs">Critical Risk</div>
-                <div class="text-[10px] text-red-400 mt-0.5">Gone dark <span class="font-bold">or</span> &gt;50% drop</div>
-            </div>
-
-            <div onclick="selectChurnTier('high')" id="churn-pill-high"
-                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-orange-100 bg-orange-50 hover:border-orange-300 transition-all"
-                style="transition:all 0.2s">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-lg">🟠</span>
-                    <span id="churn-count-high" class="text-xl font-black text-orange-700">0</span>
-                </div>
-                <div class="font-bold text-orange-700 text-xs">High Risk</div>
-                <div class="text-[10px] text-orange-400 mt-0.5">30–50% YoY decline</div>
-            </div>
-
-            <div onclick="selectChurnTier('watch')" id="churn-pill-watch"
-                class="churn-pill-card cursor-pointer rounded-xl p-4 border-2 border-amber-100 bg-amber-50 hover:border-amber-300 transition-all"
-                style="transition:all 0.2s">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-lg">🟡</span>
-                    <span id="churn-count-watch" class="text-xl font-black text-amber-700">0</span>
-                </div>
-                <div class="font-bold text-amber-700 text-xs">Watch List</div>
-                <div class="text-[10px] text-amber-400 mt-0.5">10–30% YoY decline</div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Table -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead>
-                    <tr style="background:#F9FAFB;border-bottom:2px solid #E5E7EB">
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider">Tier</th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('cust')">Customer <span id="churn-si-cust"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('prod')">Product <span id="churn-si-prod"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('so')">Sales Office <span id="churn-si-so"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('se')">Sales Executive <span id="churn-si-se"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('mtd')">MTD LPD <span id="churn-si-mtd"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('lymtd')">LYMTD LPD <span id="churn-si-lymtd"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('lpd')">LPD Lost <span id="churn-si-lpd"></span></th>
-                        <th class="px-4 py-3 text-[0.65rem] font-700 text-gray-500 uppercase tracking-wider text-right cursor-pointer hover:bg-gray-100 select-none" onclick="churnTableSort('pct')">% Change <span id="churn-si-pct">↓</span></th>
-                    </tr>
-                </thead>
-                <tbody id="churn-table-body"></tbody>
-            </table>
-        </div>
-        <div id="churn-table-pagination" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
-    </div>
-
-</div>
 
             <footer class="mt-12 text-center text-gray-400 text-sm pb-8 border-t border-gray-200 pt-6">
                 <p>Heritage Foods Limited | Samarth Analytics Engine v2.0</p>
@@ -824,7 +901,8 @@
     // =====================================================
     let globalData    = [];
     let globalColumns = [];
-    let activeFilters = {};
+    let activeFilters = {};   // colIdx → Set<string>
+    let _msState      = {};   // colIdx → { open, search, options, selected, colName }
     let currentInsights = { critical: [], action: [], positive: [] };
     let toastTimer    = null;
     let isFirstLoad   = true;
@@ -869,65 +947,205 @@
     });
 
     // =====================================================
-    // GLOBAL FILTERING ENGINE
+    // MULTI-SELECT FILTER ENGINE
     // =====================================================
+
     function buildGlobalSlicers() {
-        var container = $('#slicer-container');
-        container.empty();
+        const container = document.getElementById('slicer-container');
+        container.innerHTML = '';
+        _msState = {};
+
         slicerColumns.forEach(colName => {
             let colIdx = globalColumns.findIndex(c => c.title === colName);
             if (colIdx === -1) return;
-            let uniqueVals = [...new Set(globalData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
-            uniqueVals.sort();
-            var safeId = 'slicer-' + colName.replace(/[^a-zA-Z0-9]/g, '');
-            var wrapper = $('<div class="flex flex-col"></div>').appendTo(container);
-            $('<label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">' + colName + '</label>').appendTo(wrapper);
-            var select = $(`<select id="${safeId}" data-col-idx="${colIdx}" data-header="${colName}" class="w-full border border-gray-300 rounded-lg text-xs py-2 px-3 focus:ring-2 focus:ring-[#2E963D] outline-none bg-gray-50 global-slicer"><option value="">All ${colName}</option></select>`).appendTo(wrapper);
-            uniqueVals.forEach(val => { let safeVal = String(val).replace(/"/g, '&quot;'); select.append(`<option value="${safeVal}">${val}</option>`); });
+            let options = [...new Set(globalData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '').sort();
+            _msState[colIdx] = { open: false, search: '', options, selected: new Set(), colName };
+            const wrapper = document.createElement('div');
+            wrapper.className = 'ms-wrapper';
+            wrapper.id = `ms-wrapper-${colIdx}`;
+            wrapper.innerHTML = buildMsWrapperHTML(colIdx, colName, options, new Set());
+            container.appendChild(wrapper);
+        });
+
+        document.addEventListener('click', e => { if (!e.target.closest('.ms-wrapper')) closeAllDropdowns(); });
+    }
+
+    function buildMsWrapperHTML(colIdx, colName, options, selected) {
+        const label = colName.replace(/_/g, ' ');
+        return `
+            <label style="font-size:0.65rem;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:5px">${label}</label>
+            <div class="ms-trigger" id="ms-trigger-${colIdx}" onclick="toggleMsDropdown(${colIdx}, event)">
+                <div class="ms-trigger-left"><span class="ms-placeholder">All ${label}</span></div>
+                <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+                    <svg class="ms-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+            </div>
+            <div class="ms-dropdown" id="ms-dropdown-${colIdx}" style="display:none">${buildMsDropdownHTML(colIdx, options, selected, '')}</div>`;
+    }
+
+    function buildMsDropdownHTML(colIdx, options, selected, searchVal) {
+        const filtered = searchVal ? options.filter(o => o.toLowerCase().includes(searchVal.toLowerCase())) : options;
+        const optRows = filtered.map(opt => {
+            const isSel = selected.has(opt);
+            return `<div class="ms-option ${isSel ? 'selected' : ''}" onclick="toggleMsOption(${colIdx}, '${escQ(opt)}', event)">
+                <span class="ms-checkbox">
+                    <svg class="ms-checkbox-tick" width="9" height="7" fill="none" viewBox="0 0 9 7"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="ms-option-text" title="${escQ(opt)}">${opt}</span>
+            </div>`;
+        }).join('');
+        return `
+            <div class="ms-search-wrap">
+                <svg class="ms-search-icon" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input class="ms-search" type="text" placeholder="Search..." value="${escQ(searchVal)}" oninput="onMsSearch(${colIdx}, this.value)" onclick="event.stopPropagation()" id="ms-search-${colIdx}">
+            </div>
+            <div class="ms-quick-bar">
+                <button class="ms-quick-btn select-all" onclick="msBulkSelect(${colIdx}, true, event)">✓ All</button>
+                <span class="ms-quick-count">${selected.size} / ${options.length} selected</span>
+                <button class="ms-quick-btn clear-all" onclick="msBulkSelect(${colIdx}, false, event)">✕ Clear</button>
+            </div>
+            <div class="ms-options">${optRows || '<div class="ms-empty">No matches found</div>'}</div>`;
+    }
+
+    function toggleMsDropdown(colIdx, e) {
+        e.stopPropagation();
+        const state    = _msState[colIdx];
+        const dropdown = document.getElementById(`ms-dropdown-${colIdx}`);
+        const trigger  = document.getElementById(`ms-trigger-${colIdx}`);
+        const wasOpen  = state.open;
+        closeAllDropdowns();
+        if (!wasOpen) {
+            state.open             = true;
+            state.search           = '';
+            refreshMsDropdown(colIdx);
+            dropdown.style.display = 'block';
+            trigger.classList.add('open');
+            requestAnimationFrame(() => { const input = document.getElementById(`ms-search-${colIdx}`); if (input) input.focus(); });
+        }
+    }
+
+    function closeAllDropdowns() {
+        Object.keys(_msState).forEach(colIdx => {
+            const state    = _msState[colIdx];
+            const dropdown = document.getElementById(`ms-dropdown-${colIdx}`);
+            const trigger  = document.getElementById(`ms-trigger-${colIdx}`);
+            if (state && state.open) {
+                state.open             = false;
+                if (dropdown) dropdown.style.display = 'none';
+                if (trigger)  trigger.classList.remove('open');
+            }
         });
     }
 
-    // ── PERFORMANCE: Debounced filter change handler ──
-    $(document).on('change', '.global-slicer', function() {
-        let filterName  = $(this).data('header');
-        let filterValue = $(this).val() || 'Cleared';
-        trackEvent('Global Filter Applied', `${filterName} -> ${filterValue}`);
+    function toggleMsOption(colIdx, val, e) {
+        e.stopPropagation();
+        const state = _msState[colIdx];
+        if (state.selected.has(val)) state.selected.delete(val);
+        else                          state.selected.add(val);
+        refreshMsDropdown(colIdx);
+        refreshMsTrigger(colIdx);
+        updateClearAllBtn();
         clearTimeout(filterDebounceTimer);
-        filterDebounceTimer = setTimeout(() => applyFiltersAndUpdate(), 80);
-    });
+        filterDebounceTimer = setTimeout(() => applyFiltersAndUpdate(), 60);
+    }
 
+    function msBulkSelect(colIdx, selectAll, e) {
+        e.stopPropagation();
+        const state   = _msState[colIdx];
+        const visible = state.search
+            ? state.options.filter(o => o.toLowerCase().includes(state.search.toLowerCase()))
+            : state.options;
+        if (selectAll) visible.forEach(o => state.selected.add(o));
+        else           state.selected.clear();
+        refreshMsDropdown(colIdx);
+        refreshMsTrigger(colIdx);
+        updateClearAllBtn();
+        clearTimeout(filterDebounceTimer);
+        filterDebounceTimer = setTimeout(() => applyFiltersAndUpdate(), 60);
+    }
+
+    function updateClearAllBtn() {
+        const anyActive = Object.values(_msState).some(s => s.selected.size > 0);
+        const btn = document.getElementById('clear-all-filters-btn');
+        if (btn) btn.style.display = anyActive ? 'flex' : 'none';
+    }
+
+    function clearAllMsFilters() {
+        Object.values(_msState).forEach(s => s.selected.clear());
+        Object.keys(_msState).forEach(colIdx => {
+            refreshMsTrigger(parseInt(colIdx));
+            refreshMsDropdown(parseInt(colIdx));
+        });
+        updateClearAllBtn();
+        clearTimeout(filterDebounceTimer);
+        filterDebounceTimer = setTimeout(() => applyFiltersAndUpdate(), 60);
+    }
+
+    function onMsSearch(colIdx, val) {
+        _msState[colIdx].search = val;
+        refreshMsDropdown(colIdx);
+    }
+
+    function refreshMsDropdown(colIdx) {
+        const state    = _msState[colIdx];
+        const dropdown = document.getElementById(`ms-dropdown-${colIdx}`);
+        if (dropdown) dropdown.innerHTML = buildMsDropdownHTML(colIdx, state.options, state.selected, state.search);
+    }
+
+    function refreshMsTrigger(colIdx) {
+        const state   = _msState[colIdx];
+        const trigger = document.getElementById(`ms-trigger-${colIdx}`);
+        if (!trigger) return;
+        const arr   = [...state.selected];
+        const label = state.colName.replace(/_/g, ' ');
+        const left  = trigger.querySelector('.ms-trigger-left');
+        if (arr.length > 0) {
+            trigger.classList.add('has-selection');
+            const shown = arr.slice(0, 2);
+            left.innerHTML = `<span class="ms-pills-strip">${shown.map(v => `<span class="ms-pill" title="${v}">${v}</span>`).join('')}${arr.length > 2 ? `<span class="ms-more-pill">+${arr.length - 2}</span>` : ''}</span>`;
+        } else {
+            trigger.classList.remove('has-selection');
+            left.innerHTML = `<span class="ms-placeholder">All ${label}</span>`;
+        }
+        const right = trigger.querySelector('div:last-child');
+        right.innerHTML = `${arr.length > 0 ? `<span class="ms-count-badge">${arr.length}</span>` : ''}<svg class="ms-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>`;
+        if (state.open) trigger.classList.add('open');
+    }
+
+    function escQ(str) {
+        return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // =====================================================
+    // GLOBAL FILTERING ENGINE
+    // =====================================================
     function applyFiltersAndUpdate() {
         activeFilters = {};
-        $('.global-slicer').each(function() {
-            let val    = $(this).val();
-            let colIdx = $(this).data('col-idx');
-            if (val !== "") { activeFilters[colIdx] = val; }
+        Object.entries(_msState).forEach(([colIdx, state]) => {
+            if (state.selected.size > 0) activeFilters[colIdx] = state.selected;
         });
+
         let filteredData = globalData.filter(row => {
             for (let colIdx in activeFilters) {
-                let rowVal    = String(row[colIdx] || '').trim();
-                let filterVal = activeFilters[colIdx].replace(/&quot;/g, '"');
-                if (rowVal !== filterVal) return false;
+                if (!activeFilters[colIdx].has(String(row[colIdx] || '').trim())) return false;
             }
             return true;
         });
+
         updateDashboardComponents(filteredData);
         updateCascadingSlicers(filteredData);
         computeAndRenderInsights(filteredData);
     }
 
     function updateCascadingSlicers(filteredData) {
-        $('.global-slicer').each(function() {
-            var select     = $(this);
-            var headerName = select.data('header');
-            var colIdx     = select.data('col-idx');
-            var currentVal = select.val();
-            if (staticSlicers.includes(headerName) || currentVal !== "") return;
-            let uniqueVisibleData = [...new Set(filteredData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '');
-            uniqueVisibleData.sort();
-            select.empty();
-            select.append(`<option value="">All ${headerName}</option>`);
-            uniqueVisibleData.forEach(val => { let safeVal = String(val).replace(/"/g, '&quot;'); select.append(`<option value="${safeVal}">${val}</option>`); });
+        Object.entries(_msState).forEach(([colIdx, state]) => {
+            colIdx = parseInt(colIdx);
+            if (staticSlicers.includes(state.colName) || state.selected.size > 0) return;
+            const uniqueVals = [...new Set(filteredData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '').sort();
+            state.options = uniqueVals;
+            [...state.selected].forEach(v => { if (!uniqueVals.includes(v)) state.selected.delete(v); });
+            if (state.open) refreshMsDropdown(colIdx);
+            refreshMsTrigger(colIdx);
         });
     }
 
@@ -935,213 +1153,153 @@
     // DASHBOARD RENDER ENGINE
     // =====================================================
     function updateDashboardComponents(data) {
-    const idx      = col => globalColumns.findIndex(c => c.title === col);
-    const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
-    const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
-    const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
-    const iLYMTD   = idx('LYMTD');
-    const iLM      = idx('LM');
-    const iLYSM    = idx('LYSM');
-    const iProdCol = idx('Product');
+        const idx      = col => globalColumns.findIndex(c => c.title === col);
+        const iTrend   = idx('Sales_Trend'), iSales  = idx('MTD');
+        const iRegion  = idx('Region'),      iSO     = idx('SO_Name');
+        const iAbsDrop = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+        const iLYMTD   = idx('LYMTD');
+        const iLM      = idx('LM');
+        const iLYSM    = idx('LYSM');
+        const iProdCol = idx('Product');
 
-    let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0, totalLM: 0, totalLYSM: 0 };
-    let regionMTD = {}, regionLYMTD = {}, soMTD = {}, soLYMTD = {}, prodMTD = {}, prodLYMTD = {};
+        let stats = { growth: 0, decline: 0, new: 0, stable: 0, sales: 0, lymtd: 0, growthVol: 0, declineVol: 0, newVol: 0, totalLM: 0, totalLYSM: 0 };
+        let regionMTD = {}, regionLYMTD = {}, soMTD = {}, soLYMTD = {}, prodMTD = {}, prodLYMTD = {};
 
-    data.forEach(row => {
-        let trend    = iTrend    > -1 ? String(row[iTrend]    || '').trim() : 'Stable';
-        let salesVal = iSales    > -1 ? parseFloat(row[iSales])    || 0 : 0;
-        let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
-        let lmVal    = iLM      > -1 ? parseFloat(row[iLM])      || 0 : 0;
-        let lysmVal  = iLYSM    > -1 ? parseFloat(row[iLYSM])    || 0 : 0;
-        let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
-        let reg      = iRegion   > -1 ? String(row[iRegion]   || 'Unknown').trim() : 'All';
-        let so       = iSO      > -1 ? String(row[iSO]       || 'Unknown').trim() : 'All SOs';
-        let prod     = iProdCol > -1 ? String(row[iProdCol]  || 'Unknown').trim() : 'All';
+        data.forEach(row => {
+            let trend    = iTrend    > -1 ? String(row[iTrend]    || '').trim() : 'Stable';
+            let salesVal = iSales    > -1 ? parseFloat(row[iSales])    || 0 : 0;
+            let lymtdVal = iLYMTD   > -1 ? parseFloat(row[iLYMTD])   || 0 : 0;
+            let lmVal    = iLM      > -1 ? parseFloat(row[iLM])      || 0 : 0;
+            let lysmVal  = iLYSM    > -1 ? parseFloat(row[iLYSM])    || 0 : 0;
+            let dropVal  = iAbsDrop > -1 ? parseFloat(row[iAbsDrop]) || 0 : 0;
+            let reg      = iRegion   > -1 ? String(row[iRegion]   || 'Unknown').trim() : 'All';
+            let so       = iSO      > -1 ? String(row[iSO]       || 'Unknown').trim() : 'All SOs';
+            let prod     = iProdCol > -1 ? String(row[iProdCol]  || 'Unknown').trim() : 'All';
 
-        if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
-        else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
-        else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
-        else                                                 { stats.stable++; }
+            if (trend === 'Growth')                              { stats.growth++;  stats.growthVol  += dropVal; }
+            else if (trend === 'Decline')                        { stats.decline++; stats.declineVol += Math.abs(dropVal); }
+            else if (trend === 'New Customer' || trend === 'New'){ stats.new++;     stats.newVol     += salesVal; }
+            else                                                 { stats.stable++; }
 
-        stats.sales     += salesVal;
-        stats.lymtd     += lymtdVal;
-        stats.totalLM   += lmVal;
-        stats.totalLYSM += lysmVal;
+            stats.sales     += salesVal;
+            stats.lymtd     += lymtdVal;
+            if (trend === 'Stagnant') stats.stagnantVol = (stats.stagnantVol || 0) + salesVal;
+            stats.totalLM   += lmVal;
+            stats.totalLYSM += lysmVal;
 
-        regionMTD[reg]   = (regionMTD[reg]   || 0) + salesVal;
-        regionLYMTD[reg] = (regionLYMTD[reg] || 0) + lymtdVal;
-        soMTD[so]        = (soMTD[so]        || 0) + salesVal;
-        soLYMTD[so]      = (soLYMTD[so]      || 0) + lymtdVal;
-        prodMTD[prod]    = (prodMTD[prod]     || 0) + salesVal;
-        prodLYMTD[prod]  = (prodLYMTD[prod]  || 0) + lymtdVal;
-    });
+            regionMTD[reg]   = (regionMTD[reg]   || 0) + salesVal;
+            regionLYMTD[reg] = (regionLYMTD[reg] || 0) + lymtdVal;
+            soMTD[so]        = (soMTD[so]        || 0) + salesVal;
+            soLYMTD[so]      = (soLYMTD[so]      || 0) + lymtdVal;
+            prodMTD[prod]    = (prodMTD[prod]     || 0) + salesVal;
+            prodLYMTD[prod]  = (prodLYMTD[prod]  || 0) + lymtdVal;
+        });
 
-    const fmt     = n  => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
-    const calcPct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(1) : '0.0';
+        const fmt     = n  => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+        const calcPct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(1) : '0.0';
 
-    function twoBadges(volText, pctText, volStyle, pctStyle) {
-        return `<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
-            <span style="padding:3px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;border:1px solid;${volStyle}">${volText}</span>
-            <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;border:1px solid;letter-spacing:0.01em;${pctStyle}">${pctText}</span>
-        </div>`;
+        function twoBadges(volText, pctText, volStyle, pctStyle) {
+            return `<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span style="padding:3px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;border:1px solid;${volStyle}">${volText}</span>
+                <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;border:1px solid;letter-spacing:0.01em;${pctStyle}">${pctText}</span>
+            </div>`;
+        }
+
+        // ── 1. MTD Sales Volume ──
+        $('#kpi-sales').text(fmt(stats.sales));
+        const volDiff    = stats.sales - stats.lymtd;
+        const volDiffPct = calcPct(Math.abs(volDiff), stats.lymtd);
+        const diffBadge  = $('#kpi-sales-diff-badge');
+        const volCardBorder = $('#vol-card-border');
+
+        if (volDiff > 0) {
+            diffBadge.html(twoBadges(`↑ +${fmt(volDiff)} LPD`, `+${volDiffPct}% YoY`, 'background:#DCFCE7;color:#166534;border-color:#BBF7D0', 'background:#F0FDF4;color:#166534;border-color:#86EFAC')).removeClass('border').css('padding', '0');
+            volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
+        } else if (volDiff < 0) {
+            diffBadge.html(twoBadges(`↓ ${fmt(volDiff)} LPD`, `-${volDiffPct}% YoY`, 'background:#FEE2E2;color:#991B1B;border-color:#FECACA', 'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5')).removeClass('border').css('padding', '0');
+            volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
+        } else {
+            diffBadge.html(twoBadges(`— Flat`, `0.0% YoY`, 'background:#F3F4F6;color:#6B7280;border-color:#E5E7EB', 'background:#F9FAFB;color:#9CA3AF;border-color:#E5E7EB')).removeClass('border').css('padding', '0');
+            volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
+        }
+
+        // ── 2. Growth Accounts ──
+        const growthPct = calcPct(stats.growthVol, stats.lymtd);
+        $('#kpi-growth').text(stats.growth.toLocaleString());
+        $('#kpi-growth').next('div').attr('class', 'mt-2').css({ display: 'block' }).html(twoBadges(`↑ +${fmt(stats.growthVol)} LPD`, `+${growthPct}% of LY vol`, 'background:#DCFCE7;color:#166534;border-color:#BBF7D0', 'background:#F0FDF4;color:#166534;border-color:#86EFAC'));
+
+        // ── 3. Decline Accounts ──
+        const declinePct = calcPct(stats.declineVol, stats.lymtd);
+        $('#kpi-decline').text(stats.decline.toLocaleString());
+        $('#kpi-decline').next('div').attr('class', 'mt-2').css({ display: 'block' }).html(twoBadges(`↓ -${fmt(stats.declineVol)} LPD`, `-${declinePct}% of LY vol`, 'background:#FEE2E2;color:#991B1B;border-color:#FECACA', 'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'));
+
+        // ── 4. New Customers ──
+        const newPct = calcPct(stats.newVol, stats.lymtd);
+        $('#kpi-new').text(stats.new.toLocaleString());
+        $('#kpi-new').next('div').attr('class', 'mt-2').css({ display: 'block' }).html(twoBadges(`+ +${fmt(stats.newVol)} LPD`, `+${newPct}% of LY vol`, 'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE', 'background:#F5F8FF;color:#1D4ED8;border-color:#93C5FD'));
+
+
+        // ── 5. Stagnant Accounts ──────────────────────────────────────────────────
+        const stagnantPct = calcPct(stats.stagnantVol || 0, stats.lymtd);
+        $('#kpi-stagnant').text(stats.stable.toLocaleString());
+        $('#kpi-stagnant').next('div')
+            .attr('class', 'mt-2')
+            .css({ display: 'block' })
+            .html(twoBadges(
+                `~ ${fmt(stats.stagnantVol || 0)} LPD`,
+                `~${stagnantPct}% of LY vol`,
+                'background:#FEF3C7;color:#92400E;border-color:#FDE68A',
+                'background:#FFFBEB;color:#92400E;border-color:#FCD34D'
+            ));
+
+        // ── Overview charts — role-aware grouping ──
+        const _role = "{{ user.role }}";
+        let chartMTD, chartLYMTD, chartTitle, chartSubtitle;
+        if (_role === 'BM' || Object.keys(regionMTD).length <= 1) {
+            chartMTD = prodMTD; chartLYMTD = prodLYMTD;
+            chartTitle = 'Product Performance — MTD vs Same Period Last Year';
+            chartSubtitle = 'Milk · Curd · ButterMilk — YoY% shown above bars';
+        } else if (_role === 'RH') {
+            chartMTD = soMTD; chartLYMTD = soLYMTD;
+            chartTitle = 'Sales Office Performance — MTD vs Same Period Last Year';
+            chartSubtitle = 'Your SOs ranked by volume — YoY% shown above bars';
+        } else {
+            const EXCLUDED_REGIONS = new Set(['MP', 'CG', 'Unknown', 'KERALA', 'EAST', 'OD', 'Z-4']);
+            chartMTD   = Object.fromEntries(Object.entries(regionMTD).filter(([k]) => !EXCLUDED_REGIONS.has(k)));
+            chartLYMTD = Object.fromEntries(Object.entries(regionLYMTD).filter(([k]) => !EXCLUDED_REGIONS.has(k)));
+            chartTitle = 'Regional Performance — MTD vs Same Period Last Year';
+            chartSubtitle = 'All regions · YoY% shown above bars';
+        }
+        $('#overview-chart-title').text(chartTitle);
+        $('#overview-chart-subtitle').text(chartSubtitle);
+
+        renderOverviewCharts(chartMTD, chartLYMTD, stats);
+
+        // ── Customer tab — lazy render ──
+        lastCustomerData = data;
+        customerTabDirty = true;
+        if (!document.getElementById('view-customer').classList.contains('hidden')) {
+            requestAnimationFrame(() => renderCustomerInsightsTab(data));
+        }
+
+        // ── Master table + Leaderboard ──
+        initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
+        buildLeaderboardData(data);
     }
 
-    // ── 1. MTD Sales Volume ───────────────────────────────────────────────────
-    $('#kpi-sales').text(fmt(stats.sales));
-    const volDiff    = stats.sales - stats.lymtd;
-    const volDiffPct = calcPct(Math.abs(volDiff), stats.lymtd);
-    const diffBadge  = $('#kpi-sales-diff-badge');
-    const volCardBorder = $('#vol-card-border');
-
-    if (volDiff > 0) {
-        diffBadge.html(twoBadges(
-            `↑ +${fmt(volDiff)} LPD`,
-            `+${volDiffPct}% YoY`,
-            'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
-            'background:#F0FDF4;color:#166534;border-color:#86EFAC'
-        )).removeClass('border').css('padding', '0');
-        volCardBorder.removeClass('border-t-[#DF2027] border-t-gray-400').addClass('border-t-[#2E963D]');
-    } else if (volDiff < 0) {
-        diffBadge.html(twoBadges(
-            `↓ ${fmt(volDiff)} LPD`,
-            `-${volDiffPct}% YoY`,
-            'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
-            'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
-        )).removeClass('border').css('padding', '0');
-        volCardBorder.removeClass('border-t-[#2E963D] border-t-gray-400').addClass('border-t-[#DF2027]');
-    } else {
-        diffBadge.html(twoBadges(
-            `— Flat`,
-            `0.0% YoY`,
-            'background:#F3F4F6;color:#6B7280;border-color:#E5E7EB',
-            'background:#F9FAFB;color:#9CA3AF;border-color:#E5E7EB'
-        )).removeClass('border').css('padding', '0');
-        volCardBorder.removeClass('border-t-[#2E963D] border-t-[#DF2027]').addClass('border-t-gray-400');
-    }
-
-    // ── 2. Growth Accounts ────────────────────────────────────────────────────
-    const growthPct = calcPct(stats.growthVol, stats.lymtd);
-    $('#kpi-growth').text(stats.growth.toLocaleString());
-    $('#kpi-growth').next('div')
-        .attr('class', 'mt-2')
-        .css({ display: 'block' })
-        .html(twoBadges(
-            `↑ +${fmt(stats.growthVol)} LPD`,
-            `+${growthPct}% of LY vol`,
-            'background:#DCFCE7;color:#166534;border-color:#BBF7D0',
-            'background:#F0FDF4;color:#166534;border-color:#86EFAC'
-        ));
-
-    // ── 3. Decline Accounts ───────────────────────────────────────────────────
-    const declinePct = calcPct(stats.declineVol, stats.lymtd);
-    $('#kpi-decline').text(stats.decline.toLocaleString());
-    $('#kpi-decline').next('div')
-        .attr('class', 'mt-2')
-        .css({ display: 'block' })
-        .html(twoBadges(
-            `↓ -${fmt(stats.declineVol)} LPD`,
-            `-${declinePct}% of LY vol`,
-            'background:#FEE2E2;color:#991B1B;border-color:#FECACA',
-            'background:#FFF5F5;color:#991B1B;border-color:#FCA5A5'
-        ));
-
-    // ── 4. New Customers ──────────────────────────────────────────────────────
-    const newPct = calcPct(stats.newVol, stats.lymtd);
-    $('#kpi-new').text(stats.new.toLocaleString());
-    $('#kpi-new').next('div')
-        .attr('class', 'mt-2')
-        .css({ display: 'block' })
-        .html(twoBadges(
-            `+ +${fmt(stats.newVol)} LPD`,
-            `+${newPct}% of LY vol`,
-            'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE',
-            'background:#F5F8FF;color:#1D4ED8;border-color:#93C5FD'
-        ));
-
-    // ── Overview charts — role-aware grouping ─────────────────────────────────
-    const _role = "{{ user.role }}";
-    let chartMTD, chartLYMTD, chartTitle, chartSubtitle;
-    if (_role === 'BM' || Object.keys(regionMTD).length <= 1) {
-        chartMTD      = prodMTD;    chartLYMTD  = prodLYMTD;
-        chartTitle    = 'Product Performance — MTD vs Same Period Last Year';
-        chartSubtitle = 'Milk · Curd · ButterMilk — YoY% shown above bars';
-    } else if (_role === 'RH') {
-        chartMTD      = soMTD;      chartLYMTD  = soLYMTD;
-        chartTitle    = 'Sales Office Performance — MTD vs Same Period Last Year';
-        chartSubtitle = 'Your SOs ranked by volume — YoY% shown above bars';
-    } else {
-    const EXCLUDED_REGIONS = new Set(['MP', 'CG', 'Unknown', 'KERALA', 'EAST', 'OD', 'Z-4']);
-    chartMTD   = Object.fromEntries(Object.entries(regionMTD).filter(([k]) => !EXCLUDED_REGIONS.has(k)));
-    chartLYMTD = Object.fromEntries(Object.entries(regionLYMTD).filter(([k]) => !EXCLUDED_REGIONS.has(k)));
-    chartTitle    = 'Regional Performance — MTD vs Same Period Last Year';
-    chartSubtitle = 'All regions · YoY% shown above bars';
-}
-    $('#overview-chart-title').text(chartTitle);
-    $('#overview-chart-subtitle').text(chartSubtitle);
-
-    renderOverviewCharts(chartMTD, chartLYMTD, stats);
-
-    // ── Customer tab — lazy render ────────────────────────────────────────────
-    lastCustomerData = data;
-    customerTabDirty = true;
-    if (!document.getElementById('view-customer').classList.contains('hidden')) {
-        requestAnimationFrame(() => renderCustomerInsightsTab(data));
-    }
-
-    // ── Master table + Leaderboard ────────────────────────────────────────────
-    initTable(data, globalColumns, globalColumns.findIndex(c => c.title === 'Sales_Trend'));
-    buildLeaderboardData(data);
-}
     // =====================================================
-    // CHARTS  — update-in-place to avoid flicker
+    // CHARTS
     // =====================================================
-    // function renderOverviewCharts(barData, stats) {
-    //     const barLabels = Object.keys(barData);
-    //     const barVals   = Object.values(barData);
-
-    //     // ── PERFORMANCE: Update in-place, destroy only if labels changed ──
-    //     if (charts.overviewRegion) {
-    //         const sameLabels = JSON.stringify(charts.overviewRegion.data.labels) === JSON.stringify(barLabels);
-    //         if (sameLabels) {
-    //             charts.overviewRegion.data.datasets[0].data = barVals;
-    //             charts.overviewRegion.update('none');
-    //         } else {
-    //             charts.overviewRegion.destroy();
-    //             charts.overviewRegion = null;
-    //         }
-    //     }
-    //     if (!charts.overviewRegion) {
-    //         charts.overviewRegion = new Chart(document.getElementById('overviewRegionChart'), {
-    //             type: 'bar',
-    //             data: { labels: barLabels, datasets: [{ label: 'MTD Volume', data: barVals, backgroundColor: brandColors.green, borderRadius: 4, maxBarThickness: 50 }] },
-    //             options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
-    //         });
-    //     }
-
-    //     const healthVals = [stats.growth, stats.decline, stats.new, stats.stable];
-    //     if (charts.overviewHealth) {
-    //         charts.overviewHealth.data.datasets[0].data = healthVals;
-    //         charts.overviewHealth.update('none');
-    //     } else {
-    //         charts.overviewHealth = new Chart(document.getElementById('overviewHealthChart'), {
-    //             type: 'doughnut',
-    //             data: { labels: ['Growth', 'Decline', 'New', 'Stable'], datasets: [{ data: healthVals, backgroundColor: [brandColors.green, brandColors.red, brandColors.blue, '#E2E8F0'], borderWidth: 0 }] },
-    //             options: { maintainAspectRatio: false, animation: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } }
-    //         });
-    //     }
-    // }
-
     function renderOverviewCharts(mtdData, lymtdData, stats) {
-        const labels   = Object.keys(mtdData);
-        const mtdVals  = labels.map(k => mtdData[k]);
+        const labels    = Object.keys(mtdData);
+        const mtdVals   = labels.map(k => mtdData[k]);
         const lymtdVals = labels.map(k => lymtdData[k] || 0);
 
-        // ── YoY% label plugin — draws % above each MTD bar ──
         const yoyLabelPlugin = {
             id: 'yoyLabels',
             afterDatasetsDraw(chart) {
                 const ctx  = chart.ctx;
-                const meta = chart.getDatasetMeta(0);   // MTD dataset
+                const meta = chart.getDatasetMeta(0);
                 meta.data.forEach((bar, i) => {
                     const mtd   = mtdVals[i]   || 0;
                     const lymtd = lymtdVals[i] || 0;
@@ -1159,7 +1317,6 @@
             }
         };
 
-        // ── Chart 1: Grouped bars MTD vs LYMTD ──────────────
         if (charts.overviewRegion) {
             const sameLabels = JSON.stringify(charts.overviewRegion.data.labels) === JSON.stringify(labels);
             if (sameLabels) {
@@ -1177,58 +1334,34 @@
                 data: {
                     labels,
                     datasets: [
-                        { label: 'MTD (This Year)',      data: mtdVals,   backgroundColor: '#2E963D', borderRadius: 4, maxBarThickness: 32 },
-                        { label: 'LYMTD (Last Year)',    data: lymtdVals, backgroundColor: '#E2E8F0', borderRadius: 4, maxBarThickness: 32 },
+                        { label: 'MTD (This Year)',   data: mtdVals,   backgroundColor: '#2E963D', borderRadius: 4, maxBarThickness: 32 },
+                        { label: 'LYMTD (Last Year)', data: lymtdVals, backgroundColor: '#E2E8F0', borderRadius: 4, maxBarThickness: 32 },
                     ]
                 },
                 plugins: [yoyLabelPlugin],
                 options: {
-                    maintainAspectRatio: false,
-                    animation: false,
+                    maintainAspectRatio: false, animation: false,
                     layout: { padding: { top: 20 } },
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { size: 11 }, boxWidth: 12, padding: 12 }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                afterBody(items) {
-                                    const i    = items[0].dataIndex;
-                                    const mtd  = mtdVals[i]   || 0;
-                                    const ly   = lymtdVals[i] || 0;
-                                    if (!ly) return '';
-                                    const pct  = ((mtd - ly) / ly * 100);
-                                    return `YoY: ${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%`;
-                                }
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12, padding: 12 } },
+                        tooltip: { callbacks: { afterBody(items) { const i = items[0].dataIndex; const mtd = mtdVals[i] || 0; const ly = lymtdVals[i] || 0; if (!ly) return ''; const pct = ((mtd - ly) / ly * 100); return `YoY: ${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%`; } } }
                     },
-                    scales: {
-                        x: { grid: { display: false } },
-                        y: { beginAtZero: true, ticks: { maxTicksLimit: 5 } }
-                    }
+                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { maxTicksLimit: 5 } } }
                 }
             });
         }
 
-        // ── Chart 2: Month-end projection ────────────────────
-        const now              = new Date();
-        const daysInMonth      = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-        const daysInLastMonth  = new Date(now.getFullYear(), now.getMonth(),     0).getDate();
-        const daysInLYSM       = new Date(now.getFullYear() - 1, now.getMonth() + 1, 0).getDate();
-        const daysSoFar        = now.getDate() - 1 || 1;
+        const now             = new Date();
+        const daysInMonth     = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const daysInLastMonth = new Date(now.getFullYear(), now.getMonth(),     0).getDate();
+        const daysInLYSM      = new Date(now.getFullYear() - 1, now.getMonth() + 1, 0).getDate();
+        const daysSoFar       = now.getDate() - 1 || 1;
 
         const projected = Math.round(stats.sales  * daysInMonth);
         const lastMonth = Math.round(stats.totalLM   * daysInLastMonth);
         const lysm      = Math.round(stats.totalLYSM * daysInLYSM);
 
-        const projColors = [
-            projected >= lysm ? '#2E963D' : '#DF2027',
-            '#94A3B8',
-            '#CBD5E1',
-        ];
-
+        const projColors = [projected >= lysm ? '#2E963D' : '#DF2027', '#94A3B8', '#CBD5E1'];
         $('#projection-subtitle').text(`Run rate × ${daysInMonth} days · ${daysSoFar} days elapsed`);
 
         if (charts.overviewHealth) {
@@ -1240,33 +1373,16 @@
                 type: 'bar',
                 data: {
                     labels: ['Projected', 'Last Month', 'Same Month LY'],
-                    datasets: [{
-                        data: [projected, lastMonth, lysm],
-                        backgroundColor: projColors,
-                        borderRadius: 6,
-                        maxBarThickness: 48,
-                    }]
+                    datasets: [{ data: [projected, lastMonth, lysm], backgroundColor: projColors, borderRadius: 6, maxBarThickness: 48 }]
                 },
                 options: {
-                    maintainAspectRatio: false,
-                    animation: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => ` ${ctx.raw.toLocaleString('en-IN')}`
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-                        y: { beginAtZero: true, ticks: { maxTicksLimit: 4, font: { size: 10 } } }
-                    }
+                    maintainAspectRatio: false, animation: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString('en-IN')}` } } },
+                    scales: { x: { grid: { display: false }, ticks: { font: { size: 10 } } }, y: { beginAtZero: true, ticks: { maxTicksLimit: 4, font: { size: 10 } } } }
                 }
             });
         }
 
-        // Verdict pill
         const verdictEl = document.getElementById('projection-verdict');
         if (!lysm) {
             verdictEl.textContent = '';
@@ -1282,406 +1398,270 @@
         }
     }
 
-
     function renderAcqPage() {
-    const ACQ_PAGE_SIZE = 12;
-    const customers  = window._acqCustomers || [];
-    const page       = window._acqPage || 1;
-    const totalPages = Math.ceil(customers.length / ACQ_PAGE_SIZE);
-    const start      = (page - 1) * ACQ_PAGE_SIZE;
-    const pageItems  = customers.slice(start, start + ACQ_PAGE_SIZE);
+        const ACQ_PAGE_SIZE = 12;
+        const customers  = window._acqCustomers || [];
+        const page       = window._acqPage || 1;
+        const totalPages = Math.ceil(customers.length / ACQ_PAGE_SIZE);
+        const start      = (page - 1) * ACQ_PAGE_SIZE;
+        const pageItems  = customers.slice(start, start + ACQ_PAGE_SIZE);
 
-    document.getElementById('acq-feed-grid').innerHTML = pageItems.map(c => `
-        <div class="acq-card">
-            <div style="font-size:0.8rem;font-weight:800;color:#111827;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${c.cust}">${c.cust}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">
-                <span style="font-size:0.63rem;background:#EFF6FF;color:#1D4ED8;padding:2px 8px;border-radius:20px;font-weight:700">${c.prod}</span>
-                <span style="font-size:0.63rem;background:#F0FDF4;color:#166534;padding:2px 8px;border-radius:20px;font-weight:700">NEW</span>
-            </div>
-            <div style="font-size:0.68rem;color:#6B7280;margin-bottom:4px">📍 ${c.so}</div>
-            ${c.seMob
-                ? `<div style="font-size:0.68rem;color:#6B7280;margin-bottom:8px">📞 ${c.se} · ${c.seMob}</div>`
-                : `<div style="font-size:0.68rem;color:#6B7280;margin-bottom:8px">👤 ${c.se || 'Unassigned'}</div>`}
-            <div style="display:flex;align-items:baseline;gap:4px;border-top:1px solid #EFF6FF;padding-top:8px;margin-top:4px">
-                <span style="font-size:1.1rem;font-weight:900;color:#1D4ED8;font-family:monospace">${parseFloat(c.mtd).toLocaleString(undefined,{maximumFractionDigits:1})}</span>
-                <span style="font-size:0.65rem;color:#93C5FD;font-weight:700">LPD MTD</span>
-            </div>
-        </div>`).join('');
+        document.getElementById('acq-feed-grid').innerHTML = pageItems.map(c => `
+            <div class="acq-card">
+                <div style="font-size:0.8rem;font-weight:800;color:#111827;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${c.cust}">${c.cust}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">
+                    <span style="font-size:0.63rem;background:#EFF6FF;color:#1D4ED8;padding:2px 8px;border-radius:20px;font-weight:700">${c.prod}</span>
+                    <span style="font-size:0.63rem;background:#F0FDF4;color:#166534;padding:2px 8px;border-radius:20px;font-weight:700">NEW</span>
+                </div>
+                <div style="font-size:0.68rem;color:#6B7280;margin-bottom:4px">📍 ${c.so}</div>
+                ${c.seMob ? `<div style="font-size:0.68rem;color:#6B7280;margin-bottom:8px">📞 ${c.se} · ${c.seMob}</div>` : `<div style="font-size:0.68rem;color:#6B7280;margin-bottom:8px">👤 ${c.se || 'Unassigned'}</div>`}
+                <div style="display:flex;align-items:baseline;gap:4px;border-top:1px solid #EFF6FF;padding-top:8px;margin-top:4px">
+                    <span style="font-size:1.1rem;font-weight:900;color:#1D4ED8;font-family:monospace">${parseFloat(c.mtd).toLocaleString(undefined,{maximumFractionDigits:1})}</span>
+                    <span style="font-size:0.65rem;color:#93C5FD;font-weight:700">LPD MTD</span>
+                </div>
+            </div>`).join('');
 
-    // Pagination bar
-    const paginEl  = document.getElementById('acq-feed-pagination');
-    if (totalPages <= 1) { paginEl.innerHTML = `<span style="font-size:0.75rem;color:#9CA3AF">${customers.length} new customers</span>`; return; }
+        const paginEl  = document.getElementById('acq-feed-pagination');
+        if (totalPages <= 1) { paginEl.innerHTML = `<span style="font-size:0.75rem;color:#9CA3AF">${customers.length} new customers</span>`; return; }
 
-    const btnStyle = 'padding:4px 14px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
-    let pageButtons = '';
-    for (let p = 1; p <= totalPages; p++) {
-        const isActive = p === page;
-        pageButtons += `<button onclick="window._acqPage=${p};renderAcqPage()"
-            style="${btnStyle}${isActive ? 'background:#3B82F6;color:white;border-color:#3B82F6;' : 'color:#374151;'}">${p}</button>`;
+        const btnStyle = 'padding:4px 14px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
+        let pageButtons = '';
+        for (let p = 1; p <= totalPages; p++) {
+            const isActive = p === page;
+            pageButtons += `<button onclick="window._acqPage=${p};renderAcqPage()" style="${btnStyle}${isActive ? 'background:#3B82F6;color:white;border-color:#3B82F6;' : 'color:#374151;'}">${p}</button>`;
+        }
+        paginEl.innerHTML = `
+            <span style="font-size:0.75rem;color:#9CA3AF">${customers.length} total · Page ${page} of ${totalPages}</span>
+            <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+                <button onclick="window._acqPage=Math.max(1,window._acqPage-1);renderAcqPage()" ${page<=1?'disabled':''} style="${btnStyle}opacity:${page<=1?'0.35':'1'}">← Prev</button>
+                ${pageButtons}
+                <button onclick="window._acqPage=Math.min(${totalPages},window._acqPage+1);renderAcqPage()" ${page>=totalPages?'disabled':''} style="${btnStyle}opacity:${page>=totalPages?'0.35':'1'}">Next →</button>
+            </div>`;
     }
-
-    paginEl.innerHTML = `
-        <span style="font-size:0.75rem;color:#9CA3AF">${customers.length} total · Page ${page} of ${totalPages}</span>
-        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
-            <button onclick="window._acqPage=Math.max(1,window._acqPage-1);renderAcqPage()"
-                ${page<=1?'disabled':''} style="${btnStyle}opacity:${page<=1?'0.35':'1'}">← Prev</button>
-            ${pageButtons}
-            <button onclick="window._acqPage=Math.min(${totalPages},window._acqPage+1);renderAcqPage()"
-                ${page>=totalPages?'disabled':''} style="${btnStyle}opacity:${page>=totalPages?'0.35':'1'}">Next →</button>
-        </div>`;
-}
 
     // =====================================================
     // CUSTOMER INSIGHTS TAB — lazy-rendered
     // =====================================================
-    // Global churn data store for sort + export
-let _churnData   = { critical: [], high: [], watch: [] };
-let _churnSort   = { col: 'pct', dir: 'asc' };  // asc = worst % first
-let _churnPage   = 1;
-const CHURN_PAGE_SIZE = 50;
+    let _churnData   = { critical: [], high: [], watch: [] };
+    let _churnSort   = { col: 'pct', dir: 'asc' };
+    let _churnPage   = 1;
+    const CHURN_PAGE_SIZE = 50;
 
-function renderCustomerInsightsTab(data) {
-    const idx      = col => globalColumns.findIndex(c => c.title === col);
-    const iMTD     = idx('MTD'),       iLYMTD  = idx('LYMTD');
-    const iAbsDiff = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
-    const iPct     = idx('MTD_vs_LYMTD_Growth_Percentage');
-    const iTrend   = idx('Sales_Trend');
-    const iCust    = idx('CustomerName');
-    const iSE      = idx('SE_Name'),   iSEMob  = idx('SE_Mobile');
-    const iSO      = idx('SO_Name'),   iProd   = idx('Product');
+    function renderCustomerInsightsTab(data) {
+        const idx      = col => globalColumns.findIndex(c => c.title === col);
+        const iMTD     = idx('MTD'),       iLYMTD  = idx('LYMTD');
+        const iAbsDiff = idx('MTD_vs_LYMTD_Abs_LPD_Diff');
+        const iPct     = idx('MTD_vs_LYMTD_Growth_Percentage');
+        const iTrend   = idx('Sales_Trend');
+        const iCust    = idx('CustomerName');
+        const iSE      = idx('SE_Name'),   iSEMob  = idx('SE_Mobile');
+        const iSO      = idx('SO_Name'),   iProd   = idx('Product');
 
-    let churnCritical = [], churnHigh = [], churnWatch = [];
+        let churnCritical = [], churnHigh = [], churnWatch = [];
 
-    data.forEach(row => {
-        const mtd     = parseFloat(row[iMTD])    || 0;
-        const lymtd   = parseFloat(row[iLYMTD])  || 0;
-        const absDiff = parseFloat(row[iAbsDiff]) || 0;
-        const pct     = parseFloat(row[iPct])     || 0;
-        const trend   = String(row[iTrend]  || '').trim();
-        const pctDisp = pct * 100;
+        data.forEach(row => {
+            const mtd     = parseFloat(row[iMTD])    || 0;
+            const lymtd   = parseFloat(row[iLYMTD])  || 0;
+            const absDiff = parseFloat(row[iAbsDiff]) || 0;
+            const pct     = parseFloat(row[iPct])     || 0;
+            const trend   = String(row[iTrend]  || '').trim();
+            const pctDisp = pct * 100;
 
-        if (trend !== 'Decline') return;
+            if (trend !== 'Decline') return;
 
-        const item = {
-            cust:     String(row[iCust]  || 'Unknown').trim(),
-            se:       String(row[iSE]    || '').trim(),
-            seMob:    String(row[iSEMob] || '').trim(),
-            so:       String(row[iSO]    || '').trim(),
-            prod:     String(row[iProd]  || '').trim(),
-            mtd, lymtd,
-            mtdFmt:   mtd.toFixed(1),
-            lymtdFmt: lymtd.toFixed(1),
-            pct:      pctDisp,
-            pctFmt:   pctDisp.toFixed(1),
-            absDiff:  Math.abs(absDiff),
-            absFmt:   Math.abs(absDiff).toFixed(2),
-            goneDark: lymtd > 1 && mtd === 0
-        };
+            const item = {
+                cust:     String(row[iCust]  || 'Unknown').trim(),
+                se:       String(row[iSE]    || '').trim(),
+                seMob:    String(row[iSEMob] || '').trim(),
+                so:       String(row[iSO]    || '').trim(),
+                prod:     String(row[iProd]  || '').trim(),
+                mtd, lymtd,
+                mtdFmt:   mtd.toFixed(1),
+                lymtdFmt: lymtd.toFixed(1),
+                pct:      pctDisp,
+                pctFmt:   pctDisp.toFixed(1),
+                absDiff:  Math.abs(absDiff),
+                absFmt:   Math.abs(absDiff).toFixed(2),
+                goneDark: lymtd > 1 && mtd === 0
+            };
 
-        if (item.goneDark || pctDisp < -50) churnCritical.push({ ...item, tier: 'critical' });
-        else if (pctDisp < -30)             churnHigh.push(  { ...item, tier: 'high' });
-        else if (pctDisp < -10)             churnWatch.push(  { ...item, tier: 'watch' });
-    });
+            if (item.goneDark || pctDisp < -50) churnCritical.push({ ...item, tier: 'critical' });
+            else if (pctDisp < -30)             churnHigh.push(  { ...item, tier: 'high' });
+            else if (pctDisp < -10)             churnWatch.push(  { ...item, tier: 'watch' });
+        });
 
-    _churnData = { critical: churnCritical, high: churnHigh, watch: churnWatch };
+        _churnData = { critical: churnCritical, high: churnHigh, watch: churnWatch };
 
-    // Update pills
-    document.getElementById('churn-count-critical').textContent = churnCritical.length;
-    document.getElementById('churn-count-high').textContent     = churnHigh.length;
-    document.getElementById('churn-count-watch').textContent    = churnWatch.length;
-    document.getElementById('churn-count-total').textContent    = churnCritical.length + churnHigh.length + churnWatch.length;
+        document.getElementById('churn-count-critical').textContent = churnCritical.length;
+        document.getElementById('churn-count-high').textContent     = churnHigh.length;
+        document.getElementById('churn-count-watch').textContent    = churnWatch.length;
+        document.getElementById('churn-count-total').textContent    = churnCritical.length + churnHigh.length + churnWatch.length;
 
-    _churnPage = 1;
-    renderChurnTable();
-    customerTabDirty = false;
-}
-
-function selectChurnTier(tier) {
-    document.getElementById('churn-tier-filter').value = tier;
-    _churnPage = 1;
-    renderChurnTable();
-}
-
-function churnTableSort(col) {
-    if (_churnSort.col === col) {
-        _churnSort.dir = _churnSort.dir === 'asc' ? 'desc' : 'asc';
-    } else {
-        _churnSort.col = col;
-        // Default directions: pct/lpd descending magnitude, text ascending
-        _churnSort.dir = (col === 'pct' || col === 'lpd' || col === 'mtd' || col === 'lymtd') ? 'asc' : 'asc';
-    }
-    // Update sort icons
-    document.querySelectorAll('[id^="churn-si-"]').forEach(el => el.textContent = '');
-    const el = document.getElementById('churn-si-' + col);
-    if (el) el.textContent = _churnSort.dir === 'asc' ? ' ↑' : ' ↓';
-    _churnPage = 1;
-    renderChurnTable();
-}
-
-function renderChurnTable() {
-
-
-    function updateChurnPillActive() {
-    const tier = document.getElementById('churn-tier-filter')?.value || 'all';
-    const configs = {
-        all:      { el: 'churn-pill-all',      border: 'border-gray-400',   bg: 'bg-gray-100'   },
-        critical: { el: 'churn-pill-critical',  border: 'border-red-400',    bg: 'bg-red-100'    },
-        high:     { el: 'churn-pill-high',      border: 'border-orange-400', bg: 'bg-orange-100' },
-        watch:    { el: 'churn-pill-watch',      border: 'border-amber-400',  bg: 'bg-amber-100'  },
-    };
-    // Reset all
-    Object.values(configs).forEach(c => {
-        const el = document.getElementById(c.el);
-        if (!el) return;
-        el.style.boxShadow = '';
-        el.style.transform = '';
-    });
-    // Highlight active
-    const active = configs[tier];
-    if (active) {
-        const el = document.getElementById(active.el);
-        if (el) { el.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.12)'; el.style.transform = 'translateY(-1px)'; }
-    }
-}
-    const tierFilter = document.getElementById('churn-tier-filter')?.value || 'all';
-    const search     = (document.getElementById('churn-search')?.value || '').toLowerCase();
-
-    // Merge tiers
-    let rows = [];
-    if (tierFilter === 'all' || tierFilter === 'critical') rows = rows.concat(_churnData.critical);
-    if (tierFilter === 'all' || tierFilter === 'high')     rows = rows.concat(_churnData.high);
-    if (tierFilter === 'all' || tierFilter === 'watch')    rows = rows.concat(_churnData.watch);
-
-    // Search filter
-    if (search) {
-        rows = rows.filter(r =>
-            r.cust.toLowerCase().includes(search) ||
-            r.se.toLowerCase().includes(search)   ||
-            r.so.toLowerCase().includes(search)   ||
-            r.prod.toLowerCase().includes(search) ||
-            r.seMob.includes(search)
-        );
+        _churnPage = 1;
+        renderChurnTable();
+        customerTabDirty = false;
     }
 
-    // Sort
-    const { col, dir } = _churnSort;
-    rows.sort((a, b) => {
-        let av, bv;
-        if (col === 'pct')   { av = a.pct;    bv = b.pct; }
-        else if (col === 'lpd')   { av = a.absDiff; bv = b.absDiff; }
-        else if (col === 'mtd')   { av = a.mtd;     bv = b.mtd; }
-        else if (col === 'lymtd') { av = a.lymtd;   bv = b.lymtd; }
-        else if (col === 'tier')  { av = a.tier;     bv = b.tier; }
-        else { av = (a[col] || '').toLowerCase(); bv = (b[col] || '').toLowerCase(); }
-
-        if (typeof av === 'string') return dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
-        return dir === 'asc' ? av - bv : bv - av;
-    });
-
-    // Paginate
-    const totalPages = Math.ceil(rows.length / CHURN_PAGE_SIZE);
-    const start      = (_churnPage - 1) * CHURN_PAGE_SIZE;
-    const pageRows   = rows.slice(start, start + CHURN_PAGE_SIZE);
-
-    // Tier config
-    const tierCfg = {
-        critical: { label: 'Critical',  bg: '#FFF5F5', color: '#991B1B', badge: 'background:#FEE2E2;color:#991B1B' },
-        high:     { label: 'High Risk', bg: '#FFF7F0', color: '#9A3412', badge: 'background:#FFEDD5;color:#9A3412' },
-        watch:    { label: 'Watch',     bg: '#FEFCE8', color: '#92400E', badge: 'background:#FEF3C7;color:#92400E' }
-    };
-
-    const tbody = document.getElementById('churn-table-body');
-    if (pageRows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:#9CA3AF;font-size:0.85rem">
-            <div style="font-size:2rem;margin-bottom:8px">✅</div>No accounts match the current filter
-        </td></tr>`;
-    } else {
-        tbody.innerHTML = pageRows.map(r => {
-            const cfg  = tierCfg[r.tier];
-            const pctColor = r.goneDark ? '#991B1B' : r.pct < -50 ? '#991B1B' : r.pct < -30 ? '#9A3412' : '#92400E';
-            const pctLabel = r.goneDark ? 'GONE DARK' : r.pctFmt + '%';
-            return `<tr style="border-bottom:1px solid #F1F5F9;transition:background 0.12s" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
-                <td style="padding:12px 16px">
-                    <span style="font-size:0.68rem;font-weight:800;padding:2px 10px;border-radius:20px;${cfg.badge}">${cfg.label}</span>
-                </td>
-                <td style="padding:12px 16px;max-width:180px">
-                    <div style="font-size:0.78rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.cust}">${r.cust}</div>
-                </td>
-                <td style="padding:12px 16px">
-                    <span style="font-size:0.7rem;background:#F1F5F9;color:#475569;padding:2px 8px;border-radius:20px;font-weight:600">${r.prod}</span>
-                </td>
-                <td style="padding:12px 16px;font-size:0.75rem;color:#374151;white-space:nowrap">${r.so}</td>
-                <td style="padding:12px 16px">
-                    <div style="font-size:0.75rem;color:#374151;font-weight:600">${r.se || 'Unassigned'}</div>
-                    ${r.seMob ? `<div style="font-size:0.65rem;color:#6B7280;margin-top:1px">📞 ${r.seMob}</div>` : ''}
-                </td>
-                <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;font-weight:600;color:#374151">${r.mtdFmt}</td>
-                <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;color:#9CA3AF">${r.lymtdFmt}</td>
-                <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;font-weight:600;color:#DF2027">−${r.absFmt}</td>
-                <td style="padding:12px 16px;text-align:right">
-                    <span style="font-size:0.78rem;font-weight:900;color:${pctColor}">${pctLabel}</span>
-                </td>
-            </tr>`;
-        }).join('');
+    function selectChurnTier(tier) {
+        document.getElementById('churn-tier-filter').value = tier;
+        _churnPage = 1;
+        renderChurnTable();
     }
 
-    // Pagination bar
-    const paginEl  = document.getElementById('churn-table-pagination');
-    const btnStyle = 'padding:4px 12px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
-    if (rows.length > CHURN_PAGE_SIZE) {
-        let pageButtons = '';
-        const range = 3;
-        for (let p = 1; p <= totalPages; p++) {
-            if (p === 1 || p === totalPages || (p >= _churnPage - range && p <= _churnPage + range)) {
-                const isActive = p === _churnPage;
-                pageButtons += `<button onclick="_churnPage=${p};renderChurnTable()"
-                    style="${btnStyle}${isActive ? 'background:#2E963D;color:white;border-color:#2E963D;' : 'color:#374151;'}">${p}</button>`;
-            } else if (p === _churnPage - range - 1 || p === _churnPage + range + 1) {
-                pageButtons += `<span style="padding:4px 4px;color:#9CA3AF">…</span>`;
+    function churnTableSort(col) {
+        if (_churnSort.col === col) {
+            _churnSort.dir = _churnSort.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            _churnSort.col = col;
+            _churnSort.dir = 'asc';
+        }
+        document.querySelectorAll('[id^="churn-si-"]').forEach(el => el.textContent = '');
+        const el = document.getElementById('churn-si-' + col);
+        if (el) el.textContent = _churnSort.dir === 'asc' ? ' ↑' : ' ↓';
+        _churnPage = 1;
+        renderChurnTable();
+    }
+
+    function renderChurnTable() {
+        function updateChurnPillActive() {
+            const tier = document.getElementById('churn-tier-filter')?.value || 'all';
+            const configs = {
+                all:      { el: 'churn-pill-all' },
+                critical: { el: 'churn-pill-critical' },
+                high:     { el: 'churn-pill-high' },
+                watch:    { el: 'churn-pill-watch' },
+            };
+            Object.values(configs).forEach(c => {
+                const el = document.getElementById(c.el);
+                if (!el) return;
+                el.style.boxShadow = '';
+                el.style.transform = '';
+            });
+            const active = configs[tier];
+            if (active) {
+                const el = document.getElementById(active.el);
+                if (el) { el.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.12)'; el.style.transform = 'translateY(-1px)'; }
             }
         }
-        paginEl.innerHTML = `
-            <span>${rows.length} accounts · Page ${_churnPage} of ${totalPages}</span>
-            <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
-                <button onclick="_churnPage=Math.max(1,_churnPage-1);renderChurnTable()" ${_churnPage<=1?'disabled':''} style="${btnStyle}opacity:${_churnPage<=1?'0.35':'1'}">← Prev</button>
-                ${pageButtons}
-                <button onclick="_churnPage=Math.min(${totalPages},_churnPage+1);renderChurnTable()" ${_churnPage>=totalPages?'disabled':''} style="${btnStyle}opacity:${_churnPage>=totalPages?'0.35':'1'}">Next →</button>
-            </div>`;
-    } else {
-        paginEl.innerHTML = `<span>${rows.length} accounts · All shown</span>`;
-    }
-}
+        updateChurnPillActive();
 
-function exportChurnTier(tier) {
-    let rows = [];
-    const labelMap = { critical: 'Critical', high: 'High Risk', watch: 'Watch List' };
-    if (tier === 'all') {
-        rows = [
-            ..._churnData.critical.map(r => ({ ...r, tierLabel: 'Critical' })),
-            ..._churnData.high.map(r =>     ({ ...r, tierLabel: 'High Risk' })),
-            ..._churnData.watch.map(r =>    ({ ...r, tierLabel: 'Watch List' }))
-        ];
-    } else {
-        rows = (_churnData[tier] || []).map(r => ({ ...r, tierLabel: labelMap[tier] }));
-    }
+        const tierFilter = document.getElementById('churn-tier-filter')?.value || 'all';
+        const search     = (document.getElementById('churn-search')?.value || '').toLowerCase();
 
-    if (!rows.length) { alert('No data to export.'); return; }
+        let rows = [];
+        if (tierFilter === 'all' || tierFilter === 'critical') rows = rows.concat(_churnData.critical);
+        if (tierFilter === 'all' || tierFilter === 'high')     rows = rows.concat(_churnData.high);
+        if (tierFilter === 'all' || tierFilter === 'watch')    rows = rows.concat(_churnData.watch);
 
-    const headers = ['Tier','Customer','Product','Sales Office','SE Name','SE Mobile','MTD (LPD)','LYMTD (LPD)','LPD Lost','% Change'];
-    const csv = [
-        headers.join(','),
-        ...rows.map(r => [
-            `"${r.tierLabel}"`, `"${r.cust}"`, `"${r.prod}"`, `"${r.so}"`,
-            `"${r.se}"`, `"${r.seMob}"`,
-            r.mtdFmt, r.lymtdFmt, r.absFmt, r.pctFmt + '%'
-        ].join(','))
-    ].join('\r\n');
+        if (search) {
+            rows = rows.filter(r =>
+                r.cust.toLowerCase().includes(search) ||
+                r.se.toLowerCase().includes(search)   ||
+                r.so.toLowerCase().includes(search)   ||
+                r.prod.toLowerCase().includes(search) ||
+                r.seMob.includes(search)
+            );
+        }
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `Heritage_ChurnRisk_${new Date().toISOString().slice(0,10)}.csv`;
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    trackEvent('Churn Export', tier);
-}
-
-function applyChurnSort() {
-    const sortVal = document.getElementById('churn-sort-select')?.value || 'pct';
-
-    function sortList(list) {
-        return [...list].sort((a, b) => {
-            if (sortVal === 'pct')  return a.pct - b.pct;           // most negative first
-            if (sortVal === 'lpd')  return b.absDiff - a.absDiff;   // highest LPD loss first
-            if (sortVal === 'name') return a.cust.localeCompare(b.cust);
-            return 0;
+        const { col, dir } = _churnSort;
+        rows.sort((a, b) => {
+            let av, bv;
+            if (col === 'pct')        { av = a.pct;    bv = b.pct; }
+            else if (col === 'lpd')   { av = a.absDiff; bv = b.absDiff; }
+            else if (col === 'mtd')   { av = a.mtd;     bv = b.mtd; }
+            else if (col === 'lymtd') { av = a.lymtd;   bv = b.lymtd; }
+            else if (col === 'tier')  { av = a.tier;     bv = b.tier; }
+            else { av = (a[col] || '').toLowerCase(); bv = (b[col] || '').toLowerCase(); }
+            if (typeof av === 'string') return dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+            return dir === 'asc' ? av - bv : bv - av;
         });
+
+        const totalPages = Math.ceil(rows.length / CHURN_PAGE_SIZE);
+        const start      = (_churnPage - 1) * CHURN_PAGE_SIZE;
+        const pageRows   = rows.slice(start, start + CHURN_PAGE_SIZE);
+
+        const tierCfg = {
+            critical: { label: 'Critical',  badge: 'background:#FEE2E2;color:#991B1B' },
+            high:     { label: 'High Risk', badge: 'background:#FFEDD5;color:#9A3412' },
+            watch:    { label: 'Watch',     badge: 'background:#FEF3C7;color:#92400E' }
+        };
+
+        const tbody = document.getElementById('churn-table-body');
+        if (pageRows.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:#9CA3AF;font-size:0.85rem"><div style="font-size:2rem;margin-bottom:8px">✅</div>No accounts match the current filter</td></tr>`;
+        } else {
+            tbody.innerHTML = pageRows.map(r => {
+                const cfg      = tierCfg[r.tier];
+                const pctColor = r.goneDark ? '#991B1B' : r.pct < -50 ? '#991B1B' : r.pct < -30 ? '#9A3412' : '#92400E';
+                const pctLabel = r.goneDark ? 'GONE DARK' : r.pctFmt + '%';
+                return `<tr style="border-bottom:1px solid #F1F5F9;transition:background 0.12s" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
+                    <td style="padding:12px 16px"><span style="font-size:0.68rem;font-weight:800;padding:2px 10px;border-radius:20px;${cfg.badge}">${cfg.label}</span></td>
+                    <td style="padding:12px 16px;max-width:180px"><div style="font-size:0.78rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.cust}">${r.cust}</div></td>
+                    <td style="padding:12px 16px"><span style="font-size:0.7rem;background:#F1F5F9;color:#475569;padding:2px 8px;border-radius:20px;font-weight:600">${r.prod}</span></td>
+                    <td style="padding:12px 16px;font-size:0.75rem;color:#374151;white-space:nowrap">${r.so}</td>
+                    <td style="padding:12px 16px"><div style="font-size:0.75rem;color:#374151;font-weight:600">${r.se || 'Unassigned'}</div>${r.seMob ? `<div style="font-size:0.65rem;color:#6B7280;margin-top:1px">📞 ${r.seMob}</div>` : ''}</td>
+                    <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;font-weight:600;color:#374151">${r.mtdFmt}</td>
+                    <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;color:#9CA3AF">${r.lymtdFmt}</td>
+                    <td style="padding:12px 16px;text-align:right;font-family:monospace;font-size:0.78rem;font-weight:600;color:#DF2027">−${r.absFmt}</td>
+                    <td style="padding:12px 16px;text-align:right"><span style="font-size:0.78rem;font-weight:900;color:${pctColor}">${pctLabel}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        const paginEl  = document.getElementById('churn-table-pagination');
+        const btnStyle = 'padding:4px 12px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
+        if (rows.length > CHURN_PAGE_SIZE) {
+            let pageButtons = '';
+            const range = 3;
+            for (let p = 1; p <= totalPages; p++) {
+                if (p === 1 || p === totalPages || (p >= _churnPage - range && p <= _churnPage + range)) {
+                    const isActive = p === _churnPage;
+                    pageButtons += `<button onclick="_churnPage=${p};renderChurnTable()" style="${btnStyle}${isActive ? 'background:#2E963D;color:white;border-color:#2E963D;' : 'color:#374151;'}">${p}</button>`;
+                } else if (p === _churnPage - range - 1 || p === _churnPage + range + 1) {
+                    pageButtons += `<span style="padding:4px 4px;color:#9CA3AF">…</span>`;
+                }
+            }
+            paginEl.innerHTML = `
+                <span>${rows.length} accounts · Page ${_churnPage} of ${totalPages}</span>
+                <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+                    <button onclick="_churnPage=Math.max(1,_churnPage-1);renderChurnTable()" ${_churnPage<=1?'disabled':''} style="${btnStyle}opacity:${_churnPage<=1?'0.35':'1'}">← Prev</button>
+                    ${pageButtons}
+                    <button onclick="_churnPage=Math.min(${totalPages},_churnPage+1);renderChurnTable()" ${_churnPage>=totalPages?'disabled':''} style="${btnStyle}opacity:${_churnPage>=totalPages?'0.35':'1'}">Next →</button>
+                </div>`;
+        } else {
+            paginEl.innerHTML = `<span>${rows.length} accounts · All shown</span>`;
+        }
     }
 
-    const sorted = {
-        critical: sortList(_churnData.critical),
-        high:     sortList(_churnData.high),
-        watch:    sortList(_churnData.watch)
-    };
-
-    document.getElementById('churn-critical-badge').textContent = sorted.critical.length;
-    document.getElementById('churn-high-badge').textContent     = sorted.high.length;
-    document.getElementById('churn-watch-badge').textContent    = sorted.watch.length;
-
-    renderChurnTierRows('critical', sorted.critical);
-    renderChurnTierRows('high',     sorted.high);
-    renderChurnTierRows('watch',    sorted.watch);
-}
-
-function renderChurnTierRows(tier, list) {
-    const txtClrMap = { critical: '#991B1B', high: '#9A3412', watch: '#92400E' };
-    const txtClr    = txtClrMap[tier];
-
-    document.getElementById('churn-tier-body-' + tier).innerHTML = list.length
-        ? list.map(r => `
-            <div class="churn-row">
-                <div style="min-width:0;flex:1">
-                    <div style="font-size:0.75rem;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.cust}">${r.cust}</div>
-                    <div style="font-size:0.65rem;color:#6B7280;margin-top:1px">${r.prod} · ${r.so}</div>
-                    ${r.seMob
-                        ? `<span class="se-pill" style="margin-top:3px;display:inline-flex">📞 ${r.se} · ${r.seMob}</span>`
-                        : `<span class="se-pill" style="margin-top:3px;display:inline-flex">👤 ${r.se || 'Unassigned'}</span>`}
-                </div>
-                <div style="text-align:right;flex-shrink:0;margin-left:10px">
-                    <div style="font-size:0.78rem;font-weight:900;color:${txtClr}">${r.label}</div>
-                    <div style="font-size:0.62rem;color:#9CA3AF">Was ${r.lymtdFmt} LPD</div>
-                    <div style="font-size:0.62rem;color:#9CA3AF">−${r.absFmt} LPD</div>
-                </div>
-            </div>`).join('')
-        : `<div class="empty-state"><div style="font-size:1.5rem;margin-bottom:6px">✅</div>No accounts in this tier</div>`;
-}
-
-function exportChurnTier(tier) {
-    let rows = [];
-    if (tier === 'all') {
-        rows = [
-            ..._churnData.critical.map(r => ({ ...r, tier: 'Critical' })),
-            ..._churnData.high.map(r =>     ({ ...r, tier: 'High Risk' })),
-            ..._churnData.watch.map(r =>    ({ ...r, tier: 'Watch List' }))
-        ];
-    } else {
+    function exportChurnTier(tier) {
+        let rows = [];
         const labelMap = { critical: 'Critical', high: 'High Risk', watch: 'Watch List' };
-        rows = _churnData[tier].map(r => ({ ...r, tier: labelMap[tier] }));
+        if (tier === 'all') {
+            rows = [
+                ..._churnData.critical.map(r => ({ ...r, tierLabel: 'Critical' })),
+                ..._churnData.high.map(r =>     ({ ...r, tierLabel: 'High Risk' })),
+                ..._churnData.watch.map(r =>    ({ ...r, tierLabel: 'Watch List' }))
+            ];
+        } else {
+            rows = (_churnData[tier] || []).map(r => ({ ...r, tierLabel: labelMap[tier] }));
+        }
+        if (!rows.length) { alert('No data to export.'); return; }
+        const headers = ['Tier','Customer','Product','Sales Office','SE Name','SE Mobile','MTD (LPD)','LYMTD (LPD)','LPD Lost','% Change'];
+        const csv = [
+            headers.join(','),
+            ...rows.map(r => [`"${r.tierLabel}"`, `"${r.cust}"`, `"${r.prod}"`, `"${r.so}"`, `"${r.se}"`, `"${r.seMob}"`, r.mtdFmt, r.lymtdFmt, r.absFmt, r.pctFmt + '%'].join(','))
+        ].join('\r\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = `Heritage_ChurnRisk_${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        trackEvent('Churn Export', tier);
     }
 
-    if (!rows.length) { alert('No data to export for this tier.'); return; }
-
-    const headers = ['Tier', 'Customer', 'Product', 'Sales Office', 'SE Name', 'SE Mobile', 'MTD (LPD)', 'LYMTD (LPD)', 'LPD Lost', '% Change'];
-    const csv = [
-        headers.join(','),
-        ...rows.map(r => [
-            `"${r.tier}"`,
-            `"${r.cust}"`,
-            `"${r.prod}"`,
-            `"${r.so}"`,
-            `"${r.se}"`,
-            `"${r.seMob}"`,
-            r.mtdFmt,
-            r.lymtdFmt,
-            r.absFmt,
-            r.pctFmt + '%'
-        ].join(','))
-    ].join('\r\n');
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href     = url;
-    link.download = `Heritage_ChurnRisk_${tier}_${new Date().toISOString().slice(0,10)}.csv`;
-    document.body.appendChild(link); link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    trackEvent('Churn Export', tier);
-}
-
-    // Toggle churn tier accordion
     function toggleChurnTier(tier) {
         const body    = document.getElementById('churn-tier-body-' + tier);
         const chevron = document.getElementById('churn-' + tier + '-chevron');
@@ -1696,184 +1676,105 @@ function exportChurnTier(tier) {
     }
 
     // =====================================================
-    // MASTER DATA TABLE (DataTables)
+    // MASTER DATA TABLE
     // =====================================================
-    // =====================================================
-// MASTER DATA TABLE (DataTables) — drop-in replacement
-// for the existing initTable() function in dashboard.html
-// =====================================================
+    function initTable(data, columns, trendIdx) {
+        function renderLpd(val) {
+            const n = parseFloat(val);
+            if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
+            return `<span style="font-family:monospace;font-size:0.8rem">${n.toFixed(2)}</span>`;
+        }
+        function renderAbsDiff(val) {
+            const n = parseFloat(val);
+            if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
+            const sign  = n > 0 ? '+' : '';
+            const color = n > 0 ? '#2E963D' : n < 0 ? '#DF2027' : '#6B7280';
+            const bg    = n > 0 ? '#DCFCE7' : n < 0 ? '#FEE2E2' : '#F3F4F6';
+            return `<span style="font-family:monospace;font-size:0.78rem;font-weight:700;color:${color};background:${bg};padding:2px 7px;border-radius:5px;white-space:nowrap">${sign}${n.toFixed(2)}</span>`;
+        }
+        function renderGrowthPct(val) {
+            const n = parseFloat(val);
+            if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
+            const pct   = n * 100;
+            const sign  = pct > 0 ? '+' : '';
+            const color = pct > 0 ? '#166534' : pct < 0 ? '#991B1B' : '#374151';
+            const bg    = pct > 0 ? '#DCFCE7' : pct < 0 ? '#FEE2E2' : '#F3F4F6';
+            const arrow = pct > 0 ? '▲' : pct < 0 ? '▼' : '—';
+            return `<span style="font-family:monospace;font-size:0.75rem;font-weight:800;color:${color};background:${bg};padding:3px 8px;border-radius:20px;white-space:nowrap;letter-spacing:0.01em">${arrow} ${sign}${pct.toFixed(1)}%</span>`;
+        }
+        function renderTrend(val) {
+            const t = String(val || '').trim();
+            if (t === 'Growth')                      return '<span class="badge badge-growth">▲ Growth</span>';
+            if (t === 'Decline')                     return '<span class="badge badge-decline">▼ Decline</span>';
+            if (t === 'New Customer' || t === 'New') return '<span class="badge badge-new">✦ New</span>';
+            if (t === 'Stagnant')                    return '<span class="badge" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A">~ Stagnant</span>';
+            return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${t || 'Stable'}</span>`;
+        }
+        function renderDate(val) {
+            if (!val || val === '') return '<span style="color:#CBD5E1">—</span>';
+            return `<span style="font-size:0.78rem;color:#475569">${val}</span>`;
+        }
+        function renderPhone(val) {
+            if (!val || val === '') return '<span style="color:#CBD5E1">—</span>';
+            return `<a href="tel:${val}" style="color:#1D4ED8;font-size:0.78rem;text-decoration:none;font-weight:600" onclick="event.stopPropagation()">📞 ${val}</a>`;
+        }
 
-function initTable(data, columns, trendIdx) {
+        const colIdx = {};
+        columns.forEach((c, i) => { colIdx[c.title] = i; });
 
-    // ── Helper renderers ──────────────────────────────────────
+        const LPD_COLS       = ['LYSM','LYMTD','LQ','LM','LMTD','MTD','LW','CW'];
+        const ABS_DIFF_COLS  = ['YoY_Abs_LPD_Diff','MTD_vs_LMTD_Abs_LPD_Diff','MTD_vs_LYMTD_Abs_LPD_Diff'];
+        const PCT_COLS       = ['YoY_Growth_Percentage','MTD_vs_LMTD_Growth_Percentage','MTD_vs_LYMTD_Growth_Percentage'];
+        const DATE_COLS      = ['Last_Order_Date'];
+        const PHONE_COLS     = ['SE_Mobile'];
 
-    // LPD volume: show 2 decimal places, no colour
-    function renderLpd(val) {
-        const n = parseFloat(val);
-        if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
-        return `<span style="font-family:monospace;font-size:0.8rem">${n.toFixed(2)}</span>`;
+        function targets(names) { return names.map(n => colIdx[n]).filter(i => i !== undefined); }
+
+        const columnDefs = [];
+        if (targets(LPD_COLS).length)      columnDefs.push({ targets: targets(LPD_COLS),      render: (d) => renderLpd(d) });
+        if (targets(ABS_DIFF_COLS).length) columnDefs.push({ targets: targets(ABS_DIFF_COLS), render: (d) => renderAbsDiff(d) });
+        if (targets(PCT_COLS).length)      columnDefs.push({ targets: targets(PCT_COLS),      render: (d) => renderGrowthPct(d) });
+        if (colIdx['Sales_Trend'] !== undefined) columnDefs.push({ targets: colIdx['Sales_Trend'], render: (d) => renderTrend(d) });
+        if (targets(DATE_COLS).length)     columnDefs.push({ targets: targets(DATE_COLS),     render: (d) => renderDate(d) });
+        if (targets(PHONE_COLS).length)    columnDefs.push({ targets: targets(PHONE_COLS),    render: (d) => renderPhone(d) });
+
+        const HEADER_ALIASES = {
+            LYSM: 'LYSM (LPD)', LYMTD: 'LYMTD (LPD)', LQ: 'Last Qtr (LPD)', LM: 'Last Month (LPD)',
+            LMTD: 'LMTD (LPD)', MTD: 'MTD (LPD)', LW: 'Last Week (LPD)', CW: 'This Week (LPD)',
+            YoY_Abs_LPD_Diff: 'YoY Δ LPD', MTD_vs_LMTD_Abs_LPD_Diff: 'MTD vs LMTD Δ LPD',
+            MTD_vs_LYMTD_Abs_LPD_Diff: 'MTD vs LYMTD Δ LPD', YoY_Growth_Percentage: 'YoY Growth %',
+            MTD_vs_LMTD_Growth_Percentage: 'MTD vs LMTD %', MTD_vs_LYMTD_Growth_Percentage: 'MTD vs LYMTD %',
+            Sales_Trend: 'Trend', Last_Order_Date: 'Last Order', SE_EmpID: 'SE ID',
+            SE_Name: 'Sales Exec', SE_Mobile: 'SE Mobile', SO_Name: 'Sales Office',
+            CustomerGroup: 'Cust. Group', PLANT_NAME: 'Plant',
+        };
+
+        const displayColumns = columns.map(c => ({ title: HEADER_ALIASES[c.title] || c.title }));
+
+        if (myDataTable) {
+            myDataTable.clear();
+            myDataTable.rows.add(data);
+            myDataTable.draw();
+            return;
+        }
+
+        myDataTable = $('#salesTable').DataTable({
+            data: data, columns: displayColumns, pageLength: 15,
+            scrollX: true, scrollCollapse: true, autoWidth: false, deferRender: true,
+            columnDefs,
+            order: [[colIdx['MTD_vs_LYMTD_Abs_LPD_Diff'] ?? 0, 'asc']],
+            language: {
+                search: "", searchPlaceholder: "Search within results...",
+                info: "Showing _START_–_END_ of _TOTAL_ accounts",
+                paginate: { previous: "‹ Prev", next: "Next ›" }
+            },
+            dom: '<"top"f>rt<"bottom"p><"clear">',
+        });
+
+        $('.dataTables_filter').appendTo('#table-actions');
+        $('.dataTables_filter input').addClass('px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]');
+        $('.dataTables_filter label').contents().filter(function() { return this.nodeType === 3; }).remove();
     }
-
-    // Signed LPD absolute difference: green positive, red negative
-    function renderAbsDiff(val) {
-        const n = parseFloat(val);
-        if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
-        const sign  = n > 0 ? '+' : '';
-        const color = n > 0 ? '#2E963D' : n < 0 ? '#DF2027' : '#6B7280';
-        const bg    = n > 0 ? '#DCFCE7' : n < 0 ? '#FEE2E2' : '#F3F4F6';
-        return `
-            <span style="font-family:monospace;font-size:0.78rem;font-weight:700;
-                         color:${color};background:${bg};padding:2px 7px;
-                         border-radius:5px;white-space:nowrap">
-                ${sign}${n.toFixed(2)}
-            </span>`;
-    }
-
-    // Growth percentage: stored as a decimal ratio (0.05 → 5%)
-    // Multiplies by 100 before display, shows % symbol and colour chip
-    function renderGrowthPct(val) {
-        const n = parseFloat(val);
-        if (isNaN(n) || val === '' || val == null) return '<span style="color:#CBD5E1">—</span>';
-        const pct   = n * 100;
-        const sign  = pct > 0 ? '+' : '';
-        const color = pct > 0 ? '#166534' : pct < 0 ? '#991B1B' : '#374151';
-        const bg    = pct > 0 ? '#DCFCE7' : pct < 0 ? '#FEE2E2' : '#F3F4F6';
-        const arrow = pct > 0 ? '▲' : pct < 0 ? '▼' : '—';
-        return `
-            <span style="font-family:monospace;font-size:0.75rem;font-weight:800;
-                         color:${color};background:${bg};padding:3px 8px;
-                         border-radius:20px;white-space:nowrap;letter-spacing:0.01em">
-                ${arrow} ${sign}${pct.toFixed(1)}%
-            </span>`;
-    }
-
-    // Sales Trend badge (existing logic, kept here for clarity)
-    function renderTrend(val) {
-        const t = String(val || '').trim();
-        if (t === 'Growth')                          return '<span class="badge badge-growth">▲ Growth</span>';
-        if (t === 'Decline')                         return '<span class="badge badge-decline">▼ Decline</span>';
-        if (t === 'New Customer' || t === 'New')     return '<span class="badge badge-new">✦ New</span>';
-        if (t === 'Stagnant')                        return '<span class="badge" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A">~ Stagnant</span>';
-        return `<span class="badge bg-gray-100 text-gray-600 border border-gray-200">${t || 'Stable'}</span>`;
-    }
-
-    // Date: tidy display
-    function renderDate(val) {
-        if (!val || val === '') return '<span style="color:#CBD5E1">—</span>';
-        return `<span style="font-size:0.78rem;color:#475569">${val}</span>`;
-    }
-
-    // Phone: make clickable
-    function renderPhone(val) {
-        if (!val || val === '') return '<span style="color:#CBD5E1">—</span>';
-        return `<a href="tel:${val}" style="color:#1D4ED8;font-size:0.78rem;text-decoration:none;font-weight:600"
-                   onclick="event.stopPropagation()">📞 ${val}</a>`;
-    }
-
-    // ── Column name → index map ───────────────────────────────
-    const colIdx = {};
-    columns.forEach((c, i) => { colIdx[c.title] = i; });
-
-    // ── Build columnDefs ──────────────────────────────────────
-    // We build one entry per "type" of column, referencing all matching indices.
-
-    const LPD_COLS       = ['LYSM','LYMTD','LQ','LM','LMTD','MTD','LW','CW'];
-    const ABS_DIFF_COLS  = ['YoY_Abs_LPD_Diff','MTD_vs_LMTD_Abs_LPD_Diff','MTD_vs_LYMTD_Abs_LPD_Diff'];
-    const PCT_COLS       = ['YoY_Growth_Percentage','MTD_vs_LMTD_Growth_Percentage','MTD_vs_LYMTD_Growth_Percentage'];
-    const DATE_COLS      = ['Last_Order_Date'];
-    const PHONE_COLS     = ['SE_Mobile'];
-
-    function targets(names) {
-        return names.map(n => colIdx[n]).filter(i => i !== undefined);
-    }
-
-    const columnDefs = [];
-
-    if (targets(LPD_COLS).length)
-        columnDefs.push({ targets: targets(LPD_COLS),      render: (d) => renderLpd(d) });
-
-    if (targets(ABS_DIFF_COLS).length)
-        columnDefs.push({ targets: targets(ABS_DIFF_COLS), render: (d) => renderAbsDiff(d) });
-
-    if (targets(PCT_COLS).length)
-        columnDefs.push({ targets: targets(PCT_COLS),      render: (d) => renderGrowthPct(d) });
-
-    if (colIdx['Sales_Trend'] !== undefined)
-        columnDefs.push({ targets: colIdx['Sales_Trend'],  render: (d) => renderTrend(d) });
-
-    if (targets(DATE_COLS).length)
-        columnDefs.push({ targets: targets(DATE_COLS),     render: (d) => renderDate(d) });
-
-    if (targets(PHONE_COLS).length)
-        columnDefs.push({ targets: targets(PHONE_COLS),    render: (d) => renderPhone(d) });
-
-    // Nicer column header titles (human-readable aliases)
-    const HEADER_ALIASES = {
-        LYSM:                          'LYSM (LPD)',
-        LYMTD:                         'LYMTD (LPD)',
-        LQ:                            'Last Qtr (LPD)',
-        LM:                            'Last Month (LPD)',
-        LMTD:                          'LMTD (LPD)',
-        MTD:                           'MTD (LPD)',
-        LW:                            'Last Week (LPD)',
-        CW:                            'This Week (LPD)',
-        YoY_Abs_LPD_Diff:              'YoY Δ LPD',
-        MTD_vs_LMTD_Abs_LPD_Diff:     'MTD vs LMTD Δ LPD',
-        MTD_vs_LYMTD_Abs_LPD_Diff:    'MTD vs LYMTD Δ LPD',
-        YoY_Growth_Percentage:         'YoY Growth %',
-        MTD_vs_LMTD_Growth_Percentage: 'MTD vs LMTD %',
-        MTD_vs_LYMTD_Growth_Percentage:'MTD vs LYMTD %',
-        Sales_Trend:                   'Trend',
-        Last_Order_Date:               'Last Order',
-        SE_EmpID:                      'SE ID',
-        SE_Name:                       'Sales Exec',
-        SE_Mobile:                     'SE Mobile',
-        SO_Name:                       'Sales Office',
-        CustomerGroup:                 'Cust. Group',
-        PLANT_NAME:                    'Plant',
-    };
-
-    const displayColumns = columns.map(c => ({
-        title: HEADER_ALIASES[c.title] || c.title
-    }));
-
-    // ── Init or update the DataTable ──────────────────────────
-    if (myDataTable) {
-        myDataTable.clear();
-        myDataTable.rows.add(data);
-        myDataTable.draw();
-        return;
-    }
-
-    myDataTable = $('#salesTable').DataTable({
-        data:          data,
-        columns:       displayColumns,
-        pageLength:    15,
-        scrollX:       true,
-        scrollCollapse:true,
-        autoWidth:     false,
-        deferRender:   true,
-        columnDefs,
-        order:         [[colIdx['MTD_vs_LYMTD_Abs_LPD_Diff'] ?? 0, 'asc']],
-        language: {
-            search:            "",
-            searchPlaceholder: "Search within results...",
-            info:              "Showing _START_–_END_ of _TOTAL_ accounts",
-            paginate:          { previous: "‹ Prev", next: "Next ›" }
-        },
-        dom: '<"top"f>rt<"bottom"p><"clear">',
-    });
-
-    // Style the search box
-    $('.dataTables_filter').appendTo('#table-actions');
-    $('.dataTables_filter input').addClass(
-        'px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#2E963D] min-w-[250px]'
-    );
-    $('.dataTables_filter label').contents().filter(function() {
-        return this.nodeType === 3;
-    }).remove();
-}
-
 
     // =====================================================
     // TEAM LEADERBOARD ENGINE
@@ -1893,12 +1794,8 @@ function initTable(data, columns, trendIdx) {
     const LB_NUMERIC_COLS = new Set(['mtd','lymtd','yoy','growth','decline','newAccts','total','winRate','soCount']);
 
     function sortLb(tab, col) {
-        if (lbSort[tab].col === col) {
-            lbSort[tab].dir = lbSort[tab].dir === 'desc' ? 'asc' : 'desc';
-        } else {
-            lbSort[tab].col = col;
-            lbSort[tab].dir = 'desc';
-        }
+        if (lbSort[tab].col === col) { lbSort[tab].dir = lbSort[tab].dir === 'desc' ? 'asc' : 'desc'; }
+        else { lbSort[tab].col = col; lbSort[tab].dir = 'desc'; }
         lbPage[tab] = 1;
         updateSortIcons(tab);
         renderLbTable(tab);
@@ -1973,30 +1870,23 @@ function initTable(data, columns, trendIdx) {
         </div>`;
     }
 
-    function fmtNum(n) {
-        return parseFloat(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-    }
+    function fmtNum(n) { return parseFloat(n).toLocaleString('en-IN', { maximumFractionDigits: 0 }); }
 
     function renderLbTable(tab) {
         const allRows  = lbData[tab];
-        const filtered = lbSearch
-            ? allRows.filter(r => JSON.stringify(Object.values(r)).toLowerCase().includes(lbSearch))
-            : allRows;
-        const sorted     = getSortedRows(tab, filtered);
-        const page       = lbPage[tab];
-        const start      = (page - 1) * LB_PAGE_SIZE;
-        const pageRows   = sorted.slice(start, start + LB_PAGE_SIZE);
+        const filtered = lbSearch ? allRows.filter(r => JSON.stringify(Object.values(r)).toLowerCase().includes(lbSearch)) : allRows;
+        const sorted   = getSortedRows(tab, filtered);
+        const page     = lbPage[tab];
+        const start    = (page - 1) * LB_PAGE_SIZE;
+        const pageRows = sorted.slice(start, start + LB_PAGE_SIZE);
         const totalPages = Math.ceil(sorted.length / LB_PAGE_SIZE);
-        const maxVol     = sorted.length ? Math.max(...sorted.map(r => r.mtd)) : 1;
+        const maxVol   = sorted.length ? Math.max(...sorted.map(r => r.mtd)) : 1;
 
         const tbody = document.getElementById(tab + '-lb-body');
         tbody.innerHTML = pageRows.map((r, i) => {
             const rank    = start + i + 1;
             const winRate = winRateBar(r.growth, r.total);
-            const nameCell = `<td>
-                <div style="font-weight:700;color:#111827;font-size:0.8rem">${r.name}</div>
-                ${miniBar(r.mtd, maxVol, '#2E963D')}
-            </td>`;
+            const nameCell = `<td><div style="font-weight:700;color:#111827;font-size:0.8rem">${r.name}</div>${miniBar(r.mtd, maxVol, '#2E963D')}</td>`;
             const regionCell  = tab === 'so' ? `<td><span style="font-size:0.7rem;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:20px;font-weight:600">${r.region || '—'}</span></td>` : '';
             const soCountCell = tab === 'rh' ? `<td style="text-align:center;font-weight:600;color:#6B7280">${r.soCount || '—'}</td>` : '';
             return `<tr>
@@ -2069,8 +1959,8 @@ function initTable(data, columns, trendIdx) {
                 map[key].mtd   += mtd;
                 map[key].lymtd += lymtd;
                 map[key].total += 1;
-                if (trend === 'Growth')                              map[key].growth++;
-                else if (trend === 'Decline')                        map[key].decline++;
+                if (trend === 'Growth')                               map[key].growth++;
+                else if (trend === 'Decline')                         map[key].decline++;
                 else if (trend === 'New Customer' || trend === 'New') map[key].newAccts++;
             }
 
@@ -2081,9 +1971,7 @@ function initTable(data, columns, trendIdx) {
         });
 
         const soCountPerRegion = {};
-        Object.entries(soRegionMap).forEach(([so, reg]) => {
-            soCountPerRegion[reg] = (soCountPerRegion[reg] || 0) + 1;
-        });
+        Object.entries(soRegionMap).forEach(([so, reg]) => { soCountPerRegion[reg] = (soCountPerRegion[reg] || 0) + 1; });
 
         function toArray(map, extraFn) {
             return Object.entries(map).map(([name, d]) => {
@@ -2102,7 +1990,6 @@ function initTable(data, columns, trendIdx) {
         lbPage = { se: 1, so: 1, rh: 1 };
         ['se', 'so', 'rh'].forEach(t => updateSortIcons(t));
 
-        // Team KPI cards
         $('#tkpi-se-count').text(lbData.se.length.toLocaleString());
         if (lbData.se.length > 0) {
             const best = lbData.se[0];
@@ -2205,18 +2092,17 @@ function initTable(data, columns, trendIdx) {
         const overallPct  = totalLYMTD > 0 ? ((totalMTD - totalLYMTD) / totalLYMTD * 100) : 0;
         const overallDiff = totalMTD - totalLYMTD;
 
-        // Build insight cards
         if (overallPct < -10) insights.critical.push({ icon: '📉', title: `Overall Volume Down ${Math.abs(overallPct).toFixed(1)}% vs Last Year`, desc: `Current view is tracking ${Math.abs(overallDiff).toFixed(0)} LPD below LYMTD. Immediate strategic review recommended.`, rows: null });
-        if (goneDark.length > 0)     insights.critical.push({ icon: '🔴', title: `${goneDark.length} Account${goneDark.length > 1 ? 's' : ''} Gone Dark`,               desc: `Customers who ordered last year but have ZERO sales this month. Risk of permanent churn.`, rows: goneDark.slice(0, 8),      rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">GONE DARK</div><div style="font-size:0.65rem;color:#6B7280">Was ${r.lymtd} LPD</div></div></div>` });
-        if (heavyDecline.length > 0) insights.critical.push({ icon: '⚠️', title: `${heavyDecline.length} Account${heavyDecline.length > 1 ? 's' : ''} with >30% YoY Decline`, desc: `High-impact accounts losing significant volume. SE intervention required.`,              rows: heavyDecline.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">${r.pct}%</div><div style="font-size:0.65rem;color:#6B7280">${r.absDiff} LPD drop</div></div></div>` });
+        if (goneDark.length > 0)     insights.critical.push({ icon: '🔴', title: `${goneDark.length} Account${goneDark.length > 1 ? 's' : ''} Gone Dark`, desc: `Customers who ordered last year but have ZERO sales this month. Risk of permanent churn.`, rows: goneDark.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">GONE DARK</div><div style="font-size:0.65rem;color:#6B7280">Was ${r.lymtd} LPD</div></div></div>` });
+        if (heavyDecline.length > 0) insights.critical.push({ icon: '⚠️', title: `${heavyDecline.length} Account${heavyDecline.length > 1 ? 's' : ''} with >30% YoY Decline`, desc: `High-impact accounts losing significant volume. SE intervention required.`, rows: heavyDecline.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">${r.pct}%</div><div style="font-size:0.65rem;color:#6B7280">${r.absDiff} LPD drop</div></div></div>` });
         if (seDeclineRanked.length > 0) insights.critical.push({ icon: '👤', title: 'SEs with Highest Decline Account Count', desc: `These executives have the most accounts trending downward.`, rows: seDeclineRanked, rowFn: ([name, d]) => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#DF2027]" style="font-size:0.75rem">${d.count} accounts</div><div style="font-size:0.65rem;color:#6B7280">${d.vol.toFixed(0)} LPD lost</div></div></div>` });
 
-        if (inactiveList.length > 0)     insights.action.push({ icon: '📅', title: `${inactiveList.length} Customers — No Order in 7+ Days`,    desc: `Active MTD customers who haven't ordered in over a week. Follow-up needed.`,          rows: inactiveList.slice(0, 8),  rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-amber-600" style="font-size:0.75rem">${r.daysSince}d ago</div><div style="font-size:0.65rem;color:#6B7280">MTD: ${r.mtd} LPD</div></div></div>` });
-        if (stagnantList.length > 0)     insights.action.push({ icon: '😐', title: `${stagnantList.length} High-Value Stagnant Accounts`,         desc: `Strong Last Month performance but underperforming MTD. Demand activation opportunity.`, rows: stagnantList.slice(0, 8),  rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-amber-600" style="font-size:0.75rem">${r.mtd} LPD</div><div style="font-size:0.65rem;color:#6B7280">LM was ${r.lm} LPD</div></div></div>` });
+        if (inactiveList.length > 0)     insights.action.push({ icon: '📅', title: `${inactiveList.length} Customers — No Order in 7+ Days`, desc: `Active MTD customers who haven't ordered in over a week. Follow-up needed.`, rows: inactiveList.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-amber-600" style="font-size:0.75rem">${r.daysSince}d ago</div><div style="font-size:0.65rem;color:#6B7280">MTD: ${r.mtd} LPD</div></div></div>` });
+        if (stagnantList.length > 0)     insights.action.push({ icon: '😐', title: `${stagnantList.length} High-Value Stagnant Accounts`, desc: `Strong Last Month performance but underperforming MTD. Demand activation opportunity.`, rows: stagnantList.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div>${r.seMob ? `<span class="se-pill mt-1">📞 ${r.se} · ${r.seMob}</span>` : `<span class="se-pill mt-1">👤 ${r.se}</span>`}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-amber-600" style="font-size:0.75rem">${r.mtd} LPD</div><div style="font-size:0.65rem;color:#6B7280">LM was ${r.lm} LPD</div></div></div>` });
 
         if (newCustomers.length > 0) { const newVol = newCustomers.reduce((s, r) => s + parseFloat(r.mtd), 0); insights.positive.push({ icon: '🌱', title: `${newCustomers.length} New Customers Acquired This Month`, desc: `Contributing ${newVol.toFixed(0)} LPD of fresh volume. Pipeline expansion in progress.`, rows: newCustomers.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div><span class="se-pill mt-1">👤 ${r.se}</span></div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.mtd} LPD</div><div style="font-size:0.65rem;color:#6B7280">NEW</div></div></div>` }); }
-        if (topGrowthAccounts.length > 0) insights.positive.push({ icon: '🚀', title: `Top Growth Accounts — Momentum Leaders`,           desc: `Accounts driving the most absolute volume growth vs last year.`,                       rows: topGrowthAccounts.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div><span class="se-pill mt-1">👤 ${r.se}</span></div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.absDiff} LPD</div><div style="font-size:0.65rem;color:#6B7280">+${r.pct}% YoY</div></div></div>` });
-        if (seGrowthRanked.length > 0)   insights.positive.push({ icon: '🏆', title: 'Top Performing SEs — Growth Champions',             desc: `Executives leading the most growth accounts. Recognition and best-practice sharing recommended.`, rows: seGrowthRanked, rowFn: ([name, d]) => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">${d.count} accts</div><div style="font-size:0.65rem;color:#6B7280">+${d.vol.toFixed(0)} LPD gained</div></div></div>` });
+        if (topGrowthAccounts.length > 0) insights.positive.push({ icon: '🚀', title: `Top Growth Accounts — Momentum Leaders`, desc: `Accounts driving the most absolute volume growth vs last year.`, rows: topGrowthAccounts.slice(0, 8), rowFn: r => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${r.cust}</div><div style="font-size:0.65rem;color:#6B7280">${r.prod} · ${r.so}</div><span class="se-pill mt-1">👤 ${r.se}</span></div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">+${r.absDiff} LPD</div><div style="font-size:0.65rem;color:#6B7280">+${r.pct}% YoY</div></div></div>` });
+        if (seGrowthRanked.length > 0)   insights.positive.push({ icon: '🏆', title: 'Top Performing SEs — Growth Champions', desc: `Executives leading the most growth accounts. Recognition and best-practice sharing recommended.`, rows: seGrowthRanked, rowFn: ([name, d]) => `<div class="insight-detail-row"><div><div class="font-bold text-gray-800" style="font-size:0.7rem">${name}</div>${d.mobile ? `<span class="se-pill mt-1">📞 ${d.mobile}</span>` : ''}</div><div class="text-right flex-shrink-0 ml-2"><div class="font-black text-[#2E963D]" style="font-size:0.75rem">${d.count} accts</div><div style="font-size:0.65rem;color:#6B7280">+${d.vol.toFixed(0)} LPD gained</div></div></div>` });
 
         currentInsights = insights;
         renderInsightsPanel(insights);
@@ -2338,7 +2224,6 @@ function initTable(data, columns, trendIdx) {
         };
         $('#header-subtitle').text(subtitles[tabId] || '');
 
-        // ── PERFORMANCE: Lazy-render customer tab only on first visit or if dirty ──
         if (tabId === 'view-customer' && customerTabDirty && lastCustomerData) {
             requestAnimationFrame(() => {
                 renderCustomerInsightsTab(lastCustomerData);
