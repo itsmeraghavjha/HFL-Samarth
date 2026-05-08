@@ -916,8 +916,8 @@
     // ── PERFORMANCE: Debounce timer for filter changes ──
     let filterDebounceTimer = null;
 
-    const slicerColumns  = ['State', 'Region', 'SO_Name', 'CustomerGroup', 'Product', 'Sales_Trend'];
-    const staticSlicers  = ['Product', 'Sales_Trend'];
+    const slicerColumns  = ['Region', 'SO_Name', 'CustomerGroup', 'PH7', 'Product', 'Sales_Trend'];
+    const staticSlicers  = [ 'Sales_Trend'];
 
     // Greeting
     const hour = new Date().getHours();
@@ -968,10 +968,36 @@
         });
 
         document.addEventListener('click', e => { if (!e.target.closest('.ms-wrapper')) closeAllDropdowns(); });
+
+        // Set defaults — PH7 first, then manually cascade Product options
+        const ph7Entry  = Object.entries(_msState).find(([,s]) => s.colName === 'PH7');
+        const prodEntry = Object.entries(_msState).find(([,s]) => s.colName === 'Product');
+        if (ph7Entry) {
+            const [ph7Idx, ph7State] = ph7Entry;
+            if (ph7State.options.includes('MILK')) {
+                ph7State.selected.add('MILK');
+                refreshMsTrigger(parseInt(ph7Idx));
+                if (prodEntry) {
+                    const [prodIdx, prodState] = prodEntry;
+                    const filtered = globalData.filter(row =>
+                        String(row[parseInt(ph7Idx)] || '').trim() === 'MILK'
+                    );
+                    prodState.options = [...new Set(
+                        filtered.map(row => String(row[parseInt(prodIdx)] || '').trim())
+                    )].filter(v => v !== '').sort();
+                    if (prodState.options.includes('Milk')) {
+                        prodState.selected.add('Milk');
+                    }
+                    refreshMsTrigger(parseInt(prodIdx));
+                    refreshMsDropdown(parseInt(prodIdx));
+                }
+            }
+        }
     }
 
     function buildMsWrapperHTML(colIdx, colName, options, selected) {
-        const label = colName.replace(/_/g, ' ');
+        const SLICER_LABEL_ALIASES = { PH7: 'Product Category' };
+        const label = SLICER_LABEL_ALIASES[colName] || colName.replace(/_/g, ' ');
         return `
             <label style="font-size:0.65rem;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:5px">${label}</label>
             <div class="ms-trigger" id="ms-trigger-${colIdx}" onclick="toggleMsDropdown(${colIdx}, event)">
@@ -1040,8 +1066,13 @@
     function toggleMsOption(colIdx, val, e) {
         e.stopPropagation();
         const state = _msState[colIdx];
-        if (state.selected.has(val)) state.selected.delete(val);
-        else                          state.selected.add(val);
+        if (state.colName === 'Product') {
+            if (state.selected.has(val)) state.selected.clear();
+            else { state.selected.clear(); state.selected.add(val); }
+        } else {
+            if (state.selected.has(val)) state.selected.delete(val);
+            else                          state.selected.add(val);
+        }
         refreshMsDropdown(colIdx);
         refreshMsTrigger(colIdx);
         updateClearAllBtn();
@@ -1097,7 +1128,8 @@
         const trigger = document.getElementById(`ms-trigger-${colIdx}`);
         if (!trigger) return;
         const arr   = [...state.selected];
-        const label = state.colName.replace(/_/g, ' ');
+        const SLICER_LABEL_ALIASES = { PH7: 'Product Category' };
+        const label = SLICER_LABEL_ALIASES[state.colName] || state.colName.replace(/_/g, ' ');
         const left  = trigger.querySelector('.ms-trigger-left');
         if (arr.length > 0) {
             trigger.classList.add('has-selection');
@@ -1140,7 +1172,26 @@
     function updateCascadingSlicers(filteredData) {
         Object.entries(_msState).forEach(([colIdx, state]) => {
             colIdx = parseInt(colIdx);
-            if (staticSlicers.includes(state.colName) || state.selected.size > 0) return;
+            if (staticSlicers.includes(state.colName)) return;
+
+            if (state.colName === 'Product') {
+                // Always recompute Product options from data filtered by every OTHER active filter
+                const dataForProduct = globalData.filter(row => {
+                    for (let fIdx in activeFilters) {
+                        if (parseInt(fIdx) === colIdx) continue;
+                        if (!activeFilters[fIdx].has(String(row[fIdx] || '').trim())) return false;
+                    }
+                    return true;
+                });
+                const uniqueVals = [...new Set(dataForProduct.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '').sort();
+                state.options = uniqueVals;
+                [...state.selected].forEach(v => { if (!uniqueVals.includes(v)) state.selected.delete(v); });
+                if (state.open) refreshMsDropdown(colIdx);
+                refreshMsTrigger(colIdx);
+                return;
+            }
+
+            if (state.selected.size > 0) return;
             const uniqueVals = [...new Set(filteredData.map(row => String(row[colIdx] || '').trim()))].filter(v => v !== '').sort();
             state.options = uniqueVals;
             [...state.selected].forEach(v => { if (!uniqueVals.includes(v)) state.selected.delete(v); });

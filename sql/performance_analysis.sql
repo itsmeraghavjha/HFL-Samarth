@@ -531,15 +531,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 ;WITH Base_Sales AS (
     SELECT
         BillingDate,
@@ -549,9 +540,48 @@
         ProductHeirachy1,
         SalesQuantity
     FROM [HeritageBI].[DW].[fSales] (NOLOCK)
-    WHERE BillingDate >= '2023-01-01' 
+    WHERE BillingDate >= '2025-01-01' 
       AND CustomerID NOT LIKE '%O%'
-      AND ProductHeirachy1 IN ('Milk','Curd','ButterMilk')
+      AND ProductHeirachy1 IN ('Milk', --('Milk','Curd','ButterMilk')
+    'Butter',
+    'ButterMilk',
+    --'Cheese',
+    --'Cold Coffee',
+    'Curd',
+    --'Doodh Peda',
+    --'Feed',
+    --'Feed Supplement',
+    'Flav.Milk',
+    'Frozen Dessert',
+    'Ghee',
+    --'Gluco Shakti',
+    --'Gulab Jamun',
+    'IceCream',
+    --'Laddu',
+    'Lassi',
+    'Milk',
+    --'Milk Cake',
+    'Milk Shakes',
+    --'Others',
+    'Paneer'
+    --'Rasgulla'
+    --'Shrikhand',
+    --'Veterinary Medicines'
+)
+),
+
+PH7_Lookup AS (
+    SELECT
+        FS.ProductHeirachy1,
+        MIN(P.PH7Desc) AS PH7Desc
+    FROM [HeritageBI].[DW].[fSales] FS
+    LEFT JOIN [HeritageBI].[DW].[ph7] P
+        ON P.MaterialCode = FS.MaterialCode
+    WHERE FS.BillingDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
+      AND FS.BillingDate <= EOMONTH(GETDATE())
+      AND FS.ProductHeirachy1 IS NOT NULL
+      AND P.PH7Desc IS NOT NULL
+    GROUP BY FS.ProductHeirachy1
 ),
 
 -- ===================== LATEST CUSTOMER GROUP (DEDUPLICATION) =====================
@@ -703,6 +733,7 @@ SELECT
     M.Employee_Name                                 AS SE_Name,
     M.Employee_Mobile                               AS SE_Mobile,
     MD.ProductHeirachy1                             AS Product,
+    PL.PH7Desc AS PH7,
     
     ISNULL(LY.Avg_Daily_Sales_Same_Month_Last_Year, 0) AS LYSM,
     ISNULL(LYMTD.LYMTD_Avg_Daily_Sales, 0)             AS LYMTD,
@@ -744,6 +775,7 @@ LEFT JOIN Last_Order_Date D ON D.CustomerID = MD.CustomerID AND D.SalesOfficeID 
 LEFT JOIN SalesOffice_Master_Dedup SO ON SO.PLANT = MD.SalesOfficeID
 LEFT JOIN SE_Mapping M ON M.CustomerID = MD.CustomerID 
 LEFT JOIN Customer_Master_Dedup C ON C.CustomerID = MD.CustomerID
+LEFT JOIN PH7_Lookup PL ON PL.ProductHeirachy1 = MD.ProductHeirachy1  
 
 -- Ensures lost volume from Last Year is included so YoY pulls into the negative correctly
 WHERE ISNULL(LM.Avg_Daily_Sales_Last_Month, 0) > 0.0001 
