@@ -3,384 +3,662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heritage Samarth | Power BI Reports</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Heritage Samarth | Reports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #F1F5F9; margin: 0; overflow: hidden; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --brand:       #2E963D;
-            --brand-dark:  #1F6B2A;
-            --brand-light: #E8F5E9;
-            --red:         #DF2027;
-            --topbar-h:    64px;
-            --tab-h:       48px;
+            --brand:        #2E963D;
+            --brand-light:  #E8F5EA;
+            --brand-dark:   #1E6B2B;
+            --red:          #DF2027;
+            --blue:         #3B82F6;
+            --slate:        #64748B;
+            --border:       #E2E8F0;
+            --bg:           #F8FAFC;
+            --header-h:     56px;
+            --bar-h:        52px;
         }
 
-        /* ── Top bar ── */
-        #topbar {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: var(--topbar-h);
+        /* ── Full-viewport layout — NO page scroll ── */
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: #1E293B;
+        }
+
+        .page-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ══════════════════════════════
+           HEADER  (fixed height 56px)
+        ══════════════════════════════ */
+        .top-header {
+            height: var(--header-h);
+            flex-shrink: 0;
             background: white;
-            border-bottom: 1px solid #E2E8F0;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 24px;
-            z-index: 50;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            z-index: 20;
         }
 
-        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .header-left  { display: flex; align-items: center; gap: 10px; }
+        .header-right { display: flex; align-items: center; gap: 10px; }
 
         .back-btn {
-            display: inline-flex; align-items: center; gap: 7px;
-            padding: 8px 14px; border-radius: 8px;
-            border: 1px solid #E2E8F0; background: #F9FAFB;
-            color: #374151; font-size: 0.8rem; font-weight: 600;
-            text-decoration: none; cursor: pointer;
-            transition: all 0.15s;
+            display: flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 8px;
+            background: var(--bg); border: 1px solid var(--border);
+            color: #475569; cursor: pointer; text-decoration: none;
+            transition: background 0.15s, border-color 0.15s;
+            flex-shrink: 0;
         }
-        .back-btn:hover { background: #F1F5F9; border-color: #CBD5E1; color: #111827; }
-        .back-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+        .back-btn:hover { background: #F1F5F9; border-color: #CBD5E1; }
+        .back-btn svg { width: 16px; height: 16px; }
 
-        .brand-lockup { display: flex; align-items: center; gap: 12px; }
-        .brand-lockup img { height: 28px; object-fit: contain; }
-        .brand-divider { width: 1px; height: 28px; background: #E2E8F0; }
-        .brand-title { font-size: 0.95rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; }
-        .brand-sub { font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; }
+        .header-logo { height: 32px; object-fit: contain; }
 
-        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .header-title { font-size: 0.88rem; font-weight: 800; color: #111827; line-height: 1; }
+        .header-sub   { font-size: 0.62rem; color: var(--slate); font-weight: 500; margin-top: 2px; }
+
+        .header-divider { width: 1px; height: 28px; background: var(--border); }
 
         .user-chip {
             display: flex; align-items: center; gap: 8px;
-            padding: 6px 12px 6px 8px;
-            background: #F8FAFC; border: 1px solid #E2E8F0;
-            border-radius: 20px;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 4px 10px 4px 4px;
         }
         .user-avatar {
             width: 26px; height: 26px; border-radius: 50%;
-            background: var(--brand-light); color: var(--brand);
+            background: var(--brand); color: white;
+            font-size: 0.65rem; font-weight: 800;
             display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 0.7rem; flex-shrink: 0;
+            flex-shrink: 0;
         }
-        .user-name { font-size: 0.75rem; font-weight: 600; color: #374151; }
-        .user-role { font-size: 0.62rem; color: #94A3B8; margin-top: 1px; }
+        .user-name  { font-size: 0.72rem; font-weight: 700; color: #374151; }
 
-        .pbi-badge {
-            display: flex; align-items: center; gap: 6px;
-            padding: 5px 12px; border-radius: 20px;
-            background: #F0F4FF; border: 1px solid #DBEAFE;
-            font-size: 0.7rem; font-weight: 700; color: #1D4ED8;
-        }
-
-        /* ── Region tab bar (wide-access roles only) ── */
-        #tab-bar {
-            position: fixed;
-            top: var(--topbar-h); left: 0; right: 0;
-            height: var(--tab-h);
+        /* ══════════════════════════════
+           CONTROL BAR  (fixed height 52px)
+        ══════════════════════════════ */
+        .control-bar {
+            height: var(--bar-h);
+            flex-shrink: 0;
             background: white;
-            border-bottom: 2px solid #E2E8F0;
-            display: flex; align-items: stretch;
-            padding: 0 24px;
-            gap: 2px;
-            z-index: 40;
-            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
         }
-        #tab-bar::-webkit-scrollbar { height: 3px; }
-        #tab-bar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
 
-        .region-tab {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 0 20px;
-            font-size: 0.82rem; font-weight: 600; color: #6B7280;
-            cursor: pointer; border: none; background: none;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.15s; white-space: nowrap;
+        /* Pill tab group */
+        .tab-group {
+            display: flex;
+            gap: 3px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 3px;
+            flex-shrink: 0;
         }
-        .region-tab:hover { color: #374151; background: #F9FAFB; }
-        .region-tab.active {
-            color: var(--brand); font-weight: 700;
-            border-bottom-color: var(--brand);
+        .tab-btn {
+            display: flex; align-items: center; gap: 5px;
+            padding: 5px 13px; border-radius: 6px;
+            font-size: 0.71rem; font-weight: 700; letter-spacing: 0.01em;
+            color: var(--slate); cursor: pointer; border: none;
+            background: transparent; transition: all 0.15s;
+            white-space: nowrap;
         }
-        .region-tab .dot {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: #E2E8F0; flex-shrink: 0;
-            transition: background 0.15s;
+        .tab-btn:hover:not(.active) { color: #334155; background: #EEF2F7; }
+        .tab-btn.active {
+            background: white; color: #111827;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
         }
-        .region-tab.active .dot { background: var(--brand); }
+        .tab-btn .tab-icon { font-size: 0.85rem; }
 
-        /* ── iframe wrapper ── */
-        #iframe-container {
-            position: fixed;
-            left: 0; right: 0; bottom: 0;
-            /* top is set by JS based on whether tab bar is shown */
+        /* Region selector (compact dropdown style) */
+        .region-select-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .region-select-label { font-size: 0.65rem; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.06em; }
+        .region-select {
+            height: 32px; padding: 0 10px; border-radius: 7px;
+            border: 1.5px solid var(--border); background: white;
+            font-size: 0.72rem; font-weight: 600; color: #374151;
+            cursor: pointer; outline: none; font-family: inherit;
+            transition: border-color 0.15s;
         }
+        .region-select:focus { border-color: var(--brand); }
+
+        /* Spacer */
+        .bar-spacer { flex: 1; }
+
+        /* Status pill */
+        .status-pill {
+            display: flex; align-items: center; gap: 5px;
+            padding: 4px 10px; border-radius: 20px;
+            background: var(--bg); border: 1px solid var(--border);
+            font-size: 0.65rem; font-weight: 700; color: var(--slate);
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .status-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #94A3B8; flex-shrink: 0;
+            transition: background 0.3s;
+        }
+        .status-dot.live { background: var(--brand); animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot {
+            0%,100% { box-shadow: 0 0 0 0 rgba(46,150,61,0.4); }
+            50%      { box-shadow: 0 0 0 4px rgba(46,150,61,0); }
+        }
+
+        /* Icon action buttons */
+        .icon-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 8px;
+            border: 1.5px solid var(--border); background: white;
+            color: var(--slate); cursor: pointer;
+            text-decoration: none; transition: all 0.15s; flex-shrink: 0;
+        }
+        .icon-btn:hover { background: var(--bg); border-color: #CBD5E1; color: #374155; }
+        .icon-btn svg { width: 15px; height: 15px; }
+
+        .view-all-btn {
+            display: flex; align-items: center; gap: 6px;
+            height: 32px; padding: 0 14px; border-radius: 8px;
+            border: 1.5px solid var(--brand); background: var(--brand-light);
+            color: var(--brand-dark); font-size: 0.7rem; font-weight: 800;
+            cursor: pointer; transition: all 0.15s; white-space: nowrap;
+            flex-shrink: 0; letter-spacing: 0.01em;
+        }
+        .view-all-btn:hover { background: #C8EBC9; border-color: var(--brand-dark); }
+        .view-all-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+        /* ══════════════════════════════
+           FRAME AREA  (fills rest of viewport)
+        ══════════════════════════════ */
+        .frame-area {
+            flex: 1;
+            min-height: 0;          /* critical for flex child to shrink */
+            position: relative;
+            overflow: hidden;
+            background: white;
+        }
+
+        /* Loader overlay */
+        .frame-loader {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: white; z-index: 5; gap: 12px;
+            transition: opacity 0.25s;
+        }
+        .frame-loader.hidden { opacity: 0; pointer-events: none; }
+        .spinner {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--brand);
+            animation: spin 0.75s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-text { font-size: 0.78rem; color: var(--slate); font-weight: 600; }
+        .loader-name { font-size: 0.65rem; color: #94A3B8; margin-top: -6px; }
+
+        /* The iframe itself */
         #pbi-frame {
             width: 100%; height: 100%;
             border: none; display: block;
         }
 
-        /* ── Loading overlay ── */
-        #loading-overlay {
+        /* Empty / no-report state */
+        .empty-state {
             position: absolute; inset: 0;
-            background: white;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            gap: 16px; z-index: 10;
-            transition: opacity 0.3s;
+            gap: 10px; text-align: center;
+            padding: 24px;
         }
-        #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+        .empty-icon { font-size: 3rem; }
+        .empty-title { font-size: 1rem; font-weight: 800; color: #374151; }
+        .empty-sub   { font-size: 0.75rem; color: var(--slate); max-width: 280px; line-height: 1.6; }
 
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid #E2E8F0;
-            border-top-color: var(--brand);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        /* ══════════════════════════════
+           VIEW ALL MODAL
+        ══════════════════════════════ */
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 50;
+            background: rgba(15,23,42,0.5);
+            backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .modal-backdrop.open { display: flex; }
 
-        .loading-text { font-size: 0.85rem; font-weight: 600; color: #6B7280; }
-        .loading-sub  { font-size: 0.72rem; color: #94A3B8; margin-top: -8px; }
+        .modal-box {
+            background: white; border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+            width: 100%; max-width: 680px;
+            max-height: 80vh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            animation: modal-in 0.22s cubic-bezier(0.34,1.1,0.64,1) forwards;
+        }
+        @keyframes modal-in {
+            from { opacity: 0; transform: scale(0.94) translateY(8px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
 
-        /* ── Single-region header (RH/BM) ── */
-        #region-header {
-            position: fixed;
-            background: linear-gradient(135deg, var(--brand), #1F6B2A);
-            color: white;
+        .modal-head {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 28px;
-            z-index: 40;
+            padding: 18px 22px 16px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
-        .rh-region-name { font-size: 0.9rem; font-weight: 800; }
-        .rh-region-sub  { font-size: 0.65rem; font-weight: 600; opacity: 0.75; margin-top: 1px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .modal-title { font-size: 0.95rem; font-weight: 800; color: #111827; }
+        .modal-sub   { font-size: 0.65rem; color: var(--slate); margin-top: 2px; }
 
-        /* ── No report fallback ── */
-        #no-report {
-            position: fixed; inset: 0; background: #F8FAFC;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 12px; padding: 32px; text-align: center;
+        .modal-close {
+            width: 30px; height: 30px; border-radius: 8px;
+            border: 1.5px solid var(--border); background: var(--bg);
+            color: var(--slate); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s; flex-shrink: 0;
         }
+        .modal-close:hover { background: #FEE2E2; border-color: #FECACA; color: var(--red); }
+        .modal-close svg { width: 14px; height: 14px; }
+
+        .modal-body {
+            flex: 1; overflow-y: auto;
+            padding: 18px 22px 22px;
+        }
+        .modal-body::-webkit-scrollbar { width: 4px; }
+        .modal-body::-webkit-scrollbar-track { background: var(--bg); }
+        .modal-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+        .section-label {
+            font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #94A3B8;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 10px; margin-top: 18px;
+        }
+        .section-label:first-child { margin-top: 0; }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+        .report-card {
+            border: 1.5px solid var(--border); border-radius: 12px;
+            padding: 14px 16px; cursor: pointer; background: white;
+            transition: all 0.18s; position: relative; overflow: hidden;
+        }
+        .report-card:hover {
+            border-color: var(--brand);
+            background: var(--brand-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(46,150,61,0.12);
+        }
+        .report-card.region-card:hover {
+            border-color: var(--blue);
+            background: #EFF6FF;
+            box-shadow: 0 4px 14px rgba(59,130,246,0.1);
+        }
+        .report-card::before {
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: var(--brand); border-radius: 0 0 0 0;
+        }
+        .report-card.region-card::before { background: var(--blue); }
+
+        .rc-icon  { font-size: 1.3rem; margin-bottom: 6px; }
+        .rc-name  { font-size: 0.78rem; font-weight: 800; color: #111827; }
+        .rc-sub   { font-size: 0.62rem; color: var(--slate); margin-top: 2px; }
+        .rc-arrow {
+            position: absolute; top: 14px; right: 14px;
+            font-size: 0.65rem; font-weight: 700; color: var(--brand);
+            opacity: 0; transform: translateX(-4px);
+            transition: all 0.15s;
+        }
+        .region-card .rc-arrow { color: var(--blue); }
+        .report-card:hover .rc-arrow { opacity: 1; transform: translateX(0); }
     </style>
 </head>
 <body>
+<div class="page-shell">
 
-<!-- ════════════════ TOP BAR ════════════════ -->
-<div id="topbar">
-    <div class="topbar-left">
-        <!-- Back button -->
-        <a href="{{ url_for('dashboard.index') }}" class="back-btn">
+    <!-- ════════════════════════════════
+         HEADER
+    ════════════════════════════════ -->
+    <header class="top-header">
+        <div class="header-left">
+            <a href="/" class="back-btn" title="Back to Dashboard">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </a>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage" class="header-logo">
+            <div class="header-divider"></div>
+            <div>
+                <div class="header-title">Reports & Insights</div>
+                <div class="header-sub">Power BI Embedded · Heritage Foods</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-chip">
+                <div class="user-avatar">{{ user.name[0] }}</div>
+                <div>
+                    <div class="user-name">{{ user.name }}</div>
+                </div>
+            </div>
+            <a href="/logout" style="font-size:0.65rem;font-weight:700;color:#DF2027;text-decoration:none;padding:4px 8px;border-radius:6px;background:#FFF5F5;border:1px solid #FECACA;">Sign Out</a>
+        </div>
+    </header>
+
+    <!-- ════════════════════════════════
+         CONTROL BAR
+    ════════════════════════════════ -->
+    <div class="control-bar">
+
+        <!-- Global report tabs -->
+        <div class="tab-group" id="tab-group">
+            {% for name, url in global_reports.items() %}
+            <button class="tab-btn {% if loop.first %}active{% endif %}"
+                    id="tab-global-{{ loop.index }}"
+                    onclick="switchGlobalTab({{ loop.index }}, '{{ url | e }}', '{{ name | e }}')">
+                <span class="tab-icon">
+                    {% if 'Scheme' in name %}📋{% elif 'ABCD' in name %}🏷️{% else %}📊{% endif %}
+                </span>
+                {{ name }}
+            </button>
+            {% endfor %}
+
+            {% if all_regions %}
+            <button class="tab-btn" id="tab-region-pick"
+                    onclick="switchToRegionPicker()">
+                <span class="tab-icon">🗺️</span>
+                Customer Profiling Survey Insights
+            </button>
+            {% endif %}
+
+            {% if single_region and single_region != 'Unknown' and embed_url %}
+            <button class="tab-btn" id="tab-my-region"
+                    onclick="switchSingleRegion('{{ embed_url | e }}', '{{ single_region | e }}')">
+                <span class="tab-icon">🗺️</span>
+                {{ single_region }}
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Region dropdown (Superadmin — only shown when Region tab active) -->
+        {% if all_regions %}
+        <div class="region-select-wrap" id="region-select-wrap" style="display:none">
+            <label class="region-select-label">Region</label>
+            <select class="region-select" id="region-select" onchange="loadRegionFromSelect()">
+                <option value="">— Select Region —</option>
+                {% for region in all_regions %}
+                <option value="{{ reports[region] | e }}" data-name="{{ region }}">{{ region }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        <div class="bar-spacer"></div>
+
+        <!-- Status pill -->
+        <div class="status-pill" id="status-pill">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">Select a report</span>
+        </div>
+
+        <!-- Open in new tab -->
+        <a class="icon-btn" id="new-tab-link" href="#" target="_blank" title="Open in new tab">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
             </svg>
-            Dashboard
         </a>
 
-        <div class="brand-divider"></div>
-
-        <!-- Brand -->
-        <div class="brand-lockup">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Heritage">
-            <div>
-                <div class="brand-title">Samarth</div>
-                <div class="brand-sub">Analytics Engine</div>
-            </div>
-        </div>
-
-        <div class="brand-divider"></div>
-
-        <!-- Power BI badge -->
-        <div class="pbi-badge">
-            <!-- Power BI icon -->
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M5 3h4v18H5V3zm5 4h4v14h-4V7zm5-2h4v16h-4V5z"/>
+        <!-- View All -->
+        <button class="view-all-btn" onclick="openModal()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h7"/>
             </svg>
-            Power BI Reports
-        </div>
+            View All
+        </button>
     </div>
 
-    <div class="topbar-right">
-        {% if user.role in ['Superadmin', 'CXO'] %}
-        <div style="font-size:0.72rem;color:#94A3B8;font-weight:600">
-            {{ all_regions | length }} Regions
+    <!-- ════════════════════════════════
+         FRAME AREA
+    ════════════════════════════════ -->
+    <div class="frame-area" id="frame-area">
+        <!-- Loader -->
+        <div class="frame-loader" id="frame-loader">
+            <div class="spinner"></div>
+            <div class="loader-text">Loading report…</div>
+            <div class="loader-name" id="loader-name"></div>
         </div>
-        {% endif %}
 
-        <!-- User chip -->
-        <div class="user-chip">
-            <div class="user-avatar">{{ user.name[0] | upper }}</div>
+        <!-- Empty state (initial) -->
+        <div class="empty-state" id="empty-state">
+            <div class="empty-icon">📊</div>
+            <div class="empty-title">Select a report to view</div>
+            <div class="empty-sub">Choose from the tabs above or click "View All" to browse all available reports.</div>
+        </div>
+
+        <!-- iframe -->
+        <iframe id="pbi-frame" src="" allowfullscreen
+                onload="onFrameLoad()" style="display:none"></iframe>
+    </div>
+
+</div><!-- /.page-shell -->
+
+
+<!-- ════════════════════════════════
+     VIEW ALL MODAL
+════════════════════════════════ -->
+<div class="modal-backdrop" id="modal" onclick="onBackdropClick(event)">
+    <div class="modal-box">
+        <div class="modal-head">
             <div>
-                <div class="user-name">{{ user.name }}</div>
-                <div class="user-role">{{ user.role }} {% if user.title %}· {{ user.title }}{% endif %}</div>
+                <div class="modal-title">All Reports</div>
+                <div class="modal-sub">Click any card to open the report</div>
             </div>
+            <button class="modal-close" onclick="closeModal()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <!-- Global reports -->
+            {% if global_reports %}
+            <div class="section-label">Global Reports · All Regions</div>
+            <div class="report-grid">
+                {% for name, url in global_reports.items() %}
+                <div class="report-card" onclick="loadFromModal('{{ url | e }}', '{{ name | e }}', 'global', {{ loop.index }})">
+                    <div class="rc-icon">{% if 'Scheme' in name %}📋{% elif 'ABCD' in name %}🏷️{% else %}📊{% endif %}</div>
+                    <div class="rc-name">{{ name }}</div>
+                    <div class="rc-sub">Available to all roles</div>
+                    <span class="rc-arrow">Open →</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Region reports (Superadmin) -->
+            {% if all_regions %}
+            <div class="section-label">Regional Reports</div>
+            <div class="report-grid">
+                {% for region in all_regions %}
+                <div class="report-card region-card"
+                     onclick="loadFromModal('{{ reports[region] | e }}', '{{ region | e }}', 'region', 0)">
+                    <div class="rc-icon">🗺️</div>
+                    <div class="rc-name">{{ region }}</div>
+                    <div class="rc-sub">Regional dashboard</div>
+                    <span class="rc-arrow">Open →</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Single region user -->
+            {% if single_region and single_region != 'Unknown' and embed_url %}
+            <div class="section-label">Your Region</div>
+            <div class="report-grid">
+                <div class="report-card region-card"
+                     onclick="loadFromModal('{{ embed_url | e }}', '{{ single_region | e }}', 'region', 0)">
+                    <div class="rc-icon">🗺️</div>
+                    <div class="rc-name">{{ single_region }}</div>
+                    <div class="rc-sub">Your regional dashboard</div>
+                    <span class="rc-arrow">Open →</span>
+                </div>
+            </div>
+            {% endif %}
+
         </div>
     </div>
 </div>
-
-
-<!-- ════════════════ REGION TAB BAR (CXO / Superadmin) ════════════════ -->
-{% if user.role in ['Superadmin', 'CXO'] %}
-<div id="tab-bar" role="tablist">
-    {% for region in all_regions %}
-    <button
-        class="region-tab {% if loop.first %}active{% endif %}"
-        role="tab"
-        data-region="{{ region }}"
-        data-url="{{ reports[region] }}"
-        onclick="switchRegion(this)"
-        aria-selected="{% if loop.first %}true{% else %}false{% endif %}"
-    >
-        <span class="dot"></span>
-        {{ region }}
-    </button>
-    {% endfor %}
-</div>
-{% endif %}
-
-
-<!-- ════════════════ SINGLE-REGION HEADER (RH / BM) ════════════════ -->
-{% if user.role in ['RH', 'BM'] %}
-<div id="region-header" style="top: var(--topbar-h); height: 44px; left: 0; right: 0;">
-    <div>
-        <div class="rh-region-name">{{ single_region }} Region</div>
-        <div class="rh-region-sub">Power BI Performance Report</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:6px;opacity:0.8;font-size:0.7rem;font-weight:600">
-        <span id="rh-status-dot" style="width:7px;height:7px;border-radius:50%;background:#4ADE80;display:inline-block"></span>
-        <span id="rh-status-text">Loading…</span>
-    </div>
-</div>
-{% endif %}
-
-
-<!-- ════════════════ IFRAME CONTAINER ════════════════ -->
-{% if (user.role in ['RH', 'BM'] and not embed_url) %}
-
-<!-- No report found for this region -->
-<div id="no-report" style="top: calc(var(--topbar-h) + 44px);">
-    <div style="font-size:3rem;margin-bottom:4px">📊</div>
-    <div style="font-size:1.1rem;font-weight:800;color:#0F172A">Report Not Available</div>
-    <div style="font-size:0.85rem;color:#6B7280;max-width:360px;line-height:1.6">
-        No Power BI report is configured for
-        <strong>{{ single_region }}</strong>.
-        Please contact your administrator.
-    </div>
-    <a href="{{ url_for('dashboard.index') }}"
-       style="margin-top:16px;display:inline-flex;align-items:center;gap:8px;
-              background:#2E963D;color:white;padding:10px 20px;border-radius:8px;
-              font-size:0.82rem;font-weight:700;text-decoration:none">
-        ← Back to Dashboard
-    </a>
-</div>
-
-{% else %}
-
-<div id="iframe-container">
-    <!-- Loading state -->
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <div>
-            <div class="loading-text">Loading Power BI Report…</div>
-            <div class="loading-sub">This may take a few seconds</div>
-        </div>
-    </div>
-
-    <iframe
-        id="pbi-frame"
-        title="Power BI Report"
-        allowfullscreen
-        {% if user.role in ['RH', 'BM'] %}
-        src="{{ embed_url }}"
-        {% else %}
-        src="{{ reports[default_region] }}"
-        {% endif %}
-    ></iframe>
-</div>
-
-{% endif %}
 
 
 <script>
-// ── Layout constants passed from Flask ────────────────────────────────────
-const ROLE         = "{{ user.role }}";
-const HAS_TABS     = {{ 'true' if user.role in ['Superadmin', 'CXO'] else 'false' }};
-const REPORTS      = {{ reports | tojson }};
-const TOPBAR_H     = 64;
-const TAB_H        = 48;
-const RH_HEADER_H  = 44;
+    // ── State ──
+    let currentUrl  = '';
+    let currentName = '';
 
-// ── Set iframe container top position ────────────────────────────────────
-function layoutFrameContainer() {
-    const container = document.getElementById('iframe-container');
-    if (!container) return;
+    // ── Load on page ready ──
+    document.addEventListener('DOMContentLoaded', () => {
+        {% set first_global = global_reports.keys()|list %}
+        {% if first_global %}
+            loadReport('{{ global_reports[first_global[0]] | e }}', '{{ first_global[0] | e }}');
+        {% elif embed_url %}
+            loadReport('{{ embed_url | e }}', '{{ single_region | e }}');
+        {% endif %}
+    });
 
-    let topOffset = TOPBAR_H;
-    if (HAS_TABS)                         topOffset += TAB_H;
-    if (ROLE === 'RH' || ROLE === 'BM')   topOffset += RH_HEADER_H;
+    // ── Core load function ──
+    function loadReport(url, name) {
+        if (!url || url === '#') return;
+        currentUrl  = url;
+        currentName = name;
 
-    container.style.top = topOffset + 'px';
-}
+        const frame   = document.getElementById('pbi-frame');
+        const loader  = document.getElementById('frame-loader');
+        const empty   = document.getElementById('empty-state');
+        const loaderN = document.getElementById('loader-name');
+        const link    = document.getElementById('new-tab-link');
+        const dot     = document.getElementById('status-dot');
+        const txt     = document.getElementById('status-text');
 
-layoutFrameContainer();
+        empty.style.display  = 'none';
+        frame.style.display  = 'none';
+        loader.classList.remove('hidden');
+        loaderN.textContent = name;
+        link.href = url;
+        dot.classList.remove('live');
+        txt.textContent = 'Loading…';
 
-// ── iframe load handler ───────────────────────────────────────────────────
-const frame   = document.getElementById('pbi-frame');
-const overlay = document.getElementById('loading-overlay');
+        frame.src = url;
+    }
 
-if (frame) {
-    frame.addEventListener('load', function () {
-        if (overlay) overlay.classList.add('hidden');
+    function onFrameLoad() {
+        const frame  = document.getElementById('pbi-frame');
+        const loader = document.getElementById('frame-loader');
+        const dot    = document.getElementById('status-dot');
+        const txt    = document.getElementById('status-text');
 
-        // Update RH status indicator if present
-        const dot  = document.getElementById('rh-status-dot');
-        const txt  = document.getElementById('rh-status-text');
-        if (dot && txt) {
-            dot.style.background = '#22C55E';
-            txt.textContent = 'Report Loaded';
+        if (!frame.src || frame.src === window.location.href) return;
+        loader.classList.add('hidden');
+        frame.style.display = 'block';
+        dot.classList.add('live');
+        txt.textContent = currentName;
+    }
+
+    // ── Tab switching ──
+    function clearActiveTabs() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    }
+
+    function switchGlobalTab(idx, url, name) {
+        clearActiveTabs();
+        document.getElementById('tab-global-' + idx)?.classList.add('active');
+        toggleRegionSelect(false);
+        loadReport(url, name);
+    }
+
+    function switchSingleRegion(url, name) {
+        clearActiveTabs();
+        document.getElementById('tab-my-region')?.classList.add('active');
+        toggleRegionSelect(false);
+        loadReport(url, name);
+    }
+
+    function switchToRegionPicker() {
+        clearActiveTabs();
+        document.getElementById('tab-region-pick')?.classList.add('active');
+        toggleRegionSelect(true);
+        // Reset dropdown
+        const sel = document.getElementById('region-select');
+        if (sel) sel.value = '';
+        // Show empty state until region chosen
+        const frame  = document.getElementById('pbi-frame');
+        const loader = document.getElementById('frame-loader');
+        const empty  = document.getElementById('empty-state');
+        loader.classList.add('hidden');
+        frame.style.display  = 'none';
+        frame.src = '';
+        empty.style.display  = 'flex';
+        document.getElementById('status-dot').classList.remove('live');
+        document.getElementById('status-text').textContent = 'Select a region';
+    }
+
+    function toggleRegionSelect(show) {
+        const el = document.getElementById('region-select-wrap');
+        if (el) el.style.display = show ? 'flex' : 'none';
+    }
+
+    function loadRegionFromSelect() {
+        const sel  = document.getElementById('region-select');
+        const url  = sel.value;
+        const name = sel.options[sel.selectedIndex]?.dataset?.name || 'Region';
+        if (url) loadReport(url, name);
+    }
+
+    // ── Modal ──
+    function openModal()  { document.getElementById('modal').classList.add('open'); }
+    function closeModal() { document.getElementById('modal').classList.remove('open'); }
+    function onBackdropClick(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+    function loadFromModal(url, name, type, idx) {
+        closeModal();
+        clearActiveTabs();
+        toggleRegionSelect(false);
+
+        if (type === 'global' && idx > 0) {
+            document.getElementById('tab-global-' + idx)?.classList.add('active');
+        } else if (type === 'region') {
+            const rTab = document.getElementById('tab-my-region');
+            const rPick = document.getElementById('tab-region-pick');
+            if (rTab) rTab.classList.add('active');
+            else if (rPick) rPick.classList.add('active');
         }
+        loadReport(url, name);
+    }
+
+    // ── Keyboard ──
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeModal();
     });
-
-    // Fallback: hide overlay after 15s in case load event misfires
-    setTimeout(() => { if (overlay) overlay.classList.add('hidden'); }, 15000);
-}
-
-// ── Region switcher (CXO / Superadmin only) ───────────────────────────────
-function switchRegion(btn) {
-    if (!btn) return;
-
-    // Update tabs
-    document.querySelectorAll('.region-tab').forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-    });
-    btn.classList.add('active');
-    btn.setAttribute('aria-selected', 'true');
-
-    // Show loading overlay and swap src
-    if (overlay) overlay.classList.remove('hidden');
-    if (frame)   frame.src = btn.dataset.url;
-
-    // Analytics tracking
-    trackEvent('Power BI Region Switch', btn.dataset.region);
-}
-
-// ── Usage tracking ────────────────────────────────────────────────────────
-function trackEvent(action, details) {
-    fetch('/api/track', {
-        method:    'POST',
-        headers:   { 'Content-Type': 'application/json' },
-        body:      JSON.stringify({ action, details }),
-        keepalive: true,
-    }).catch(() => {});
-}
-
-// Track initial page load
-trackEvent('Power BI Page View', ROLE === 'RH' || ROLE === 'BM'
-    ? '{{ single_region }}'
-    : 'All Regions'
-);
 </script>
 </body>
 </html>

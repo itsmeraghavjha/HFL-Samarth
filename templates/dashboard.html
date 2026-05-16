@@ -412,11 +412,19 @@
                     <span class="sidebar-text">Customer Insights</span>
                 </a>
 
+                <a onclick="switchTab('view-targets')" data-target="view-targets" class="sidebar-link" title="Targets & Achievement">
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+    </svg>
+    <span class="sidebar-text">Targets</span>
+</a>
+
                 <a href="{{ url_for('dashboard.powerbi') }}" class="sidebar-link" title="Power BI Reports">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l2-2 2 2v13M3 19V10l3-3 3 3v9M15 19V4l3-3 3 3v15"/>
                     </svg>
-                    <span class="sidebar-text">Survey Insights</span>
+                    <span class="sidebar-text">Reports & Insights</span>
                 </a>
 
                 {% if user.role == 'Superadmin' %}
@@ -817,6 +825,196 @@
 
             </div>
 
+
+
+            <!-- ============================================================
+     2. TAB DIV  (add inside the main .p-8 content area)
+============================================================ -->
+<div id="view-targets" class="tab-content hidden">
+ 
+    <!-- Header row with month label + quick export -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="text-xl font-black text-gray-900" id="tgt-month-label">Target Achievement</h2>
+            <p class="text-xs text-gray-400 mt-0.5">
+                LPD run-rate vs budget LPD
+            </p>
+        </div>
+        <button onclick="exportTargets()"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-semibold hover:bg-gray-50 shadow-sm transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Export CSV
+        </button>
+    </div>
+ 
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-7" id="tgt-kpi-row">
+        <div class="stat-card border-l-4 border-l-gray-300 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-4xl">🎯</div>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Target Run-Rate</p>
+            <h3 class="text-3xl font-black text-gray-900" id="tgt-kpi-budget-lpd">—</h3>
+            <p class="text-[10px] text-gray-400 mt-1">Budgeted LPD for the month</p>
+        </div>
+        
+        <div class="stat-card border-l-4 border-l-blue-500 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-4xl">🥛</div>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Actual Run-Rate</p>
+            <h3 class="text-3xl font-black text-blue-700" id="tgt-kpi-actual-lpd">—</h3>
+            <p class="text-[10px] text-gray-400 mt-1 font-medium"><span id="tgt-kpi-gap"></span> LPD vs Target</p>
+        </div>
+        
+        <div class="stat-card border-l-4 border-l-purple-500 bg-purple-50/30 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-4xl">⚡</div>
+            <p class="text-[10px] font-bold text-purple-600 uppercase tracking-widest mb-1 flex items-center gap-1">
+                Required Ask-Rate
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="LPD required for remaining days to hit 100%"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </p>
+            <h3 class="text-3xl font-black text-purple-700" id="tgt-kpi-required-lpd">—</h3>
+            <p class="text-[10px] text-purple-500/80 mt-1 font-medium">To achieve 100% by month-end</p>
+        </div>
+
+        <div class="stat-card border-l-4 border-l-brand relative overflow-hidden flex flex-col justify-center">
+            <div class="flex justify-between items-end mb-2">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Achievement</p>
+                <h3 class="text-2xl font-black" id="tgt-kpi-achievement">—</h3>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-2.5 mb-1 overflow-hidden relative">
+                <div id="tgt-kpi-ach-bar" class="bg-brand h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                <div class="absolute top-0 bottom-0 w-[2px] bg-gray-400 z-10" style="left: 100%"></div> 
+            </div>
+            <p class="text-[10px] text-gray-400 text-right mt-1" id="tgt-kpi-on-target-text">—</p>
+        </div>
+    </div>
+ 
+    <!-- Tabs: By SE / By Product Group / By Region -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+        <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="font-bold text-gray-800 text-base">Achievement Leaderboard</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Achievement % = Actual LPD ÷ Budget LPD × 100</p>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+                <input id="tgt-search-input" type="text" placeholder="Search..."
+                    oninput="onTgtSearch(this.value)"
+                    class="px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#2E963D] w-44">
+                <div class="lb-tab-bar">
+                    <button class="lb-tab active" onclick="switchTgtTab('se')"   id="tgt-tab-se">👤 SE Leaderboard</button>
+                    <button class="lb-tab"         onclick="switchTgtTab('so')"   id="tgt-tab-so">🏢 Sales Office</button>
+                    <button class="lb-tab"         onclick="switchTgtTab('reg')"  id="tgt-tab-reg">🌐 Region</button>
+                    <button class="lb-tab"         onclick="switchTgtTab('prod')" id="tgt-tab-prod">📦 Product Category</button>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- SE Panel -->
+        <div id="tgt-panel-se" class="tgt-panel tgt-active-panel overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="lb-table-head">
+                    <tr>
+                        <th class="w-12">#</th>
+                        <th onclick="sortTgt('se','name')" class="cursor-pointer select-none hover:bg-gray-100">Sales Executive <span id="tsi-se-name"></span></th>
+                        <th onclick="sortTgt('se','region')" class="cursor-pointer select-none hover:bg-gray-100">Region <span id="tsi-se-region"></span></th>
+                        <th onclick="sortTgt('se','so')" class="cursor-pointer select-none hover:bg-gray-100">Sales Office <span id="tsi-se-so"></span></th>
+                        <th onclick="sortTgt('se','prodGroup')" class="cursor-pointer select-none hover:bg-gray-100">Product Group <span id="tsi-se-prodGroup"></span></th>
+                        <th onclick="sortTgt('se','budgetLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Budget LPD <span id="tsi-se-budgetLpd"></span></th>
+                        <th onclick="sortTgt('se','actualLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Actual LPD <span id="tsi-se-actualLpd">↓</span></th>
+                        <th onclick="sortTgt('se','achievement')" class="text-center cursor-pointer select-none hover:bg-gray-100">Achievement % <span id="tsi-se-achievement"></span></th>
+                        <th class="text-center">Progress</th>
+                        <th onclick="sortTgt('se','gap')" class="text-right cursor-pointer select-none hover:bg-gray-100">Gap (LPD) <span id="tsi-se-gap"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tgt-body-se" class="lb-table-body divide-y divide-gray-50"></tbody>
+            </table>
+            <div id="tgt-page-se" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
+        </div>
+<!-- SO  Panel -->
+
+        <div id="tgt-panel-so" class="tgt-panel overflow-x-auto" style="display:none">
+    <table class="w-full text-left">
+        <thead class="lb-table-head">
+            <tr>
+                <th class="w-12">#</th>
+                <th onclick="sortTgt('so','name')" class="cursor-pointer select-none hover:bg-gray-100">Sales Office <span id="tsi-so-name"></span></th>
+                <th onclick="sortTgt('so','region')" class="cursor-pointer select-none hover:bg-gray-100">Region <span id="tsi-so-region"></span></th>
+                <th onclick="sortTgt('so','budgetLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Budget LPD <span id="tsi-so-budgetLpd"></span></th>
+                <th onclick="sortTgt('so','actualLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Actual LPD <span id="tsi-so-actualLpd">↓</span></th>
+                <th onclick="sortTgt('so','achievement')" class="text-center cursor-pointer select-none hover:bg-gray-100">Achievement % <span id="tsi-so-achievement"></span></th>
+                <th class="text-center">Progress</th>
+                <th onclick="sortTgt('so','gap')" class="text-right cursor-pointer select-none hover:bg-gray-100">Gap (LPD) <span id="tsi-so-gap"></span></th>
+            </tr>
+        </thead>
+        <tbody id="tgt-body-so" class="lb-table-body divide-y divide-gray-50"></tbody>
+    </table>
+    <div id="tgt-page-so" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
+</div>
+ 
+        <!-- Product Group Panel -->
+        <div id="tgt-panel-prod" class="tgt-panel overflow-x-auto" style="display:none">
+            <table class="w-full text-left">
+                <thead class="lb-table-head">
+                    <tr>
+                        <th class="w-12">#</th>
+                        <th onclick="sortTgt('prod','name')" class="cursor-pointer select-none hover:bg-gray-100">Product Group <span id="tsi-prod-name"></span></th>
+                        <th onclick="sortTgt('prod','budgetLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Budget LPD <span id="tsi-prod-budgetLpd"></span></th>
+                        <th onclick="sortTgt('prod','actualLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Actual LPD <span id="tsi-prod-actualLpd">↓</span></th>
+                        <th onclick="sortTgt('prod','achievement')" class="text-center cursor-pointer select-none hover:bg-gray-100">Achievement % <span id="tsi-prod-achievement"></span></th>
+                        <th class="text-center">Progress</th>
+                        <th onclick="sortTgt('prod','gap')" class="text-right cursor-pointer select-none hover:bg-gray-100">Gap (LPD) <span id="tsi-prod-gap"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tgt-body-prod" class="lb-table-body divide-y divide-gray-50"></tbody>
+            </table>
+            <div id="tgt-page-prod" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
+        </div>
+ 
+        <!-- Region Panel -->
+        <div id="tgt-panel-reg" class="tgt-panel overflow-x-auto" style="display:none">
+            <table class="w-full text-left">
+                <thead class="lb-table-head">
+                    <tr>
+                        <th class="w-12">#</th>
+                        <th onclick="sortTgt('reg','name')" class="cursor-pointer select-none hover:bg-gray-100">Region <span id="tsi-reg-name"></span></th>
+                        <th onclick="sortTgt('reg','budgetLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Budget LPD <span id="tsi-reg-budgetLpd"></span></th>
+                        <th onclick="sortTgt('reg','actualLpd')" class="text-right cursor-pointer select-none hover:bg-gray-100">Actual LPD <span id="tsi-reg-actualLpd">↓</span></th>
+                        <th onclick="sortTgt('reg','achievement')" class="text-center cursor-pointer select-none hover:bg-gray-100">Achievement % <span id="tsi-reg-achievement"></span></th>
+                        <th class="text-center">Progress</th>
+                        <th onclick="sortTgt('reg','gap')" class="text-right cursor-pointer select-none hover:bg-gray-100">Gap (LPD) <span id="tsi-reg-gap"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tgt-body-reg" class="lb-table-body divide-y divide-gray-50"></tbody>
+            </table>
+            <div id="tgt-page-reg" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 bg-gray-50/30 flex-wrap gap-3"></div>
+        </div>
+    </div>
+ 
+    <!-- PP Matrix Chart -->
+    <div class="stat-card mb-8">
+        <div class="flex justify-between items-start mb-5">
+            <div>
+                <h3 class="font-bold text-gray-800 text-sm">Performance vs Productivity</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Avg Sales Volume Achievement % vs Actual LPD — by Sales Office</p>
+            </div>
+            <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                <span class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#2E963D]"></span> On Target (≥ 100%)</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></span> Near Target (80–100%)</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#DF2027]"></span> Below Target (&lt; 80%)</span>
+            </div>
+        </div>
+        <div style="height:420px"><canvas id="tgt-pp-matrix"></canvas></div>
+    </div>
+ 
+    <!-- Loading / Error state -->
+    <div id="tgt-loading" class="hidden text-center py-20">
+        <div class="inline-block w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-sm text-gray-400">Loading target data…</p>
+    </div>
+    <div id="tgt-error" class="hidden bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-700 text-sm mb-6"></div>
+ 
+</div>
+
             <footer class="mt-12 text-center text-gray-400 text-sm pb-8 border-t border-gray-200 pt-6">
                 <p>Heritage Foods Limited | Samarth Analytics Engine v2.0</p>
             </footer>
@@ -918,6 +1116,26 @@
 
     const slicerColumns  = ['Region', 'SO_Name', 'CustomerGroup', 'PH7', 'Product', 'Sales_Trend'];
     const staticSlicers  = [ 'Sales_Trend'];
+    const TARGET_HIDDEN_FILTERS = ['CustomerGroup', 'Product', 'Sales_Trend'];
+
+    function updateFilterVisibility(tabId) {
+        const isTargets = tabId === 'view-targets';
+        const container = document.getElementById('slicer-container');
+        Object.entries(_msState).forEach(([colIdx, state]) => {
+            const wrapper = document.getElementById('ms-wrapper-' + colIdx);
+            if (!wrapper) return;
+            if (isTargets && TARGET_HIDDEN_FILTERS.includes(state.colName)) {
+                wrapper.style.display = 'none';
+            } else {
+                wrapper.style.display = '';
+            }
+        });
+        if (container) {
+            container.className = isTargets
+                ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4'
+                : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4';
+        }
+    }
 
     // Greeting
     const hour = new Date().getHours();
@@ -1167,7 +1385,57 @@
         updateDashboardComponents(filteredData);
         updateCascadingSlicers(filteredData);
         computeAndRenderInsights(filteredData);
+        
+        // --- ADD THIS LINE ---
+        if (tgtLoaded) applyFiltersToTargets();
     }
+
+
+    function applyFiltersToTargets() {
+        if (!tgtRawData || tgtRawData.length === 0) return;
+
+        // ✅ ci declared first — everything below depends on it
+        const ci = window._tgtColIdx || {};
+
+        const filterMapping = {
+            'Region':  'Region',
+            'SO_Name': 'SOSHORTNAME',
+            'PH7':     'ProductGroup',
+        };
+
+        let activeNamedFilters = {};
+        Object.entries(activeFilters).forEach(([idx, set]) => {
+            const colName = globalColumns[idx].title;
+            if (filterMapping[colName]) activeNamedFilters[filterMapping[colName]] = set;
+        });
+
+        const catCol = ci['Category'] ?? -1;
+
+        const filteredTgtData = tgtRawData.filter(row => {
+            for (let targetCol in activeNamedFilters) {
+                const targetColIdx = ci[targetCol];
+                if (targetColIdx !== undefined) {
+                    const rowVal = String(row[targetColIdx] || '').trim().toLowerCase();
+                    const matched = [...activeNamedFilters[targetCol]].some(v => v.toLowerCase() === rowVal);
+                    if (!matched) return false;
+                }
+            }
+            if (_tgtCatSelected.size > 0 && catCol > -1) {
+                const rowCat = String(row[catCol] || '').trim();
+                if (!_tgtCatSelected.has(rowCat)) return false;
+            }
+            return true;
+        });
+
+        const originalRaw = tgtRawData;
+        tgtRawData = filteredTgtData;
+        buildTgtAggregates();
+        renderTgtKpis();
+        renderTgtTable(activeTgtTab);
+        renderTgtCharts();
+        tgtRawData = originalRaw;
+    }
+
 
     function updateCascadingSlicers(filteredData) {
         Object.entries(_msState).forEach(([colIdx, state]) => {
@@ -2418,6 +2686,719 @@
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => { el.classList.remove('show'); el.style.borderTopColor = ''; }, 3500);
     }
+
+
+// ── Target-specific Category filter ──
+let _tgtCatSelected = new Set();
+
+function buildTgtCategoryFilter(options) {
+    // Find or create the filter container in the targets tab header
+    let container = document.getElementById('tgt-cat-filter-wrap');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'tgt-cat-filter-wrap';
+        container.className = 'flex items-center gap-2 mb-4';
+        container.innerHTML = `
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Division:</label>
+            <div id="tgt-cat-pills" class="flex gap-2 flex-wrap"></div>`;
+        // Insert after the KPI row
+        const kpiRow = document.getElementById('tgt-kpi-row');
+        if (kpiRow) kpiRow.after(container);
+    }
+    const pillsEl = document.getElementById('tgt-cat-pills');
+    // Add "All" pill + one per category
+    const allPills = [{ val: '__all__', label: 'All' }, ...options.map(o => ({ val: o, label: o }))];
+    pillsEl.innerHTML = allPills.map(({ val, label }) => `
+        <button onclick="toggleTgtCat('${val}')" id="tgt-cat-pill-${val}"
+            class="tgt-cat-pill px-3 py-1 rounded-full text-xs font-bold border transition-all
+                   ${val === '__all__' ? 'bg-brand text-white border-brand' : 'bg-white text-gray-600 border-gray-300 hover:border-brand hover:text-brand'}">
+            ${label}
+        </button>`).join('');
+}
+
+function toggleTgtCat(val) {
+    if (val === '__all__') {
+        _tgtCatSelected.clear();
+    } else {
+        if (_tgtCatSelected.has(val)) _tgtCatSelected.delete(val);
+        else _tgtCatSelected.add(val);
+    }
+    const allActive = _tgtCatSelected.size === 0;
+    // Rebuild each pill's class from scratch to avoid regex issues with Tailwind hover: classes
+    document.querySelectorAll('.tgt-cat-pill').forEach(el => {
+        const catVal = el.id.replace('tgt-cat-pill-', '');
+        const isAll  = catVal === '__all__';
+        const active = isAll ? allActive : _tgtCatSelected.has(catVal);
+        el.className = `tgt-cat-pill px-3 py-1 rounded-full text-xs font-bold border transition-all ${
+            active
+                ? 'bg-[#2E963D] text-white border-[#2E963D]'
+                : 'bg-white text-gray-600 border-gray-300 hover:border-[#2E963D] hover:text-[#2E963D]'
+        }`;
+    });
+    applyFiltersToTargets();
+}
+
+
+    // =====================================================
+// TARGETS TAB — GLOBALS
+// =====================================================
+let tgtRawData   = [];
+let tgtMeta      = {};         // { days_elapsed, days_in_month, month_label }
+let tgtLoaded    = false;
+ 
+let tgtSearchVal  = '';
+let activeTgtTab  = 'se';
+ 
+const TGT_PAGE_SIZE = 25;
+let tgtPage  = { se: 1, so: 1, prod: 1, reg: 1 };
+let tgtSort  = {
+    se:   { col: 'actualLpd', dir: 'desc' },
+    so:   { col: 'actualLpd', dir: 'desc' },
+    prod: { col: 'actualLpd', dir: 'desc' },
+    reg:  { col: 'actualLpd', dir: 'desc' },
+};
+let tgtBuilt = { se: [], so: [], prod: [], reg: [] };
+let tgtCharts = {};
+ 
+// ── Extend existing switchTab to handle targets lazy-load ──
+const _origSwitchTab = window.switchTab;
+    window.switchTab = function(tabId) {
+        _origSwitchTab(tabId);
+        updateFilterVisibility(tabId);
+        if (tabId === 'view-targets') {
+    clearAllMsFilters();
+    if (!tgtLoaded) loadTargetsData();
+    document.getElementById('header-subtitle').textContent =
+        'Track team target achievement via LPD run-rate vs budget LPD.';
+}
+    };
+ 
+// =====================================================
+// DATA LOAD
+// =====================================================
+function loadTargetsData() {
+    document.getElementById('tgt-loading').classList.remove('hidden');
+    document.getElementById('tgt-error').classList.add('hidden');
+ 
+    fetch('/api/targets')
+        .then(r => r.json())
+        .then(res => {
+            if (res.error) throw new Error(res.error);
+            tgtRawData = res.data;
+            tgtMeta    = {
+                days_elapsed:  res.days_elapsed,
+                days_in_month: res.days_in_month,
+                month_label:   res.month_label,
+            };
+            // Column index map FIRST — everything else depends on this
+            const cols = res.columns.map(c => c.title);
+            window._tgtColIdx = {};
+            cols.forEach((c, i) => { window._tgtColIdx[c] = i; });
+
+            tgtLoaded = true;
+            document.getElementById('tgt-loading').classList.add('hidden');
+            document.getElementById('tgt-month-label').textContent =
+                `Team Target Achievement - ${tgtMeta.month_label}`;
+
+            // Build Category filter now that _tgtColIdx is ready
+            const catCol = window._tgtColIdx['Category'] ?? -1;
+            if (catCol > -1) {
+                const cats = [...new Set(tgtRawData.map(r => String(r[catCol] || '').trim()))].filter(Boolean).sort();
+                buildTgtCategoryFilter(cats);
+            }
+
+            buildTgtAggregates();
+            renderTgtKpis();
+            renderTgtTable(activeTgtTab);
+            renderTgtCharts();
+
+            // Apply any active global filters (e.g. default MILK selection)
+            if (Object.keys(activeFilters).length > 0) {
+                applyFiltersToTargets();
+            }
+        })
+        .catch(err => {
+            document.getElementById('tgt-loading').classList.add('hidden');
+            const el = document.getElementById('tgt-error');
+            el.textContent = 'Failed to load targets: ' + err.message;
+            el.classList.remove('hidden');
+        });
+}
+ 
+// =====================================================
+// AGGREGATE (SE / Product Group / Region)
+// =====================================================
+function buildTgtAggregates() {
+    const ci = window._tgtColIdx || {};
+
+    // ── Column indices ──────────────────────────────────────
+    const iRegion   = ci['Region']          ?? -1;
+    const iSO       = ci['SalesOffice']     ?? -1;
+    const iSOShort  = ci['SOSHORTNAME']     ?? -1;
+    const iEmpName  = ci['EMPLOYEENAME']    ?? -1;
+    const iEmpMob   = ci['Employee_Mobile'] ?? -1;
+    const iProdGrp  = ci['ProductGroup']    ?? -1;
+    const iActLpd   = ci['ACTUALQTY_LPD']   ?? -1;   // daily run-rate
+    const iBudLpd   = ci['BUDGETQTY']       ?? -1;   // daily budget rate
+
+    // Initialize all 4 maps
+    const seMap = {}, soMap = {}, prodMap = {}, regMap = {};
+
+    tgtRawData.forEach(row => {
+        const region    = str(row, iRegion);
+        const so        = str(row, iSO);
+        const soShort   = str(row, iSOShort);
+        const emp       = str(row, iEmpName);
+        const mob       = str(row, iEmpMob);
+        const prod      = str(row, iProdGrp);
+
+        const actualLpd = iActLpd !== -1 ? (parseFloat(row[iActLpd])  || 0) : 0;
+        const budgetLpd = iBudLpd !== -1 ? (parseFloat(row[iBudLpd])  || 0) : 0;
+
+        function bump(map, key, extra) {
+            if (!key) return;
+            if (!map[key]) map[key] = { actualLpd: 0, budgetLpd: 0, rows: 0, ...extra };
+            map[key].actualLpd += actualLpd;
+            map[key].budgetLpd += budgetLpd;
+            map[key].rows      += 1;
+        }
+
+        // Populate all 4 maps
+        bump(seMap,   emp  + '||' + prod, { name: emp, mobile: mob, region, so, soShort, prodGroup: prod });
+        bump(soMap,   so,                 { name: soShort !== '—' ? soShort : so, region, seCount: 0 });
+        if (so && so !== '—' && soMap[so]) soMap[so].seCount += 1; 
+        bump(prodMap, prod,               { name: prod });
+        bump(regMap,  region,             { name: region });
+    });
+
+    function toArr(map) {
+        return Object.values(map).map(d => ({
+            ...d,
+            achievement: d.budgetLpd > 0 ? (d.actualLpd / d.budgetLpd) * 100 : 0,
+            gap:         d.actualLpd - d.budgetLpd,
+            avgActualLpd: d.actualLpd / (d.seCount || d.rows || 1),
+        }));
+    }
+
+    // Save back to the global tgtBuilt object (fallback to empty arrays just in case)
+    tgtBuilt.se   = toArr(seMap) || [];
+    tgtBuilt.so   = toArr(soMap) || []; 
+    tgtBuilt.prod = toArr(prodMap) || [];
+    tgtBuilt.reg  = toArr(regMap) || [];
+}
+
+function str(row, i) { return i > -1 && row[i] != null ? String(row[i]).trim() : '—'; }
+function flt(row, i) { return i > -1 ? parseFloat(row[i]) || 0 : 0; }
+ 
+// =====================================================
+// KPI CARDS
+// =====================================================
+function renderTgtKpis() {
+    const se = tgtBuilt.se;
+ 
+    const totalBudgetLpd = tgtBuilt.prod.reduce((s, r) => s + r.budgetLpd, 0);
+    const totalActualLpd = tgtBuilt.prod.reduce((s, r) => s + r.actualLpd, 0);
+    const overallAch     = totalBudgetLpd > 0 ? (totalActualLpd / totalBudgetLpd) * 100 : 0;
+    const onTarget       = se.filter(r => r.achievement >= 100).length;
+    
+    // PM Insight: Calculate Required Ask Rate
+    const daysElapsed = tgtMeta.days_elapsed || 1;
+    const daysInMonth = tgtMeta.days_in_month || 30;
+    const daysLeft = daysInMonth - daysElapsed;
+    
+    const totalBudgetVol = totalBudgetLpd * daysInMonth;
+    const totalActualVol = totalActualLpd * daysElapsed;
+    const remainingVolNeeded = totalBudgetVol - totalActualVol;
+    
+    // If days left is 0, required is 0. If they already beat target, required is 0.
+    const requiredLpd = (daysLeft > 0 && remainingVolNeeded > 0) ? (remainingVolNeeded / daysLeft) : 0;
+    const gap = totalActualLpd - totalBudgetLpd;
+ 
+    // Formatters
+    const fmt = (n) => n.toLocaleString('en-IN', { maximumFractionDigits: 1 });
+
+    document.getElementById('tgt-kpi-budget-lpd').textContent  = fmt(totalBudgetLpd);
+    document.getElementById('tgt-kpi-actual-lpd').textContent  = fmt(totalActualLpd);
+    
+    const gapEl = document.getElementById('tgt-kpi-gap');
+    gapEl.textContent = gap >= 0 ? `+${fmt(gap)}` : `${fmt(gap)}`;
+    gapEl.className = gap >= 0 ? 'text-[#2E963D]' : 'text-[#DF2027]';
+
+    document.getElementById('tgt-kpi-required-lpd').textContent = requiredLpd > 0 ? fmt(requiredLpd) : 'Target Hit 🎉';
+ 
+    const achEl  = document.getElementById('tgt-kpi-achievement');
+    achEl.textContent = overallAch.toFixed(1) + '%';
+    achEl.className   = 'text-2xl font-black ' + achColor(overallAch, 'text');
+    
+    const achBar = document.getElementById('tgt-kpi-ach-bar');
+    achBar.style.width = Math.min(overallAch, 100) + '%';
+    achBar.style.backgroundColor = achColor(overallAch, 'hex');
+ 
+    document.getElementById('tgt-kpi-on-target-text').textContent = `${onTarget} SEs hitting target`;
+}
+
+// =====================================================
+// TABLE RENDER
+// =====================================================
+function switchTgtTab(tab) {
+    activeTgtTab = tab;
+    document.querySelectorAll('.tgt-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('tgt-panel-' + tab).style.display = 'block';
+    document.querySelectorAll('.lb-tab[id^="tgt-tab-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('tgt-tab-' + tab).classList.add('active');
+    tgtPage[tab] = 1;
+    updateTgtSortIcons(tab);
+    renderTgtTable(tab);
+}
+ 
+function onTgtSearch(val) {
+    tgtSearchVal = val.toLowerCase();
+    tgtPage[activeTgtTab] = 1;
+    renderTgtTable(activeTgtTab);
+}
+ 
+function sortTgt(tab, col) {
+    if (tgtSort[tab].col === col) {
+        tgtSort[tab].dir = tgtSort[tab].dir === 'desc' ? 'asc' : 'desc';
+    } else {
+        tgtSort[tab].col = col;
+        tgtSort[tab].dir = 'desc';
+    }
+    tgtPage[tab] = 1;
+    updateTgtSortIcons(tab);
+    renderTgtTable(tab);
+}
+ 
+function updateTgtSortIcons(tab) {
+    document.querySelectorAll(`[id^="tsi-${tab}-"]`).forEach(el => el.textContent = '');
+    const { col, dir } = tgtSort[tab];
+    const el = document.getElementById(`tsi-${tab}-${col}`);
+    if (el) el.textContent = dir === 'desc' ? ' ↓' : ' ↑';
+}
+ 
+const TGT_NUMERIC = new Set(['budgetLpd', 'actualLpd', 'achievement', 'gap']);
+ 
+function renderTgtTable(tab) {
+    const all      = tgtBuilt[tab] || [];
+    const search   = tgtSearchVal;
+    const filtered = search
+        ? all.filter(r => JSON.stringify(Object.values(r)).toLowerCase().includes(search))
+        : all;
+ 
+    const { col, dir } = tgtSort[tab];
+    const sorted = [...filtered].sort((a, b) => {
+        const av = TGT_NUMERIC.has(col) ? (a[col] || 0) : String(a[col] || '').toLowerCase();
+        const bv = TGT_NUMERIC.has(col) ? (b[col] || 0) : String(b[col] || '').toLowerCase();
+        if (typeof av === 'string') return dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+        return dir === 'asc' ? av - bv : bv - av;
+    });
+ 
+    const page       = tgtPage[tab];
+    const start      = (page - 1) * TGT_PAGE_SIZE;
+    const pageRows   = sorted.slice(start, start + TGT_PAGE_SIZE);
+    const totalPages = Math.ceil(sorted.length / TGT_PAGE_SIZE);
+ 
+    const tbody = document.getElementById('tgt-body-' + tab);
+ 
+    if (pageRows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:#9CA3AF;font-size:0.85rem">No data found</td></tr>`;
+    } else {
+        tbody.innerHTML = pageRows.map((r, i) => {
+            const rank      = start + i + 1;
+            const ach       = r.achievement;
+            const gap       = r.gap;
+            const gapColor  = gap >= 0 ? '#166534' : '#991B1B';
+            const gapBg     = gap >= 0 ? '#DCFCE7' : '#FEE2E2';
+            const gapSign   = gap >= 0 ? '+' : '';
+            const progressBar = tgtProgressBar(ach);
+            const achChip     = tgtAchChip(ach);
+ 
+           if (tab === 'se') {
+                return `<tr onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''"
+                            style="transition:background 0.12s">
+                    <td style="padding-left:20px">${rankBadge(rank)}</td>
+                    <td style="padding:10px 16px">
+                        <div style="font-weight:700;color:#111827;font-size:0.8rem">${r.name}</div>
+                        ${r.mobile && r.mobile !== '—' ? `<div style="font-size:0.65rem;color:#6B7280">📞 ${r.mobile}</div>` : ''}
+                    </td>
+                    <td style="padding:10px 16px;font-size:0.75rem;color:#6B7280">${r.region}</td>
+                    <td style="padding:10px 16px;font-size:0.75rem;color:#6B7280">${r.soShort || r.so}</td>
+                    <td style="padding:10px 16px">
+                        <span style="font-size:0.7rem;background:#F1F5F9;color:#475569;padding:2px 8px;border-radius:20px;font-weight:600">${r.prodGroup}</span>
+                    </td>
+                    <td style="padding:10px 16px;text-align:right;font-family:monospace;color:#6B7280;font-size:0.78rem">${r.budgetLpd.toFixed(2)}</td>
+                    <td style="padding:10px 16px;text-align:right;font-family:monospace;font-weight:700;color:#1F2937;font-size:0.78rem">${r.actualLpd.toFixed(2)}</td>
+                    <td style="padding:10px 16px;text-align:center">${achChip}</td>
+                    <td style="padding:10px 16px;min-width:100px">${progressBar}</td>
+                    <td style="padding:10px 16px;text-align:right">
+                        <span style="font-size:0.75rem;font-weight:800;color:${gapColor};background:${gapBg};padding:2px 8px;border-radius:6px;font-family:monospace">${gapSign}${gap.toFixed(2)}</span>
+                    </td>
+                </tr>`;
+            } else if (tab === 'so') {
+                // ADDED THIS BLOCK FOR THE SO TAB (8 columns, includes Region)
+                return `<tr onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''"
+                            style="transition:background 0.12s">
+                    <td style="padding-left:20px">${rankBadge(rank)}</td>
+                    <td style="padding:10px 16px;font-weight:700;color:#111827;font-size:0.8rem">${r.name}</td>
+                    <td style="padding:10px 16px;font-size:0.75rem;color:#6B7280">${r.region || '—'}</td>
+                    <td style="padding:10px 16px;text-align:right;font-family:monospace;color:#6B7280;font-size:0.78rem">${r.budgetLpd.toFixed(2)}</td>
+                    <td style="padding:10px 16px;text-align:right;font-family:monospace;font-weight:700;color:#1F2937;font-size:0.78rem">${r.actualLpd.toFixed(2)}</td>
+                    <td style="padding:10px 16px;text-align:center">${achChip}</td>
+                    <td style="padding:10px 16px;min-width:120px">${progressBar}</td>
+                    <td style="padding:10px 16px;text-align:right">
+                        <span style="font-size:0.75rem;font-weight:800;color:${gapColor};background:${gapBg};padding:2px 8px;border-radius:6px;font-family:monospace">${gapSign}${gap.toFixed(2)}</span>
+                    </td>
+                </tr>`;
+            } else {
+                // Fallback for Product Group and Region tabs (7 columns)
+                return `<tr onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''"
+                            style="transition:background 0.12s">
+                    <td style="padding-left:20px">${rankBadge(rank)}</td>
+                    <td style="padding:10px 16px;font-weight:700;color:#111827;font-size:0.8rem">${r.name}</td>
+                    <td style="padding:10px 16px;text-align:right;font-family:monospace;color:#6B7280;font-size:0.78rem">${r.budgetLpd.toFixed(2)}</td>
+                    <td style="padding:10px 16px;text-align:right;font-family:monospace;font-weight:700;color:#1F2937;font-size:0.78rem">${r.actualLpd.toFixed(2)}</td>
+                    <td style="padding:10px 16px;text-align:center">${achChip}</td>
+                    <td style="padding:10px 16px;min-width:120px">${progressBar}</td>
+                    <td style="padding:10px 16px;text-align:right">
+                        <span style="font-size:0.75rem;font-weight:800;color:${gapColor};background:${gapBg};padding:2px 8px;border-radius:6px;font-family:monospace">${gapSign}${gap.toFixed(2)}</span>
+                    </td>
+                </tr>`;
+            }
+        }).join('');
+    }
+ 
+    // Pagination
+    renderTgtPagination(tab, sorted.length, page, totalPages);
+}
+ 
+function renderTgtPagination(tab, total, page, totalPages) {
+    const el       = document.getElementById('tgt-page-' + tab);
+    const btnStyle = 'padding:4px 12px;border-radius:6px;border:1px solid #E5E7EB;background:white;font-size:0.75rem;font-weight:600;cursor:pointer;';
+ 
+    if (total <= TGT_PAGE_SIZE) {
+        el.innerHTML = `<span>${total} records · All shown</span>`;
+        return;
+    }
+ 
+    let pageButtons = '';
+    const range = 2;
+    for (let p = 1; p <= totalPages; p++) {
+        if (p === 1 || p === totalPages || (p >= page - range && p <= page + range)) {
+            const isActive = p === page;
+            pageButtons += `<button onclick="tgtChangePage('${tab}',${p})" style="${btnStyle}${isActive ? 'background:#2E963D;color:white;border-color:#2E963D;' : 'color:#374151;'}">${p}</button>`;
+        } else if (p === page - range - 1 || p === page + range + 1) {
+            pageButtons += `<span style="padding:4px 4px;color:#9CA3AF">…</span>`;
+        }
+    }
+ 
+    el.innerHTML = `
+        <span>${total} records · Page ${page} of ${totalPages}</span>
+        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+            <button onclick="tgtChangePage('${tab}',${page - 1})" ${page <= 1 ? 'disabled' : ''} style="${btnStyle}opacity:${page <= 1 ? '0.35' : '1'}">← Prev</button>
+            ${pageButtons}
+            <button onclick="tgtChangePage('${tab}',${page + 1})" ${page >= totalPages ? 'disabled' : ''} style="${btnStyle}opacity:${page >= totalPages ? '0.35' : '1'}">Next →</button>
+        </div>`;
+}
+ 
+function tgtChangePage(tab, page) {
+    tgtPage[tab] = page;
+    renderTgtTable(tab);
+    document.getElementById('tgt-panel-' + tab).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+ 
+// =====================================================
+// ACHIEVEMENT HELPERS
+// =====================================================
+function achColor(pct, mode) {
+    if (pct >= 100) return mode === 'text' ? 'text-[#2E963D]' : '#2E963D';
+    if (pct >= 80)  return mode === 'text' ? 'text-amber-600'  : '#D97706';
+    return mode === 'text' ? 'text-[#DF2027]' : '#DF2027';
+}
+ 
+function tgtAchChip(pct) {
+    const color = achColor(pct, 'hex');
+    const bg    = pct >= 100 ? '#DCFCE7' : pct >= 80 ? '#FEF3C7' : '#FEE2E2';
+    const label = pct.toFixed(1) + '%';
+    const icon  = pct >= 100 ? '✅' : pct >= 80 ? '⚡' : '⚠️';
+    return `<span style="font-size:0.72rem;font-weight:800;color:${color};background:${bg};padding:3px 10px;border-radius:20px;white-space:nowrap">${icon} ${label}</span>`;
+}
+ 
+function tgtProgressBar(pct) {
+    const clamped = Math.min(pct, 150);
+    const color   = pct >= 100 ? '#2E963D' : pct >= 80 ? '#F59E0B' : '#DF2027';
+    const width   = Math.min(100, (clamped / 150) * 100);
+    return `<div style="position:relative;height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden;min-width:80px">
+        <div style="position:absolute;left:0;top:0;height:100%;width:${width}%;background:${color};border-radius:3px;transition:width 0.5s ease"></div>
+        ${pct >= 100 ? '' : `<div style="position:absolute;left:${(100/150)*100}%;top:-2px;height:10px;width:2px;background:#94A3B8;border-radius:1px"></div>`}
+    </div>
+    <div style="font-size:0.6rem;color:#9CA3AF;margin-top:2px;text-align:right">${pct >= 150 ? '150%+' : pct.toFixed(0) + '%'}</div>`;
+}
+ 
+// =====================================================
+// CHARTS
+// =====================================================
+function renderTgtCharts() {
+    // Destroy all old chart instances
+    ['dist','region','matrix','ppMatrix'].forEach(k => {
+        if (tgtCharts[k]) { tgtCharts[k].destroy(); delete tgtCharts[k]; }
+    });
+
+    // Build SO scatter data — only SOs with a real budget
+    // If an SO filter is active, drill down to SE level for the scatter
+const soFilterActive = Object.entries(_msState || {}).some(([,s]) => 
+    s.colName === 'SO_Name' && s.selected.size > 0
+);
+const scatterSource = soFilterActive 
+    ? tgtBuilt.se.reduce((acc, r) => {
+        // Aggregate SE rows to one point per SE (sum budget/actual across products)
+        const key = r.name + '||' + (r.so || '');
+        if (!acc[key]) acc[key] = { name: r.name, region: r.region, actualLpd: 0, budgetLpd: 0 };
+        acc[key].actualLpd += r.actualLpd;
+        acc[key].budgetLpd += r.budgetLpd;
+        return acc;
+      }, {})
+    : null;
+
+const soData = scatterSource
+    ? Object.values(scatterSource)
+        .map(r => ({
+            ...r,
+            achievement:  r.budgetLpd > 0 ? (r.actualLpd / r.budgetLpd) * 100 : 0,
+            avgActualLpd: r.actualLpd / (r.seCount || 1),
+        }))
+        .filter(r => r.budgetLpd > 1)
+    : tgtBuilt.so
+        .map(r => ({ ...r, avgActualLpd: r.avgActualLpd || r.actualLpd }))
+        .filter(r => r.budgetLpd > 1);
+
+    if (!soData.length) return;
+
+    const scatterPoints = soData.map(r => ({
+        x:           parseFloat(r.achievement.toFixed(1)),
+        y:           parseFloat((r.avgActualLpd || r.actualLpd).toFixed(1)),
+        name:        r.name,
+        region:      r.region || '',
+        achievement: r.achievement,
+        budgetLpd:   r.budgetLpd,
+        actualLpd:   r.actualLpd,
+        avgActualLpd: r.avgActualLpd || r.actualLpd,
+    }));
+
+    const ptColors = scatterPoints.map(d =>
+        d.achievement >= 100 ? 'rgba(46,150,61,0.88)' :
+        d.achievement >= 80  ? 'rgba(245,158,11,0.88)' :
+                                'rgba(223,32,39,0.88)'
+    );
+
+    // Helper: draw a rounded rectangle path
+    function rrPath(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y,     x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x,     y + h, r);
+        ctx.arcTo(x,     y + h, x,     y,     r);
+        ctx.arcTo(x,     y,     x + w, y,     r);
+        ctx.closePath();
+    }
+
+    const ppLabelPlugin = {
+        id: 'ppLabels',
+        afterDatasetsDraw(chart) {
+            const ctx  = chart.ctx;
+            const meta = chart.getDatasetMeta(0);
+
+            meta.data.forEach((pt, i) => {
+                const d     = scatterPoints[i];
+                const px    = pt.x;
+                const py    = pt.y;
+                const raw   = d.name || '';
+                const label = raw.length > 22 ? raw.slice(0, 21) + '…' : raw;
+
+                const borderColor = d.achievement >= 100 ? '#2E963D'
+                                  : d.achievement >= 80  ? '#D97706'
+                                  : '#C01919';
+                const bgColor     = d.achievement >= 100 ? '#DCFCE7'
+                                  : d.achievement >= 80  ? '#FEF3C7'
+                                  : '#FEE2E2';
+
+                ctx.save();
+                ctx.font = '700 8.5px Inter, sans-serif';
+                const tw  = ctx.measureText(label).width;
+                const bw  = tw + 12;
+                const bh  = 15;
+                const br  = 3;
+                const bx  = px - bw / 2;
+                const by  = py - 28;
+
+                // Badge background
+                rrPath(ctx, bx, by, bw, bh, br);
+                ctx.fillStyle   = bgColor;
+                ctx.fill();
+                ctx.strokeStyle = borderColor;
+                ctx.lineWidth   = 1;
+                ctx.stroke();
+
+                // Connector line
+                ctx.beginPath();
+                ctx.moveTo(px, py - 9);
+                ctx.lineTo(px, by + bh);
+                ctx.strokeStyle = borderColor + '99';
+                ctx.lineWidth   = 0.8;
+                ctx.stroke();
+
+                // Label text
+                ctx.fillStyle    = borderColor;
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, px, by + bh / 2);
+
+                ctx.restore();
+            });
+        }
+    };
+
+    // Reference lines at x=80, x=100 drawn via afterDraw
+    const refLinePlugin = {
+        id: 'refLines',
+        afterDraw(chart) {
+            const { ctx, scales: { x, y } } = chart;
+            const lines = [
+                { xVal: 80,  color: '#F59E0B44', label: '80%' },
+                { xVal: 100, color: '#2E963D44', label: '100%' }
+            ];
+            lines.forEach(({ xVal, color, label }) => {
+                const px = x.getPixelForValue(xVal);
+                if (px < x.left || px > x.right) return;
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(px, y.top);
+                ctx.lineTo(px, y.bottom);
+                ctx.strokeStyle = color;
+                ctx.lineWidth   = 1.5;
+                ctx.setLineDash([5, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle    = color.slice(0, 7) + 'CC';
+                ctx.font         = 'bold 9px Inter, sans-serif';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(label, px, y.top + 12);
+                ctx.restore();
+            });
+        }
+    };
+
+    const xVals = scatterPoints.map(d => d.x);
+    const yVals = scatterPoints.map(d => d.y);
+    const xMin  = Math.max(0,   Math.floor((Math.min(...xVals) - 10) / 10) * 10);
+    const xMax  = Math.ceil((Math.max(...xVals, 105) + 10) / 10) * 10;
+    const yMin  = Math.max(0,   Math.floor((Math.min(...yVals) * 0.85) / 500) * 500);
+    const yMax  = Math.ceil((Math.max(...yVals) * 1.12) / 500) * 500;
+
+    tgtCharts.ppMatrix = new Chart(document.getElementById('tgt-pp-matrix'), {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Sales Offices',
+                data: scatterPoints,
+                pointBackgroundColor: ptColors,
+                pointBorderColor:     '#ffffff',
+                pointBorderWidth:     2,
+                pointRadius:          9,
+                pointHoverRadius:     12
+            }]
+        },
+        plugins: [ppLabelPlugin, refLinePlugin],
+        options: {
+            maintainAspectRatio: false,
+            animation: false,
+            layout: { padding: { top: 36, right: 24, left: 10, bottom: 10 } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => {
+                            const d = scatterPoints[ctx.dataIndex];
+                            return [
+                                ' ' + d.name + (d.region ? ' · ' + d.region : ''),
+                                ' Achievement    : ' + d.achievement.toFixed(1) + '%',
+                                ' Avg SE LPD     : ' + d.avgActualLpd.toFixed(1),
+                                ' Total Actual   : ' + d.actualLpd.toFixed(1),
+                                ' Budget LPD     : ' + d.budgetLpd.toFixed(1),
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    min: xMin, max: xMax,
+                    title: {
+                        display: true,
+                        text: soFilterActive 
+    ? 'Performance – SE Achievement (%)' 
+    : 'Performance – Sales Office Achievement (%)',
+                        font: { size: 11, weight: 'bold' },
+                        color: '#374151'
+                    },
+                    grid:  { color: '#F1F5F9' },
+                    ticks: { callback: v => v + '%', font: { size: 10 } }
+                },
+                y: {
+                    min: yMin, max: yMax,
+                    title: {
+                        display: true,
+                        text: soFilterActive ? 'SE Actual LPD (Run-Rate)' : 'Avg SE Productivity (LPD per SE)',
+                        font: { size: 11, weight: 'bold' },
+                        color: '#374151'
+                    },
+                    grid:  { color: '#F1F5F9' },
+                    ticks: { callback: v => v.toLocaleString('en-IN'), font: { size: 10 } }
+                }
+            }
+        }
+    });
+}
+
+// =====================================================
+// EXPORT
+// =====================================================
+function exportTargets() {
+    if (!tgtRawData.length) { alert('No target data loaded.'); return; }
+    const ci = window._tgtColIdx;
+    const headers = ['Region','SalesOffice','SOSHORTNAME','EMPLOYEENAME','Employee_Mobile',
+                     'ProductGroup','BudgetQty','ActualQty','ActualLPD','BudgetLPD','Achievement%','Gap_LPD'];
+ 
+    const rows = tgtRawData.map(row => {
+        const budget    = parseFloat(row[ci['BUDGETQTY']]) || 0;
+        const actualLpd = parseFloat(row[ci['ACTUALQTY_LPD']]) || 0;
+        const budgetLpd = parseFloat(row[ci['BUDGETQTY']]) || 0;
+        const ach       = budgetLpd > 0 ? ((actualLpd / budgetLpd) * 100).toFixed(1) : '0.0';
+        const gap       = (actualLpd - budgetLpd).toFixed(2);
+        return [
+            `"${str(row, ci['Region'])}"`,
+            `"${str(row, ci['SalesOffice'])}"`,
+            `"${str(row, ci['SOSHORTNAME'])}"`,
+            `"${str(row, ci['EMPLOYEENAME'])}"`,
+            `"${str(row, ci['Employee_Mobile'])}"`,
+            `"${str(row, ci['ProductGroup'])}"`,
+            budget.toFixed(0), (parseFloat(row[ci['ACTUALQTY']]) || 0).toFixed(0),
+            actualLpd.toFixed(2), budgetLpd.toFixed(2),
+            ach + '%', gap
+        ].join(',');
+    });
+ 
+    const csv  = [headers.join(','), ...rows].join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `Heritage_Targets_${tgtMeta.month_label?.replace(' ', '_') || 'export'}.csv`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    trackEvent('Targets Export', tgtMeta.month_label);
+}
     </script>
 </body>
 </html>
