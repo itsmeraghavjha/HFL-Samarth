@@ -24,6 +24,11 @@ GLOBAL_REPORTS = {
     "ABCD Classification": "https://app.powerbi.com/view?r=eyJrIjoiY2M4M2VhM2MtYzY4OC00N2QzLWIyMzktNGFiMTVjMGMxM2JkIiwidCI6IjdmZjNjMWE5LTljYTAtNDBlNC1iMjdmLWRmZDU1M2M4OGZkZCJ9",
 }
 
+DNE_REPORTS = {
+    "FD": "https://app.powerbi.com/view?r=eyJrIjoiZmZjZmEyMzEtOGM1ZS00MjJmLTk4ZTQtOWMxNGFlMjhlMzZmIiwidCI6IjdmZjNjMWE5LTljYTAtNDBlNC1iMjdmLWRmZDU1M2M4OGZkZCJ9",
+    "PD": "https://app.powerbi.com/view?r=eyJrIjoiYmQ0ODkyMGEtZGJhMy00M2UxLTgyMGQtOGU4NjE0ZmNmODU5IiwidCI6IjdmZjNjMWE5LTljYTAtNDBlNC1iMjdmLWRmZDU1M2M4OGZkZCJ9",
+}
+
 # Maps the short region codes in your DB → full names used in POWERBI_REPORTS
 # Add more codes here if you see new ones in the data
 REGION_CODE_MAP = {
@@ -117,6 +122,7 @@ def powerbi():
             default_region = default_region,
             embed_url      = None,
             global_reports = GLOBAL_REPORTS,
+            dne_reports    = DNE_REPORTS,  
         )
 
     # RH / BM — warm cache then resolve region from SO codes
@@ -135,6 +141,7 @@ def powerbi():
         default_region= None,
         embed_url     = embed_url,
         global_reports = GLOBAL_REPORTS, 
+        dne_reports    = DNE_REPORTS,  
     )
 
 
